@@ -28,7 +28,11 @@
         <ddal-sqlparser-version>3.0.3</ddal-sqlparser-version>
         <lucy-version>1.6.3</lucy-version>
         <commons-codec-version>1.13</commons-codec-version>
-        <commons-io-version>2.6</commons-io-version>
+        <common-io-version>2.6</common-io-version>
+        <tika-version>1.22</tika-version>
+        <poi-version>4.1.1</poi-version>
+        <pdfbox-version>2.0.17</pdfbox-version>
+        <boxable-version>1.5</boxable-version>
         <h2database-version>1.4.200</h2database-version>
     </properties>
 
@@ -125,10 +129,40 @@
             <version>${commons-codec-version}</version>
         </dependency>
 
+        <!-- 파일 검증(확장자, MimeType) -->
+        <dependency>
+            <groupId>org.apache.tika</groupId>
+            <artifactId>tika-core</artifactId>
+            <version>${tika-version}</version>
+        </dependency>
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.6</version>
+            <version>${common-io-version}</version>
+        </dependency>
+
+        <!-- Create Excel -->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>${poi-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>${poi-version}</version>
+        </dependency>
+
+        <!-- Create Pdf -->
+        <dependency>
+            <groupId>org.apache.pdfbox</groupId>
+            <artifactId>pdfbox</artifactId>
+            <version>${pdfbox-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.dhorions</groupId>
+            <artifactId>boxable</artifactId>
+            <version>${boxable-version}</version>
         </dependency>
 
         <!-- 여기까지 표준프레임워크에서 정의한 library -->
