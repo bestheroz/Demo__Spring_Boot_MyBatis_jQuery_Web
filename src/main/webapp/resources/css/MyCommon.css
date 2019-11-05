@@ -1,0 +1,17 @@
+@CHARSET "UTF-8";
+
+body {
+    background-color: #F5F5F5;
+}
+
+main {
+    padding-top: 30px;
+}
+
+.text-ellipsis {
+    /* 	width: 100px; */
+    /* 	max-width: 100px; */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

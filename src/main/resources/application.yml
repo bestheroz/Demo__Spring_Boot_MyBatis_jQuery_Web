@@ -1,0 +1,47 @@
+spring:
+  profiles:
+    active: local
+  devtools:
+    livereload:
+      enabled: true
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+  resources:
+    chain:
+      compressed: true
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 20MB
+      max-request-size: 10MB
+      file-size-threshold: 0
+  mvc:
+    view:
+      prefix: /WEB-INF/views/
+      suffix: .jsp
+mybatis:
+  mapper-locations: classpath:**/*Mapper.xml
+  type-aliases-super-type: java.io.Serializable
+  type-aliases-package: com.github.bestheroz
+  config-location: classpath:mybatis-config.xml
+server:
+  error:
+    path: /common/exception/error.view
+---
+spring:
+  profiles: local
+  datasource:
+    initialization-mode: always
+    schema: classpath:/removabledb/h2.sql
+---
+spring:
+  profiles: dev
+  datasource:
+    hikari:
+      username: example
+      password: example123
+      driver-class-name: org.jdbcdslog.DriverLoggingProxy
+      jdbc-url: jdbc:jdbcdslog:mysql://example.com:3306/example?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&&zeroDateTimeBehavior=convertToNull;targetDriver=org.gjt.mm.mysql.Driver

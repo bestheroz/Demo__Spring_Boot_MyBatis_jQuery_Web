@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration>
+<!--suppress XmlWrongRootElement -->
+<taglib version="2.1" xmlns="http://java.sun.com/xml/j2ee">
+    <tlib-version>2.1</tlib-version>
+    <short-name>my</short-name>
+    <uri>/WEB-INF/tld/taglibrary</uri>
+    <tag>
+        <name>html</name>
+        <tag-class>com.github.bestheroz.standard.common.taglibrary.HtmlTag</tag-class>
+        <info>This Tag set default Html and Script Tag</info>
+        <attribute>
+            <name>title</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+
+        <!-- Plugin JS, CSS -->
+        <attribute>
+            <name>cookie</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>datetimePicker</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>fileDownloader</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>icon</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>handlebars</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>maxLength</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>modal</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>numberFormatter</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>paging</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>progressBar</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>popup</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>scrollUp</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>table</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>textEditor</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>validator</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>menu</name>
+        <tag-class>com.github.bestheroz.standard.common.taglibrary.MenuTag</tag-class>
+        <info>This Tag Draw Menu</info>
+    </tag>
+
+    <tag>
+        <name>footer</name>
+        <tag-class>com.github.bestheroz.standard.common.taglibrary.FooterTag</tag-class>
+        <info>This Tag Draw Footer</info>
+    </tag>
+
+</taglib>

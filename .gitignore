@@ -1,0 +1,16 @@
+/classes/
+/node_modules/
+/target/
+/vue/node_modules/
+/.idea/artifacts/
+/.idea/libraries/
+/.idea/hotswap_agent.xml
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/sqldialects.xml
+/.idea/webContexts.xml
+/.idea/workspace.xml
+/.idea/compiler.xml
+/.classpath
+/*.iml
+/**/*.iml

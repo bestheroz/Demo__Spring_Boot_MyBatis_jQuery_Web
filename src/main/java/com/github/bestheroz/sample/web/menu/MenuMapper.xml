@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.github.bestheroz.sample.web.menu.MenuDAO">
+    <!-- 	<select id="getMenuVOObject" resultType="MenuVO" parameterType="JsonObject"> -->
+    <!-- 		    SELECT SMM.* -->
+    <!-- 		         , LEVEL LVL -->
+    <!-- 		      FROM SAMPLE_MENU_MST SMM -->
+    <!-- 		     WHERE 1 = 1 -->
+    <!-- 		       AND SMM.USE_TF = 'Y' -->
+    <!-- 		       AND SMM.POWER <![CDATA[<=]]> #{power, jdbcType=INTEGER} -->
+    <!-- 		START WITH SMM.MENU_ID = '1' -->
+    <!-- 		CONNECT BY NOCYCLE PRIOR SMM.MENU_ID = SMM.PAR_MENU_ID -->
+    <!-- 		  ORDER BY LVL, SMM.DISPLAY_ORDER, SMM.MENU_NAME ASC -->
+    <!-- 	</select> -->
+    <select id="getMenuVOList" resultType="MenuVO" parameterType="JsonObject">
+        SELECT A.* FROM (
+        SELECT 1 LVL ,
+        SMM.MENU_ID ,
+        SMM.MENU_NAME,
+        SMM.PAR_MENU_ID,
+        SMM.MENU_TYPE,
+        SMM.USE_TF,
+        SMM.POWER,
+        SMM.DISPLAY_ORDER,
+        SMM.URL
+        FROM SAMPLE_MENU_MST SMM
+        <where>
+            AND SMM.MENU_ID = 1
+            AND SMM.POWER <![CDATA[<=]]> #{power, jdbcType=INTEGER}
+        </where>
+        UNION ALL
+        SELECT 2 LVL ,
+        SMM.MENU_ID ,
+        SMM.MENU_NAME,
+        SMM.PAR_MENU_ID,
+        SMM.MENU_TYPE,
+        SMM.USE_TF,
+        SMM.POWER,
+        SMM.DISPLAY_ORDER,
+        SMM.URL
+        FROM SAMPLE_MENU_MST SMM
+        <where>
+            AND SMM.PAR_MENU_ID = 1
+            AND SMM.POWER <![CDATA[<=]]> #{power, jdbcType=INTEGER}
+        </where>
+        UNION ALL
+        SELECT 3 LVL ,
+        CMM2.MENU_ID ,
+        CMM2.MENU_NAME,
+        CMM2.PAR_MENU_ID,
+        CMM2.MENU_TYPE,
+        CMM2.USE_TF,
+        CMM2.POWER,
+        CMM2.DISPLAY_ORDER,
+        CMM2.URL
+        FROM SAMPLE_MENU_MST SMM ,
+        SAMPLE_MENU_MST CMM2
+        <where>
+            AND SMM.MENU_ID = CMM2.PAR_MENU_ID
+            AND SMM.PAR_MENU_ID = 1
+            AND CMM2.POWER <![CDATA[<=]]> #{power, jdbcType=INTEGER}
+        </where>
+        UNION ALL
+        SELECT 4 LVL ,
+        CMM3.MENU_ID ,
+        CMM3.MENU_NAME,
+        CMM3.PAR_MENU_ID,
+        CMM3.MENU_TYPE,
+        CMM3.USE_TF,
+        CMM3.POWER,
+        CMM3.DISPLAY_ORDER,
+        CMM3.URL
+        FROM SAMPLE_MENU_MST SMM ,
+        SAMPLE_MENU_MST CMM2 ,
+        SAMPLE_MENU_MST CMM3
+        <where>
+            AND CMM2.MENU_ID = CMM3.PAR_MENU_ID
+            AND SMM.MENU_ID = CMM2.PAR_MENU_ID
+            AND SMM.PAR_MENU_ID = 1
+            AND CMM3.POWER <![CDATA[<=]]> #{power, jdbcType=INTEGER}
+        </where>
+        UNION ALL
+        SELECT 5 LVL ,
+        CMM4.MENU_ID ,
+        CMM4.MENU_NAME,
+        CMM4.PAR_MENU_ID,
+        CMM4.MENU_TYPE,
+        CMM4.USE_TF,
+        CMM4.POWER,
+        CMM4.DISPLAY_ORDER,
+        CMM4.URL
+        FROM SAMPLE_MENU_MST SMM ,
+        SAMPLE_MENU_MST CMM2 ,
+        SAMPLE_MENU_MST CMM3 ,
+        SAMPLE_MENU_MST CMM4
+        <where>
+            AND CMM3.MENU_ID = CMM4.PAR_MENU_ID
+            AND CMM2.MENU_ID = CMM3.PAR_MENU_ID
+            AND SMM.MENU_ID = CMM2.PAR_MENU_ID
+            AND SMM.PAR_MENU_ID = 1
+            AND CMM4.POWER <![CDATA[<=]]> #{power, jdbcType=INTEGER}
+        </where>
+        ) A
+        ORDER BY A.LVL, A.DISPLAY_ORDER, A.MENU_NAME
+    </select>
+</mapper>

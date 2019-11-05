@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//www.mybatis.org//DTD Config 3.0//EN" "http://www.mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+    <settings>
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+        <setting name="logImpl" value="SLF4J"/>
+    </settings>
+
+    <typeAliases>
+        <typeAlias alias="DateTime" type="org.joda.time.DateTime"></typeAlias>
+        <typeAlias alias="LocalDateTime" type="org.joda.time.LocalDateTime"></typeAlias>
+    </typeAliases>
+
+    <typeHandlers>
+        <!-- org.joda.time.DateTime 로 변경 -->
+        <typeHandler handler="com.github.bestheroz.standard.context.db.typehandler.DateTimeTypeHandler"/>
+        <!-- org.joda.time.LocalDateTime 로 변경 -->
+        <typeHandler handler="com.github.bestheroz.standard.context.db.typehandler.LocalDateTimeTypeHandler"/>
+        <!-- String parameter 는 Filter를 태운다(XSS 처리...) -->
+        <typeHandler handler="com.github.bestheroz.standard.context.db.typehandler.StringTypeHandler"/>
+        <typeHandler handler="com.github.bestheroz.standard.context.db.typehandler.DefaultTypeHandler"/>
+    </typeHandlers>
+
+</configuration>
