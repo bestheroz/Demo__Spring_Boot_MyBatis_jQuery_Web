@@ -86,14 +86,16 @@ public class SqlForTableVO {
 
     private void validWhereKey(final Set<String> whereKeys, final Map<String, Object> param) {
         if (MyNullUtils.size(whereKeys) < 1) {
+            this.logger.warn("\nparam : {}\nwhereKeys: {}", MyMapperUtils.writeObjectAsString(param), MyMapperUtils.writeObjectAsString(whereKeys));
             this.logger.warn(CommonExceptionCode.FAIL_INVALID_PARAMETER.toString());
-            throw CommonException.EXCEPTION_ERROR_INVALID_PARAMETER;
+            throw CommonException.EXCEPTION_FAIL_INVALID_PARAMETER;
         }
 
         for (final String key : whereKeys) {
             if (!param.containsKey(key) || param.get(key) == null) {
+                this.logger.warn("\nparam : {}\nwhereKeys: {}", MyMapperUtils.writeObjectAsString(param), MyMapperUtils.writeObjectAsString(key));
                 this.logger.warn(CommonExceptionCode.FAIL_INVALID_PARAMETER.toString());
-                throw CommonException.EXCEPTION_ERROR_INVALID_PARAMETER;
+                throw CommonException.EXCEPTION_FAIL_INVALID_PARAMETER;
             }
         }
     }
@@ -153,13 +155,11 @@ public class SqlForTableVO {
     }
 
     public <T extends Object> String selectOneTableVO(@NonNull final T vo, @NonNull final Set<String> whereKeys) {
-        System.out.println(MyMapperUtils.writeObjectAsHashMap(vo));
         validWhereKey(whereKeys, MyMapperUtils.writeObjectAsHashMap(vo));
 
         final SQL sql = new SQL();
         final String tableName = getTableName(vo);
-        final Field[] fields = vo.getClass().getDeclaredFields();
-        getSelectSql(vo, sql, tableName, fields);
+        getSelectSql(vo, sql, tableName, vo.getClass().getDeclaredFields());
         sql.FROM(tableName);
         getWhereSql(vo, whereKeys, sql, tableName);
         this.logger.debug(sql.toString());
@@ -264,13 +264,13 @@ public class SqlForTableVO {
     public <T extends Object> String deleteTableVO(@NonNull final T vo, final Set<String> whereKeys) {
         if (MyNullUtils.size(whereKeys) < 1) {
             this.logger.warn(CommonExceptionCode.FAIL_NO_DATA_SUCCESS.toString());
-            throw CommonException.EXCEPTION_ERROR_NO_DATA_SUCCESS;
+            throw CommonException.EXCEPTION_FAIL_NO_DATA_SUCCESS;
         }
         final Map<String, Object> param = MyMapperUtils.writeObjectAsHashMap(vo);
         for (final String key : whereKeys) {
             if (!param.containsKey(key) || param.get(key) == null) {
                 this.logger.warn("{} not in {}\n{}", key, MyMapperUtils.writeObjectAsString(param), CommonExceptionCode.FAIL_INVALID_PARAMETER.toString());
-                throw CommonException.EXCEPTION_ERROR_INVALID_PARAMETER;
+                throw CommonException.EXCEPTION_FAIL_INVALID_PARAMETER;
             }
         }
         final SQL sql = new SQL();

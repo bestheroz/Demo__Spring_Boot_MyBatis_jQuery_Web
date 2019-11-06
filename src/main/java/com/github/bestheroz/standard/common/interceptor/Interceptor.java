@@ -29,8 +29,8 @@ public class Interceptor extends HandlerInterceptorAdapter {
             if (MySessionUtils.isNotLogined(request.getSession())) {
                 if (!StringUtils.contains(request.getHeader("accept"), "html") && (StringUtils.startsWith(request.getContentType(), MediaType.APPLICATION_FORM_URLENCODED_VALUE)
                         || StringUtils.startsWith(request.getContentType(), MediaType.APPLICATION_JSON_VALUE))) {
-                    LOGGER.warn(CommonException.EXCEPTION_ERROR_TRY_LOGIN_FIRST.getJsonObject().toString());
-                    throw CommonException.EXCEPTION_ERROR_TRY_LOGIN_FIRST;
+                    LOGGER.warn(CommonException.EXCEPTION_FAIL_TRY_LOGIN_FIRST.getJsonObject().toString());
+                    throw CommonException.EXCEPTION_FAIL_TRY_LOGIN_FIRST;
                 }
                 request.getSession().invalidate();
                 String pathWithinApplication = new UrlPathHelper().getPathWithinApplication(request);

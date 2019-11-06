@@ -18,18 +18,11 @@ spring:
       max-file-size: 20MB
       max-request-size: 10MB
       file-size-threshold: 0
-  mvc:
-    view:
-      prefix: /WEB-INF/views/
-      suffix: .jsp
 mybatis:
   mapper-locations: classpath:**/*Mapper.xml
   type-aliases-super-type: java.io.Serializable
   type-aliases-package: com.github.bestheroz
   config-location: classpath:mybatis-config.xml
-server:
-  error:
-    path: /common/exception/error.view
 ---
 spring:
   profiles: local

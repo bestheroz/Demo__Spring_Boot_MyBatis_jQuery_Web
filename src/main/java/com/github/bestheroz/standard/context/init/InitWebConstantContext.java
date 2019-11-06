@@ -13,32 +13,10 @@ import java.util.TimeZone;
 
 @Configuration
 public class InitWebConstantContext {
-    private static String contextPath = null;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
-    public static String getContextPath() {
-        return contextPath;
-    }
-
-    private void setContextPath(final ServletContext servletContext) {
-        if (contextPath == null) {
-            String tempContextPath = servletContext.getContextPath();
-            if (StringUtils.equals(tempContextPath, "/")) {
-                tempContextPath = "";
-            }
-            if (StringUtils.isNotEmpty(tempContextPath) && StringUtils.endsWith(tempContextPath, "/")) {
-                tempContextPath = StringUtils.removeEnd(tempContextPath, "/");
-            }
-            contextPath = tempContextPath;
-        }
-        servletContext.setAttribute("CONTEXT_PATH", contextPath);
-        this.logger.info("servletContext.setAttribute(\"CONTEXT_PATH\", \"{}\");", contextPath);
-    }
 
     @Autowired(required = false)
     public void setConstant(final ServletContext servletContext) throws IllegalArgumentException {
-        this.setContextPath(servletContext);
-
         DateTimeZone.setDefault(MyDateUtils.TIME_ZONE_ASIA_SEOUL);
         TimeZone.setDefault(MyDateUtils.TIME_ZONE_ASIA_SEOUL.toTimeZone());
         servletContext.setAttribute("TIME_ZONE_ASIA_SEOUL", MyDateUtils.TIME_ZONE_ASIA_SEOUL.getID());

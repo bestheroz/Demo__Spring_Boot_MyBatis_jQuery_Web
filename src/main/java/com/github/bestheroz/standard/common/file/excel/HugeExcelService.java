@@ -1,13 +1,12 @@
 package com.github.bestheroz.standard.common.file.excel;
 
-import com.github.bestheroz.sample.context.db.H2dbMybatisContext;
 import com.github.bestheroz.standard.common.exception.CommonException;
-import com.github.bestheroz.standard.common.util.MyAccessBeanUtils;
 import com.github.bestheroz.standard.common.util.MyDateUtils;
 import com.github.bestheroz.standard.common.util.MyFileUtils;
 import com.github.bestheroz.standard.context.abstractview.AbstractExcelXView;
 import com.google.common.base.CaseFormat;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.ibatis.session.SqlSession;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.IndexedColors;
@@ -21,6 +20,7 @@ import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -33,6 +33,9 @@ import java.util.Map;
 public class HugeExcelService extends AbstractExcelXView {
     public static final String VIEW_NAME = "hugeExcelView";
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    @Autowired
+    private SqlSession sqlSession;
 
     @SuppressWarnings("DuplicatedCode")
     @Override
@@ -79,8 +82,7 @@ public class HugeExcelService extends AbstractExcelXView {
     }
 
     private void addRowData(final SXSSFSheet sheet, final List<ExcelVO> excelVOs, final String sql) {
-        try (final Connection connection = MyAccessBeanUtils.getBean(H2dbMybatisContext.class).getDataSource().getConnection();
-             // try (Connection connection = MyStaticContextAccessorUtils.getBean(DbMybatisContext.class).getHikariDataSource().getConnection();
+        try (final Connection connection = this.sqlSession.getConnection();
              final Statement createStatement = connection.createStatement();
              final ResultSet executeQuery = createStatement.executeQuery(sql)) {
 

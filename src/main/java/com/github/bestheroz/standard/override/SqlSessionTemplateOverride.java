@@ -39,8 +39,8 @@ public class SqlSessionTemplateOverride extends SqlSessionTemplate {
         }
 
         if (result == 0) {
-            LOGGER.warn(CommonException.EXCEPTION_ERROR_NO_DATA_SUCCESS.getJsonObject().toString());
-            throw CommonException.EXCEPTION_ERROR_NO_DATA_SUCCESS;
+            LOGGER.warn(CommonException.EXCEPTION_FAIL_NO_DATA_SUCCESS.getJsonObject().toString());
+            throw CommonException.EXCEPTION_FAIL_NO_DATA_SUCCESS;
         }
 
         return result;
@@ -56,8 +56,8 @@ public class SqlSessionTemplateOverride extends SqlSessionTemplate {
         }
 
         if (result == 0) {
-            LOGGER.warn(CommonException.EXCEPTION_ERROR_NO_DATA_SUCCESS.getJsonObject().toString());
-            throw CommonException.EXCEPTION_ERROR_NO_DATA_SUCCESS;
+            LOGGER.warn(CommonException.EXCEPTION_FAIL_NO_DATA_SUCCESS.getJsonObject().toString());
+            throw CommonException.EXCEPTION_FAIL_NO_DATA_SUCCESS;
         }
 
         return result;
@@ -73,8 +73,8 @@ public class SqlSessionTemplateOverride extends SqlSessionTemplate {
         }
 
         if (result == 0) {
-            LOGGER.warn(CommonException.EXCEPTION_ERROR_NO_DATA_SUCCESS.getJsonObject().toString());
-            throw CommonException.EXCEPTION_ERROR_NO_DATA_SUCCESS;
+            LOGGER.warn(CommonException.EXCEPTION_FAIL_NO_DATA_SUCCESS.getJsonObject().toString());
+            throw CommonException.EXCEPTION_FAIL_NO_DATA_SUCCESS;
         }
 
         return result;
@@ -90,8 +90,8 @@ public class SqlSessionTemplateOverride extends SqlSessionTemplate {
         }
 
         if (result == 0) {
-            LOGGER.warn(CommonException.EXCEPTION_ERROR_NO_DATA_SUCCESS.getJsonObject().toString());
-            throw CommonException.EXCEPTION_ERROR_NO_DATA_SUCCESS;
+            LOGGER.warn(CommonException.EXCEPTION_FAIL_NO_DATA_SUCCESS.getJsonObject().toString());
+            throw CommonException.EXCEPTION_FAIL_NO_DATA_SUCCESS;
         }
 
         return result;
@@ -275,8 +275,8 @@ public class SqlSessionTemplateOverride extends SqlSessionTemplate {
         }
 
         if (result == 0) {
-            LOGGER.warn(CommonException.EXCEPTION_ERROR_NO_DATA_SUCCESS.getJsonObject().toString());
-            throw CommonException.EXCEPTION_ERROR_NO_DATA_SUCCESS;
+            LOGGER.warn(CommonException.EXCEPTION_FAIL_NO_DATA_SUCCESS.getJsonObject().toString());
+            throw CommonException.EXCEPTION_FAIL_NO_DATA_SUCCESS;
         }
         return result;
     }
@@ -291,8 +291,8 @@ public class SqlSessionTemplateOverride extends SqlSessionTemplate {
         }
 
         if (result == 0) {
-            LOGGER.warn(CommonException.EXCEPTION_ERROR_NO_DATA_SUCCESS.getJsonObject().toString());
-            throw CommonException.EXCEPTION_ERROR_NO_DATA_SUCCESS;
+            LOGGER.warn(CommonException.EXCEPTION_FAIL_NO_DATA_SUCCESS.getJsonObject().toString());
+            throw CommonException.EXCEPTION_FAIL_NO_DATA_SUCCESS;
         }
 
         return result;
@@ -343,8 +343,8 @@ public class SqlSessionTemplateOverride extends SqlSessionTemplate {
         } else if (StringUtils.containsIgnoreCase(stackTrace, "Fail to Decryption data")) {
             throw new CommonException(CommonExceptionCode.FAIL_TO_DECRYPTION_DATA);
         } else {
-            LOGGER.warn(CommonException.EXCEPTION_ERROR_INVALID_REQUEST.getJsonObject().toString());
-            throw CommonException.EXCEPTION_ERROR_INVALID_REQUEST;
+            LOGGER.warn(CommonException.EXCEPTION_FAIL_INVALID_REQUEST.getJsonObject().toString());
+            throw CommonException.EXCEPTION_FAIL_INVALID_REQUEST;
         }
     }
 }

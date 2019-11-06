@@ -10,7 +10,6 @@ import org.joda.time.DateTime;
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import springfox.documentation.spring.web.json.Json;
 
 import java.lang.reflect.Type;
 import java.util.*;
@@ -21,7 +20,7 @@ public class MyMapperUtils {
             .registerTypeAdapter(DateTime.class, new DateTimeDeserializerTypeAdapter()).registerTypeAdapter(DateTime.class, new DateTimeSerializerTypeAdapter())
             .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializerTypeAdapter()).registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializerTypeAdapter())
             .registerTypeAdapter(Map.class, new MapDeserializerTypeAdapter()).registerTypeAdapter(HashMap.class, new MapDeserializerTypeAdapter())
-            .registerTypeAdapter(LinkedTreeMap.class, new MapDeserializerTypeAdapter()).registerTypeAdapter(Json.class, new JsonSerializerTypeAdapter()).disableHtmlEscaping().create();
+            .registerTypeAdapter(LinkedTreeMap.class, new MapDeserializerTypeAdapter()).disableHtmlEscaping().create();
 
     protected MyMapperUtils() {
         throw new UnsupportedOperationException();

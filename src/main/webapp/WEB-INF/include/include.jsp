@@ -7,7 +7,7 @@
 <%@ taglib uri="/WEB-INF/tld/taglibrary.tld" prefix="my" %>
 
 <%-- <jsp:useBean id="dateObject" class="java.util.Date" scope="page" /> --%>
-<%-- 
+<%--
 
 dateObject는 Date형을 처리하기 위함
 {"date":28,"day":1,"hours":20,"minutes":27,"month":10,"seconds":41,"time":1480332461000,"timezoneOffset":-540,"year":116}

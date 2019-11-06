@@ -20,8 +20,8 @@ public class MenuService {
 
     public JsonArray getMenuVOObject(final JsonObject param, final boolean isNotLogined) throws CommonException {
         if (isNotLogined) {
-            this.logger.warn(CommonException.EXCEPTION_ERROR_NOT_ALLOWED_MEMBER.getJsonObject().toString());
-            throw CommonException.EXCEPTION_ERROR_NOT_ALLOWED_MEMBER;
+            this.logger.warn(CommonException.EXCEPTION_FAIL_NOT_ALLOWED_MEMBER.getJsonObject().toString());
+            throw CommonException.EXCEPTION_FAIL_NOT_ALLOWED_MEMBER;
         }
 
         final JsonObject temp = new JsonObject();

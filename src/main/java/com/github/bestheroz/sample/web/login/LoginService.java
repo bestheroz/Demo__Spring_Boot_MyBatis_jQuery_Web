@@ -31,8 +31,8 @@ public class LoginService {
         // 로그인 관문
         // 1. 유저가 없으면
         if (sampleMemberMstVO == null) {
-            this.logger.warn(CommonException.EXCEPTION_ERROR_NOT_ALLOWED_MEMBER.getJsonObject().toString());
-            throw CommonException.EXCEPTION_ERROR_NOT_ALLOWED_MEMBER;
+            this.logger.warn(CommonException.EXCEPTION_FAIL_NOT_ALLOWED_MEMBER.getJsonObject().toString());
+            throw CommonException.EXCEPTION_FAIL_NOT_ALLOWED_MEMBER;
         }
 
         final LoginVO loginVO = MyMapperUtils.writeObjectAsObject(sampleMemberMstVO, LoginVO.class);
@@ -45,8 +45,8 @@ public class LoginService {
         // 3. 패스워드가 틀리면
         if (!StringUtils.equals(vo.getMemberPw(), loginVO.getMemberPw())) {
             this.loginDAO.updatePlusLoginFailCnt(vo);
-            this.logger.warn(CommonException.EXCEPTION_ERROR_NOT_ALLOWED_MEMBER.getJsonObject().toString());
-            throw CommonException.EXCEPTION_ERROR_NOT_ALLOWED_MEMBER;
+            this.logger.warn(CommonException.EXCEPTION_FAIL_NOT_ALLOWED_MEMBER.getJsonObject().toString());
+            throw CommonException.EXCEPTION_FAIL_NOT_ALLOWED_MEMBER;
         }
 
         // 4. 아래는 성공

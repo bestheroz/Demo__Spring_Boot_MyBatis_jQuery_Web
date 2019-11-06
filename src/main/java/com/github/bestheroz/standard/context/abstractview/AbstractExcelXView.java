@@ -173,7 +173,7 @@ public abstract class AbstractExcelXView extends AbstractView {
         final ApplicationContext applicationContext = this.getApplicationContext();
         if (applicationContext == null) {
             this.logger.warn("applicationContext is null");
-            throw CommonException.EXCEPTION_ERROR_SYSTEM;
+            throw CommonException.EXCEPTION_FAIL_SYSTEM;
         }
         final LocalizedResourceHelper helper = new LocalizedResourceHelper(applicationContext);
         final Locale userLocale = RequestContextUtils.getLocale(request);

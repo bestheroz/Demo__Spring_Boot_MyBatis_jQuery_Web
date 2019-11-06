@@ -1,7 +1,5 @@
 package com.github.bestheroz.standard.common.constant;
 
-import com.github.bestheroz.standard.context.init.InitWebConstantContext;
-
 @SuppressWarnings("ALL")
 public class CommonCode {
     /**
@@ -12,7 +10,7 @@ public class CommonCode {
      * </pre>
      */
 
-    public static final String CONTEXT_PATH = InitWebConstantContext.getContextPath();
+    public static final String CONTEXT_PATH = "";
     public static final String PATH_RESOURCES = CONTEXT_PATH.concat("/resources");
     public static final String PATH_JS = PATH_RESOURCES.concat("/js");
     public static final String PATH_IMAGE = PATH_RESOURCES.concat("/images");
