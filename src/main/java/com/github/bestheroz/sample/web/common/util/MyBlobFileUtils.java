@@ -8,6 +8,7 @@ import com.github.bestheroz.standard.common.exception.CommonExceptionCode;
 import com.github.bestheroz.standard.common.util.MyAccessBeanUtils;
 import com.github.bestheroz.standard.common.util.MyFileUtils;
 import com.github.bestheroz.standard.common.util.MyNullUtils;
+import com.google.common.collect.Sets;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -19,7 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
 
 public class MyBlobFileUtils {
@@ -29,8 +29,7 @@ public class MyBlobFileUtils {
         final TableSampleFileMstVO tableSampleFileMstVO = new TableSampleFileMstVO();
         tableSampleFileMstVO.setFileSeq(fileSeq);
         tableSampleFileMstVO.setFileName(fileName);
-        final Set<String> whereKeys = new HashSet<>();
-        whereKeys.add("fileSeq");
+        final Set<String> whereKeys = Sets.newHashSet("fileSeq");
         if (StringUtils.isNotEmpty(tableSampleFileMstVO.getFileName())) {
             whereKeys.add("fileName");
         }

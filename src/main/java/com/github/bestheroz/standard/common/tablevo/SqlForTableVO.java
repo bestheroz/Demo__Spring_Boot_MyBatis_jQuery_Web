@@ -5,7 +5,7 @@ import com.github.bestheroz.standard.common.exception.CommonExceptionCode;
 import com.github.bestheroz.standard.common.util.MyMapperUtils;
 import com.github.bestheroz.standard.common.util.MyNullUtils;
 import com.google.common.base.CaseFormat;
-import com.google.common.collect.Sets;
+import com.google.common.collect.ImmutableSet;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.jdbc.SQL;
 import org.slf4j.Logger;
@@ -28,15 +28,15 @@ public class SqlForTableVO {
     public static final String INSERT = "insertTableVO";
     public static final String UPDATE = "updateTableVO";
     public static final String DELETE = "deleteTableVO";
-    public static final Set<String> VARCHAR_JAVA_TYPE_SET = Sets.newHashSet("String", "Char");
-    public static final Set<String> SHORT_JAVA_TYPE_SET = Sets.newHashSet("Short");
-    public static final Set<String> INTEGER_JAVA_TYPE_SET = Sets.newHashSet("Integer");
-    public static final Set<String> BIGINT_JAVA_TYPE_SET = Sets.newHashSet("Long");
-    public static final Set<String> NUMBER_JAVA_TYPE_SET = Sets.newHashSet("Short", "Integer", "Long", "Double");
-    public static final Set<String> DOUBLE_JAVA_TYPE_SET = Sets.newHashSet("Double");
-    public static final Set<String> TIMESTAMP_JAVA_TYPE_SET = Sets.newHashSet("DateTime", "LocalDateTime");
-    public static final Set<String> BLOB_JAVA_TYPE_SET = Sets.newHashSet("Byte[]");
-    public static final Set<String> BOOLEAN_JAVA_TYPE_SET = Sets.newHashSet("Boolean");
+    public static final Set<String> VARCHAR_JAVA_TYPE_SET = ImmutableSet.of("String", "Char");
+    public static final Set<String> SHORT_JAVA_TYPE_SET = ImmutableSet.of("Short");
+    public static final Set<String> INTEGER_JAVA_TYPE_SET = ImmutableSet.of("Integer");
+    public static final Set<String> BIGINT_JAVA_TYPE_SET = ImmutableSet.of("Long");
+    public static final Set<String> NUMBER_JAVA_TYPE_SET = ImmutableSet.of("Short", "Integer", "Long", "Double");
+    public static final Set<String> DOUBLE_JAVA_TYPE_SET = ImmutableSet.of("Double");
+    public static final Set<String> TIMESTAMP_JAVA_TYPE_SET = ImmutableSet.of("DateTime", "LocalDateTime");
+    public static final Set<String> BLOB_JAVA_TYPE_SET = ImmutableSet.of("Byte[]");
+    public static final Set<String> BOOLEAN_JAVA_TYPE_SET = ImmutableSet.of("Boolean");
     private static final String TABLE_COLUMN_NAME_CREATED_BY = "CREATED_BY";
     private static final String TABLE_COLUMN_NAME_CREATED = "CREATED";
     private static final String TABLE_COLUMN_NAME_UPDATED = "UPDATED";
@@ -45,9 +45,9 @@ public class SqlForTableVO {
     private static final String VARIABLE_NAME_UPDATED = "updated";
     private static final String SYSDATE = "NOW()";
     private static final String ENCRYPTED_FIELD_SET = "ENCRYPTED_COLUMN_LIST";
-    private static final Set<String> EXCLUDE_FIELD_SET = Sets.newHashSet("SERIAL_VERSION_U_I_D", "serialVersionUID", "E_N_C_R_Y_P_T_E_D__C_O_L_U_M_N__L_I_S_T");
+    private static final Set<String> EXCLUDE_FIELD_SET = ImmutableSet.of("SERIAL_VERSION_U_I_D", "serialVersionUID", "E_N_C_R_Y_P_T_E_D__C_O_L_U_M_N__L_I_S_T");
     // 참고용: 각VO에 암호화 컬럼 정의 방법
-    // public static transient final Set<String> ENCRYPTED_COLUMN_LIST = Sets.newHashSet("mbrMobl", "emailId").stream().collect(Collectors.toSet());
+    // public static transient final Set<String> ENCRYPTED_COLUMN_LIST = ImmutableSet.of("mbrMobl", "emailId").stream().collect(Collectors.toSet());
     private static final String SELECT_ENCRYPTED_STRING = "XX1.DEC_VARCHAR2_SEL ({0}, 10, ''SSN'', ''{1}'', ''{0}'') AS {0}";
     private static final String INSERT_BIND_STRING = "#'{'{0}{1}'}'";
     private static final String INSERT_BIND_ENCRYPTED_STRING = "XX1.ENC_VARCHAR2_INS (#'{'{1}{2}'}', 11, ''SSN'', ''{3}'', ''{0}'')";
@@ -57,7 +57,7 @@ public class SqlForTableVO {
     private static final String WHERE_BIND_ENCRYPTED_STRING = "{0} = XX1.ENC_VARCHAR2_INS (#'{'param1.{1}{2}'}', 11, ''SSN'', ''{3}'', ''{0}'')";
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    public <T extends Object> String countTableVO(@NonNull final T vo, final Set<String> whereKeys) {
+    public <T> String countTableVO(@NonNull final T vo, final Set<String> whereKeys) {
         final SQL sql = new SQL();
         final String tableName = this.getTableName(vo);
         sql.SELECT("COUNT(1) AS CNT").FROM(tableName);
@@ -69,7 +69,7 @@ public class SqlForTableVO {
         return sql.toString();
     }
 
-    private <T extends Object> void getSelectSql(@NonNull final T vo, final SQL sql, final String tableName, final Field[] fields) {
+    private <T> void getSelectSql(@NonNull final T vo, final SQL sql, final String tableName, final Field[] fields) {
         final Set<String> encryptedColumnList = this.getEncryptedColumnList(vo);
         for (final Field field : fields) {
             final String camelFieldName = field.getName();
@@ -98,7 +98,7 @@ public class SqlForTableVO {
         }
     }
 
-    private <T extends Object> void getWhereSql(@NonNull final T vo, final Set<String> whereKeys, final SQL sql, final String tableName) {
+    private <T> void getWhereSql(@NonNull final T vo, final Set<String> whereKeys, final SQL sql, final String tableName) {
         final Map<String, Object> param = MyMapperUtils.writeObjectAsHashMap(vo);
         try {
             this.validWhereKey(whereKeys, param);
@@ -121,7 +121,7 @@ public class SqlForTableVO {
     }
 
     @SuppressWarnings("unchecked")
-    private <T extends Object> Set<String> getEncryptedColumnList(@NonNull final T vo) {
+    private <T> Set<String> getEncryptedColumnList(@NonNull final T vo) {
         try {
             return (Set<String>) vo.getClass().getField(ENCRYPTED_FIELD_SET).get(new HashSet<>());
         } catch (final IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
@@ -130,7 +130,7 @@ public class SqlForTableVO {
     }
 
     @SuppressWarnings("unused")
-    public <T extends Object> String selectTableVO(@NonNull final T vo, final Set<String> whereKeys, final String orderByColumns) {
+    public <T> String selectTableVO(@NonNull final T vo, final Set<String> whereKeys, final String orderByColumns) {
         final SQL sql = new SQL();
         final String tableName = this.getTableName(vo);
         final Field[] fields = vo.getClass().getDeclaredFields();
@@ -148,11 +148,11 @@ public class SqlForTableVO {
         return sql.toString();
     }
 
-    private <T extends Object> String getTableName(@NonNull final T vo) {
+    private <T> String getTableName(@NonNull final T vo) {
         return CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, StringUtils.substringBetween(vo.getClass().getSimpleName(), "Table", "VO"));
     }
 
-    public <T extends Object> String selectOneTableVO(@NonNull final T vo, @NonNull final Set<String> whereKeys) {
+    public <T> String selectOneTableVO(@NonNull final T vo, @NonNull final Set<String> whereKeys) {
         this.validWhereKey(whereKeys, MyMapperUtils.writeObjectAsHashMap(vo));
 
         final SQL sql = new SQL();
@@ -165,7 +165,7 @@ public class SqlForTableVO {
         return sql.toString();
     }
 
-    public <T extends Object> String insertTableVO(@NonNull final T vo) {
+    public <T> String insertTableVO(@NonNull final T vo) {
         final Map<String, Object> param = MyMapperUtils.writeObjectAsHashMap(vo);
         final SQL sql = new SQL();
         final String tableName = this.getTableName(vo);
@@ -186,7 +186,7 @@ public class SqlForTableVO {
             }
         }
 
-        final Class<? extends Object> class1 = vo.getClass();
+        final Class<?> class1 = vo.getClass();
         for (final Field field : class1.getDeclaredFields()) {
             final String camelFieldName = field.getName();
             if (EXCLUDE_FIELD_SET.contains(CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, camelFieldName))) {
@@ -202,7 +202,7 @@ public class SqlForTableVO {
         return sql.toString();
     }
 
-    public <T extends Object> String updateTableVO(@NonNull final T vo, @NotNull final Set<String> whereKeys, @Nullable final Set<String> forcedUpdateKeys) {
+    public <T> String updateTableVO(@NonNull final T vo, @NotNull final Set<String> whereKeys, @Nullable final Set<String> forcedUpdateKeys) {
         final Map<String, Object> param = MyMapperUtils.writeObjectAsHashMap(vo);
         this.validWhereKey(whereKeys, param);
 
@@ -246,7 +246,7 @@ public class SqlForTableVO {
             }
         }
 
-        final Class<? extends Object> class1 = vo.getClass();
+        final Class<?> class1 = vo.getClass();
         for (final Field field : class1.getDeclaredFields()) {
             final String camelFieldName = field.getName();
             final String fieldName = CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, camelFieldName);
@@ -260,7 +260,7 @@ public class SqlForTableVO {
         return sql.toString();
     }
 
-    public <T extends Object> String deleteTableVO(@NonNull final T vo, final Set<String> whereKeys) {
+    public <T> String deleteTableVO(@NonNull final T vo, final Set<String> whereKeys) {
         if (MyNullUtils.size(whereKeys) < 1) {
             this.logger.warn(CommonExceptionCode.FAIL_NO_DATA_SUCCESS.toString());
             throw CommonException.EXCEPTION_FAIL_NO_DATA_SUCCESS;

@@ -7,6 +7,7 @@ import com.github.bestheroz.sample.web.tablevo.samplecodemst.TableSampleCodeMstD
 import com.github.bestheroz.sample.web.tablevo.samplecodemst.TableSampleCodeMstVO;
 import com.github.bestheroz.standard.common.exception.CommonException;
 import com.github.bestheroz.standard.common.util.MyMapperUtils;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -96,8 +97,7 @@ public class AdminValueLabelService {
 
     // DETAIL PART
     public List<AdminValueLabelVO> getSampleCodeDetVOList(final AdminValueLabelVO vo) throws CommonException {
-        final Set<String> whereKeys = new HashSet<>();
-        whereKeys.add("groupCode");
+        final Set<String> whereKeys = Sets.newHashSet("groupCode");
         if (StringUtils.isNotEmpty(vo.getCode())) {
             whereKeys.add("code");
         }
@@ -114,12 +114,12 @@ public class AdminValueLabelService {
 
     public void updateSampleCodeDet(final TableSampleCodeDetVO vo, final LoginVO loginVO) throws CommonException {
         vo.setUpdatedBy(loginVO.getMemberId());
-        this.tableSampleCodeDetDAO.update(vo, Sets.newHashSet("groupCode", "code"), null);
+        this.tableSampleCodeDetDAO.update(vo, ImmutableSet.of("groupCode", "code"), null);
         this.session.removeAttribute("ValueLabel." + vo.getGroupCode());
     }
 
     public void deleteSampleCodeDet(final TableSampleCodeDetVO vo) throws CommonException {
-        this.tableSampleCodeDetDAO.delete(vo, Sets.newHashSet("groupCode", "code"));
+        this.tableSampleCodeDetDAO.delete(vo, ImmutableSet.of("groupCode", "code"));
         this.session.removeAttribute("ValueLabel." + vo.getGroupCode());
     }
 

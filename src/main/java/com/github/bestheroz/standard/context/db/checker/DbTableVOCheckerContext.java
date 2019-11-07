@@ -2,7 +2,7 @@ package com.github.bestheroz.standard.context.db.checker;
 
 import com.github.bestheroz.standard.common.tablevo.SqlForTableVO;
 import com.google.common.base.CaseFormat;
-import com.google.common.collect.Sets;
+import com.google.common.collect.ImmutableSet;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.ibatis.session.SqlSession;
@@ -31,11 +31,11 @@ import java.util.Set;
 @Component
 public class DbTableVOCheckerContext {
     public static final String DEFAULT_DATE_TYPE = "LocalDateTime";
-    public static final Set<String> STRING_JDBC_TYPE_SET = Sets.newHashSet("VARCHAR", "VARCHAR2", "CHAR", "CLOB");
-    public static final Set<String> NUMBER_JDBC_TYPE_SET = Sets.newHashSet("INTEGER", "TINYINT", "INT", "INT UNSIGNED", "NUMBER");
-    public static final Set<String> DATETIME_JDBC_TYPE_SET = Sets.newHashSet("TIMESTAMP", "DATE", "DATETIME");
-    public static final Set<String> BOOLEAN_JDBC_TYPE_SET = Sets.newHashSet("BOOLEAN");
-    public static final Set<String> BYTE_JDBC_TYPE_SET = Sets.newHashSet("BLOB");
+    public static final Set<String> STRING_JDBC_TYPE_SET = ImmutableSet.of("VARCHAR", "VARCHAR2", "CHAR", "CLOB");
+    public static final Set<String> NUMBER_JDBC_TYPE_SET = ImmutableSet.of("INTEGER", "TINYINT", "INT", "INT UNSIGNED", "NUMBER");
+    public static final Set<String> DATETIME_JDBC_TYPE_SET = ImmutableSet.of("TIMESTAMP", "DATE", "DATETIME");
+    public static final Set<String> BOOLEAN_JDBC_TYPE_SET = ImmutableSet.of("BOOLEAN");
+    public static final Set<String> BYTE_JDBC_TYPE_SET = ImmutableSet.of("BLOB");
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired(required = false)

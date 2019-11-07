@@ -2,7 +2,7 @@ package com.github.bestheroz.standard.common.util;
 
 import com.github.bestheroz.standard.common.exception.CommonException;
 import com.github.bestheroz.standard.common.exception.CommonExceptionCode;
-import com.google.common.collect.Sets;
+import com.google.common.collect.ImmutableSet;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -366,18 +366,18 @@ public class MyFileUtils {
     }
 
     public enum FileType {
-        IMAGE(Sets.newHashSet("gif", "jpg", "jpeg", "tif", "tiff", "png", "bmp"), Sets.newHashSet("image/gif", "image/jpeg", "image/pjpeg", "image/tiff", "image/x-tiff", "image/png", "image/bmp")),
+        IMAGE(ImmutableSet.of("gif", "jpg", "jpeg", "tif", "tiff", "png", "bmp"), ImmutableSet.of("image/gif", "image/jpeg", "image/pjpeg", "image/tiff", "image/x-tiff", "image/png", "image/bmp")),
 
-        EXCEL(Sets.newHashSet("xlsx", "xls"),
-                Sets.newHashSet("application/excel", "application/vnd.ms-excel", "application/x-excel", "application/x-msexcel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")),
+        EXCEL(ImmutableSet.of("xlsx", "xls"),
+                ImmutableSet.of("application/excel", "application/vnd.ms-excel", "application/x-excel", "application/x-msexcel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")),
 
-        WORD(Sets.newHashSet("docx", "doc", "dotx"), Sets.newHashSet("application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        WORD(ImmutableSet.of("docx", "doc", "dotx"), ImmutableSet.of("application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
                 "application/vnd.openxmlformats-officedocument.wordprocessingml.template")),
 
-        PDF(Collections.singleton("pdf"), Sets.newHashSet("application/pdf", "application/x-pdf")),
+        PDF(Collections.singleton("pdf"), ImmutableSet.of("application/pdf", "application/x-pdf")),
 
-        ILLEGAL(Sets.newHashSet("exe", "sh", "csh", "ai"),
-                Sets.newHashSet("application/octet-stream", "application/x-sh", "application/x-shar", "text/x-script.sh", "application/x-csh", "text/x-script.csh", "application/postscript"));
+        ILLEGAL(ImmutableSet.of("exe", "sh", "csh", "ai"),
+                ImmutableSet.of("application/octet-stream", "application/x-sh", "application/x-shar", "text/x-script.sh", "application/x-csh", "text/x-script.csh", "application/postscript"));
 
         private final Set<String> extList;
         private final Set<String> mimeTypeList;
