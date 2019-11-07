@@ -9,6 +9,8 @@ spring:
       charset: UTF-8
       enabled: true
       force: true
+    converters:
+      preferred-json-mapper: gson
   resources:
     chain:
       compressed: true
@@ -23,6 +25,13 @@ mybatis:
   type-aliases-super-type: java.io.Serializable
   type-aliases-package: com.github.bestheroz
   config-location: classpath:mybatis-config.xml
+server:
+  compression:
+    enabled: true
+  error:
+    path: /common/exception/error.view
+  http2:
+    enabled: true
 ---
 spring:
   profiles: local
