@@ -1,33 +1,31 @@
-package com.github.bestheroz.standard.common.tablevo;
-
 import com.github.bestheroz.standard.context.db.checker.DbTableVOCheckerContext;
+import com.github.bestheroz.standard.context.web.WebConfig;
 import com.google.common.base.CaseFormat;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.apache.ibatis.session.SqlSession;
 import org.junit.jupiter.api.Test;
+import org.mybatis.spring.boot.test.autoconfigure.AutoConfigureMybatis;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
-import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 
-@SpringJUnitConfig(locations = {"file:src/main/webapp/WEB-INF/spring/root-context.xml", "file:src/main/webapp/WEB-INF/spring/appServlet/servlet-context.xml"})
-@WebAppConfiguration
-@Transactional
+@SpringBootTest(classes = {WebConfig.class})
+@AutoConfigureMybatis
 public class TestCreateTableVO {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    @Autowired
-    private SqlSession sqlSession;
+    @Qualifier("dataSource") @Autowired(required = false)
+    private DataSource dataSource;
 
     @Test
     public void test11() {
-        try (final Statement stmt = this.sqlSession.getConnection().createStatement()) {
+        try (final Statement stmt = this.dataSource.getConnection().createStatement()) {
 
             final String tableName = "sample_member_mst";
 
@@ -44,7 +42,7 @@ public class TestCreateTableVO {
                     final String camelColumnName = CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, columnName);
                     if (DbTableVOCheckerContext.STRING_JDBC_TYPE_SET.contains(columnTypeName)) {
                         fieldType = "String";
-                    } else if (StringUtils.equals(columnTypeName, "NUMBER")) {
+                    } else if (StringUtils.equalsAny(columnTypeName, "NUMBER", "DECIMAL")) {
                         if (metaInfo.getScale(i + 1) > 0) { // 소수점이 있으면
                             fieldType = "Double";
                         } else {

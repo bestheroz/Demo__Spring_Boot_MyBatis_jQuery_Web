@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration>
+<!-- <configuration debug="true" scan="true" scanPeriod="1 seconds"> -->
+<configuration debug="true">
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <layout class="com.github.bestheroz.standard.context.aop.logging.encoder.LoggingLayout"/>
+        </encoder>
+    </appender>
+
+    <logger name="org.springframework" level="INFO"/>
+    <logger name="org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor" level="DEBUG"/>
+    <logger name="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping" level="WARN"/>
+    <logger name="logging.level.org.springframework.web.filter" level="DEBUG"/>
+
+    <logger name="org.apache.ibatis" level="INFO"/>
+    <logger name="org.apache.commons.beanutils" level="INFO"/>
+
+    <logger name="org.mybatis.spring" level="INFO"/>
+
+    <logger name="com.zaxxer.hikari.pool" level="INFO"/>
+    <logger name="org.jdbcdslog" level="INFO"/>
+    <logger name="org.jdbcdslog.StatementLogger" level="INFO"/>
+    <logger name="org.jdbcdslog.ResultSetLogger" level="INFO"/>
+
+    <logger name="org.hibernate.validator.internal" level="INFO"/>
+
+    <logger name="springfox.documentation.schema" level="INFO"/>
+    <logger name="io.swagger.models.parameters.AbstractSerializableParameter" level="ERROR"/>
+    <logger name="springfox.documentation.spring.web" level="INFO"/>
+    <logger name="springfox.documentation.swagger.readers.operation" level="INFO"/>
+
+    <logger name="com.github.ziplet.filter.compression" level="INFO"/>
+
+    <root level="DEBUG">
+        <appender-ref ref="STDOUT"/>
+    </root>
+
+</configuration>

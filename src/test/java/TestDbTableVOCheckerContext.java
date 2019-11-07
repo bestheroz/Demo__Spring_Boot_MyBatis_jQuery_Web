@@ -1,25 +1,26 @@
-package com.github.bestheroz.standard.context.db.checker;
-
 import com.github.bestheroz.standard.common.tablevo.SqlForTableVO;
+import com.github.bestheroz.standard.context.db.checker.DbTableVOCheckerContext;
+import com.github.bestheroz.standard.context.web.WebConfig;
 import com.google.common.base.CaseFormat;
-import com.google.common.collect.Sets;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.junit.jupiter.api.Test;
+import org.mybatis.spring.boot.test.autoconfigure.AutoConfigureMybatis;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.core.type.classreading.CachingMetadataReaderFactory;
 import org.springframework.core.type.classreading.MetadataReader;
 import org.springframework.core.type.classreading.MetadataReaderFactory;
-import org.springframework.stereotype.Component;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.SystemPropertyUtils;
 
+import javax.sql.DataSource;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.sql.ResultSet;
@@ -28,22 +29,20 @@ import java.sql.Statement;
 import java.util.HashSet;
 import java.util.Set;
 
-@Component
-public class DbTableVOCheckerContext {
-    public static final String DEFAULT_DATE_TYPE = "LocalDateTime";
-    public static final Set<String> STRING_JDBC_TYPE_SET = Sets.newHashSet("VARCHAR", "VARCHAR2", "CHAR", "CLOB");
-    public static final Set<String> NUMBER_JDBC_TYPE_SET = Sets.newHashSet("INTEGER", "TINYINT", "INT", "INT UNSIGNED", "NUMBER");
-    public static final Set<String> DATETIME_JDBC_TYPE_SET = Sets.newHashSet("TIMESTAMP", "DATE", "DATETIME");
-    public static final Set<String> BOOLEAN_JDBC_TYPE_SET = Sets.newHashSet("BOOLEAN");
-    public static final Set<String> BYTE_JDBC_TYPE_SET = Sets.newHashSet("BLOB");
+@SpringBootTest(classes = {WebConfig.class})
+@AutoConfigureMybatis
+public class TestDbTableVOCheckerContext {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    @Qualifier("dataSource") @Autowired(required = false)
+    private DataSource dataSource;
 
-    @Autowired(required = false)
-    public void validDbTableVO(final SqlSession sqlSession) {
-        try (final Statement stmt = new SqlSessionFactoryBuilder().build(sqlSession.getConfiguration()).openSession().getConnection().createStatement()) {
+    @Test
+    public void validDbTableVO() {
+        try (final Statement stmt = this.dataSource.getConnection().createStatement()) {
             final Set<Class<?>> targetClassList = this.findMyTypes();
             final Set<String> filedList = new HashSet<>();
             for (final Class<?> class1 : targetClassList) {
+                this.logger.debug("check {}", class1.getSimpleName());
                 filedList.clear();
                 for (final Field field : class1.getDeclaredFields()) {
                     filedList.add(field.getName());
@@ -71,11 +70,11 @@ public class DbTableVOCheckerContext {
                             if (filedList.contains(camelColumnName)) {
                                 final String fieldClassName = class1.getDeclaredField(camelColumnName).getType().getSimpleName();
                                 final String columnTypeName = metaInfo.getColumnTypeName(i + 1);
-                                if (STRING_JDBC_TYPE_SET.contains(columnTypeName) && !SqlForTableVO.VARCHAR_JAVA_TYPE_SET.contains(fieldClassName)
-                                        || NUMBER_JDBC_TYPE_SET.contains(columnTypeName) && !SqlForTableVO.NUMBER_JAVA_TYPE_SET.contains(fieldClassName)
-                                        || DATETIME_JDBC_TYPE_SET.contains(columnTypeName) && !SqlForTableVO.TIMESTAMP_JAVA_TYPE_SET.contains(fieldClassName)
-                                        || BOOLEAN_JDBC_TYPE_SET.contains(columnTypeName) && !SqlForTableVO.BOOLEAN_JAVA_TYPE_SET.contains(fieldClassName)
-                                        || BYTE_JDBC_TYPE_SET.contains(columnTypeName) && !SqlForTableVO.BLOB_JAVA_TYPE_SET.contains(fieldClassName)) {
+                                if (DbTableVOCheckerContext.STRING_JDBC_TYPE_SET.contains(columnTypeName) && !SqlForTableVO.VARCHAR_JAVA_TYPE_SET.contains(fieldClassName)
+                                        || DbTableVOCheckerContext.NUMBER_JDBC_TYPE_SET.contains(columnTypeName) && !SqlForTableVO.NUMBER_JAVA_TYPE_SET.contains(fieldClassName)
+                                        || DbTableVOCheckerContext.DATETIME_JDBC_TYPE_SET.contains(columnTypeName) && !SqlForTableVO.TIMESTAMP_JAVA_TYPE_SET.contains(fieldClassName)
+                                        || DbTableVOCheckerContext.BOOLEAN_JDBC_TYPE_SET.contains(columnTypeName) && !SqlForTableVO.BOOLEAN_JAVA_TYPE_SET.contains(fieldClassName)
+                                        || DbTableVOCheckerContext.BYTE_JDBC_TYPE_SET.contains(columnTypeName) && !SqlForTableVO.BLOB_JAVA_TYPE_SET.contains(fieldClassName)) {
                                     this.logger.warn("자료형이 일치하지 않음 {}.{}({}) != {}.{}({})", tableName, columnName, columnTypeName, className, camelColumnName, fieldClassName);
                                     isInvalid = true;
                                 }
@@ -93,9 +92,9 @@ public class DbTableVOCheckerContext {
                             final String columnTypeName = metaInfo.getColumnTypeName(i + 1);
                             final String columnName = metaInfo.getColumnName(i + 1);
                             final String camelColumnName = CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, columnName);
-                            if (STRING_JDBC_TYPE_SET.contains(columnTypeName)) {
+                            if (DbTableVOCheckerContext.STRING_JDBC_TYPE_SET.contains(columnTypeName)) {
                                 fieldType = "String";
-                            } else if (StringUtils.equals(columnTypeName, "NUMBER")) {
+                            } else if (StringUtils.equalsAny(columnTypeName, "NUMBER", "DECIMAL")) {
                                 if (metaInfo.getScale(i + 1) > 0) { // 소수점이 있으면
                                     fieldType = "Double";
                                 } else {
@@ -111,13 +110,13 @@ public class DbTableVOCheckerContext {
                                         // fieldType = "Double";
                                     }
                                 }
-                            } else if (NUMBER_JDBC_TYPE_SET.contains(columnTypeName)) {
+                            } else if (DbTableVOCheckerContext.NUMBER_JDBC_TYPE_SET.contains(columnTypeName)) {
                                 fieldType = "Integer";
-                            } else if (DATETIME_JDBC_TYPE_SET.contains(columnTypeName)) {
-                                fieldType = DEFAULT_DATE_TYPE;
+                            } else if (DbTableVOCheckerContext.DATETIME_JDBC_TYPE_SET.contains(columnTypeName)) {
+                                fieldType = DbTableVOCheckerContext.DEFAULT_DATE_TYPE;
                             } else if (DbTableVOCheckerContext.BOOLEAN_JDBC_TYPE_SET.contains(columnTypeName)) {
                                 fieldType = "Boolean";
-                            } else if (BYTE_JDBC_TYPE_SET.contains(columnTypeName)) {
+                            } else if (DbTableVOCheckerContext.BYTE_JDBC_TYPE_SET.contains(columnTypeName)) {
                                 fieldType = "Byte[];";
                                 this.logger.debug("private Byte[] {}{}", camelColumnName, "; // XXX: spotbugs 피하기 : Arrays.copyOf(value, value.length)");
                             } else {
