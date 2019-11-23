@@ -18,9 +18,9 @@ public class ValueLabelController {
     @Autowired
     private HttpSession session;
 
-    @RequestMapping(value = "/common/valuelabel/getValueLabeVOList.json", method = RequestMethod.POST)
+    @RequestMapping(value = "/common/valuelabel/getValueLabelVOList.json", method = RequestMethod.POST)
     @ResponseBody
-    public List<ValueLabelVO> getValueLabeVOList(@RequestParam("groupCode") final String groupCode) throws CommonException {
-        return this.valueLabelService.getValueLabeVOList(groupCode);
+    public List<ValueLabelVO> getValueLabelVOList(@RequestParam("groupCode") final String groupCode) throws CommonException {
+        return this.valueLabelService.getValueLabelVOList(groupCode);
     }
 }

@@ -27,7 +27,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(final InterceptorRegistry registry) {
         registry.addInterceptor(new Interceptor()).addPathPatterns("/**").excludePathPatterns("/sample/login/**").excludePathPatterns("/resources/**")
-                .excludePathPatterns("/common/valuelabel/getValueLabeVOList.json")
+                .excludePathPatterns("/common/valuelabel/getValueLabelVOList.json")
                 .excludePathPatterns("/favicon.*").excludePathPatterns("/common/exception/**");
     }
 

@@ -190,7 +190,7 @@
     <my:footer/>
     <script data-for="ready">
         jQuery(($) => {
-            $.when(drawTable1(), drawTable2(), MyAjax.getSelectOptions($("#useTf"), "${CONTEXT_PATH}/common/valuelabel/getValueLabeVOList.json", {
+            $.when(drawTable1(), drawTable2(), MyAjax.getSelectOptions($("#useTf"), "${CONTEXT_PATH}/common/valuelabel/getValueLabelVOList.json", {
                 groupCode: "USE_TF"
             })).done(() => {
                 selectList();

@@ -122,9 +122,9 @@
     </div>
     <script data-for="ready">
         jQuery(($) => {
-            $.when(drawTable1(), MyAjax.getSelectOptions($("#menuType"), "${CONTEXT_PATH}/common/valuelabel/getValueLabeVOList.json", {
+            $.when(drawTable1(), MyAjax.getSelectOptions($("#menuType"), "${CONTEXT_PATH}/common/valuelabel/getValueLabelVOList.json", {
                 groupCode: "MENU_TYPE"
-            }), MyAjax.getSelectOptions($("#power"), "${CONTEXT_PATH}/common/valuelabel/getValueLabeVOList.json", {
+            }), MyAjax.getSelectOptions($("#power"), "${CONTEXT_PATH}/common/valuelabel/getValueLabelVOList.json", {
                 groupCode: "MEMBER_TYPE"
             }), MyAjax.getSelectOptions($("#parMenuId"), "${CONTEXT_PATH}/sample/admin/menu/getPMenuValueLableVOList.json")).done(() => {
                 selectList();

@@ -15,13 +15,13 @@ public class ValueLabelService {
     @Autowired
     private ValueLabelDAO valueLabelDAO;
 
-    public List<ValueLabelVO> getValueLabeVOList(final String groupCode) throws CommonException {
-        return this.valueLabelDAO.getValueLabeVOList(groupCode);
+    public List<ValueLabelVO> getValueLabelVOList(final String groupCode) throws CommonException {
+        return this.valueLabelDAO.getValueLabelVOList(groupCode);
     }
 
     public JsonObject getValueLabelVoListToJsonObject(final String groupCode) throws CommonException {
         final JsonObject jsonObject = new JsonObject();
-        for (final ValueLabelVO vo : this.getValueLabeVOList(groupCode)) {
+        for (final ValueLabelVO vo : this.getValueLabelVOList(groupCode)) {
             jsonObject.addProperty(vo.getValue(), vo.getLabel());
         }
         return jsonObject;

@@ -129,7 +129,7 @@
     <my:footer/>
     <script data-for="ready">
         jQuery(($) => {
-            $.when(drawTable1(), MyAjax.getSelectOptions($("#memberType"), "${CONTEXT_PATH}/common/valuelabel/getValueLabeVOList.json", {
+            $.when(drawTable1(), MyAjax.getSelectOptions($("#memberType"), "${CONTEXT_PATH}/common/valuelabel/getValueLabelVOList.json", {
                 groupCode: "MEMBER_TYPE"
             })).done(() => {
                 selectList();
