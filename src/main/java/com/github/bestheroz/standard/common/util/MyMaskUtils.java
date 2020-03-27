@@ -1,16 +1,15 @@
 package com.github.bestheroz.standard.common.util;
 
+import lombok.experimental.UtilityClass;
 import org.apache.commons.lang3.RegExUtils;
 import org.apache.commons.lang3.StringUtils;
 
+@UtilityClass
 public class MyMaskUtils {
-    protected MyMaskUtils() {
-        throw new UnsupportedOperationException();
-    }
 
     public static String getEmail(final String email) {
         if (StringUtils.isEmpty(email)) {
-            return "";
+            return StringUtils.EMPTY;
         }
 
         final String dirty = MyEscapeUtils.unescapeAll(email);
@@ -44,7 +43,7 @@ public class MyMaskUtils {
 
     public static String getId(final String id) {
         if (StringUtils.isEmpty(id)) {
-            return "";
+            return StringUtils.EMPTY;
         }
 
         final String dirty = MyEscapeUtils.unescapeAll(id);
@@ -62,7 +61,7 @@ public class MyMaskUtils {
 
     public static String getMobileTel(final String mobile) {
         if (StringUtils.isEmpty(mobile)) {
-            return "";
+            return StringUtils.EMPTY;
         }
 
         final StringBuilder returnValue = new StringBuilder();
@@ -92,7 +91,7 @@ public class MyMaskUtils {
 
     public static String getName(final String name) {
         if (StringUtils.isEmpty(name)) {
-            return "";
+            return StringUtils.EMPTY;
         }
 
         final String dirty = MyEscapeUtils.unescapeAll(name);

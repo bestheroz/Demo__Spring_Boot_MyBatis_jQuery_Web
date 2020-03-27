@@ -1,14 +1,19 @@
 package com.github.bestheroz.standard.common.util;
 
 import com.github.bestheroz.sample.web.login.LoginVO;
+import com.github.bestheroz.standard.common.exception.CommonException;
 import com.google.gson.JsonObject;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpSession;
 import java.util.Enumeration;
 
+@Slf4j
 public class MySessionUtils {
     public static final String SESSION_VALUE_OF_LOGIN_VO = "loginVO";
     private static final Logger LOGGER = LoggerFactory.getLogger(MySessionUtils.class);
@@ -17,79 +22,92 @@ public class MySessionUtils {
         throw new UnsupportedOperationException();
     }
 
-    public static boolean isLogined(final HttpSession session) {
-        return session.getAttribute(SESSION_VALUE_OF_LOGIN_VO) != null;
+    public static HttpSession getSession() {
+        final ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+        return attr.getRequest().getSession();
     }
 
-    public static boolean isNotLogined(final HttpSession session) {
-        return !isLogined(session);
+    public static boolean isLoggedIn() {
+        return getSession().getAttribute(SESSION_VALUE_OF_LOGIN_VO) != null;
     }
 
-    public static LoginVO getLoginVO(final HttpSession session) {
+    public static boolean isNotLoggedIn() {
+        return !isLoggedIn();
+    }
+
+    public static LoginVO getLoginVO() {
         try {
-            return (LoginVO) session.getAttribute(SESSION_VALUE_OF_LOGIN_VO);
-        } catch (final Throwable e) {
-            LOGGER.warn(ExceptionUtils.getStackTrace(e));
-            return null;
-        }
-    }
-
-    public static void setLoginVO(final HttpSession session, final LoginVO loginVO) {
-        session.setAttribute(SESSION_VALUE_OF_LOGIN_VO, loginVO);
-        session.setAttribute("memberId", loginVO.getMemberId());
-        session.setAttribute("memberName", loginVO.getMemberName());
-        session.setAttribute("memberType", loginVO.getMemberType());
-    }
-
-    public static void logout(final HttpSession session) {
-        final JsonObject result = new JsonObject();
-        try {
-            for (final Enumeration<String> attributeNames = session.getAttributeNames();
-                 attributeNames.hasMoreElements(); ) {
-                final String nextElement = attributeNames.nextElement();
-                result.addProperty(nextElement, MyMapperUtils.writeObjectAsString(session.getAttribute(nextElement)));
-                session.removeAttribute(nextElement);
+            final LoginVO loginVO = (LoginVO) getSession().getAttribute(SESSION_VALUE_OF_LOGIN_VO);
+            if (loginVO == null) {
+                log.warn(CommonException.FAIL_TRY_LOGIN_FIRST.toString());
+                throw CommonException.FAIL_TRY_LOGIN_FIRST;
             }
-            LOGGER.debug("(because logout)remove all session's attirubet : {}", result.toString());
+            return loginVO;
         } catch (final Throwable e) {
             LOGGER.warn(ExceptionUtils.getStackTrace(e));
+            throw e;
         }
     }
 
-    public static boolean hasAttribute(final HttpSession httpSession, final String name) {
+    public static void setLoginVO(final LoginVO loginVO) {
+        getSession().setAttribute(SESSION_VALUE_OF_LOGIN_VO, loginVO);
+        getSession().setAttribute("memberId", loginVO.getMemberId());
+        getSession().setAttribute("memberName", loginVO.getMemberName());
+        getSession().setAttribute("memberType", loginVO.getMemberType());
+    }
+
+    public static String getMemberId() {
         try {
-            return httpSession.getAttribute(name) != null;
+            final String memberId = (String) getSession().getAttribute("memberId");
+            if (memberId == null) {
+                log.warn(CommonException.FAIL_TRY_LOGIN_FIRST.toString());
+                throw CommonException.FAIL_TRY_LOGIN_FIRST;
+            }
+            return memberId;
+        } catch (final Throwable e) {
+            LOGGER.warn(ExceptionUtils.getStackTrace(e));
+            throw e;
+        }
+    }
+
+    public static void logout() {
+        getSession().invalidate();
+    }
+
+    public static boolean hasAttribute(final String name) {
+        try {
+            return getSession().getAttribute(name) != null;
         } catch (final Throwable e) {
             LOGGER.warn(ExceptionUtils.getStackTrace(e));
             return false;
         }
     }
 
-    public static String getAttribute(final HttpSession session, final String name) {
+    public static String getAttribute(final String name) {
         try {
-            return (String) session.getAttribute(name);
+            return (String) getSession().getAttribute(name);
         } catch (final Throwable e) {
             LOGGER.warn(ExceptionUtils.getStackTrace(e));
             return null;
         }
     }
 
-    public static void setAttribute(final HttpSession session, final String name, final Object value) {
-        session.setAttribute(name, value);
+    public static void setAttribute(final String name, final Object value) {
+        getSession().setAttribute(name, value);
     }
 
-    public static Integer getAttributeInteger(final HttpSession session, final String name) {
+    public static Integer getAttributeInteger(final String name) {
         try {
-            return (Integer) session.getAttribute(name);
+            return (Integer) getSession().getAttribute(name);
         } catch (final Throwable e) {
             LOGGER.warn(ExceptionUtils.getStackTrace(e));
             return null;
         }
     }
 
-    public static Object getAttributeObject(final HttpSession session, final String name) {
+    public static Object getAttributeObject(final String name) {
         try {
-            return session.getAttribute(name);
+            return getSession().getAttribute(name);
         } catch (final Throwable e) {
             LOGGER.warn(ExceptionUtils.getStackTrace(e));
             return null;
@@ -97,26 +115,26 @@ public class MySessionUtils {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> T getAttributeObject(final HttpSession session, final String name, final Class<T> returnType) {
+    public static <T> T getAttributeObject(final String name, final Class<T> returnType) {
         try {
-            return (T) session.getAttribute(name);
+            return (T) getSession().getAttribute(name);
         } catch (final Throwable e) {
             LOGGER.warn(ExceptionUtils.getStackTrace(e));
             return null;
         }
     }
 
-    public static void removeAttribute(final HttpSession session, final String name) {
-        session.removeAttribute(name);
+    public static void removeAttribute(final String name) {
+        getSession().removeAttribute(name);
     }
 
-    public static void printAttributeList(final HttpSession session) {
+    public static void printAttributeList() {
         final JsonObject result = new JsonObject();
         try {
-            for (final Enumeration<String> attributeNames = session.getAttributeNames();
+            for (final Enumeration<String> attributeNames = getSession().getAttributeNames();
                  attributeNames.hasMoreElements(); ) {
                 final String nextElement = attributeNames.nextElement();
-                result.addProperty(nextElement, MyMapperUtils.writeObjectAsString(session.getAttribute(nextElement)));
+                result.addProperty(nextElement, MyMapperUtils.writeObjectAsString(getSession().getAttribute(nextElement)));
             }
             LOGGER.debug(result.toString());
         } catch (final Throwable e) {

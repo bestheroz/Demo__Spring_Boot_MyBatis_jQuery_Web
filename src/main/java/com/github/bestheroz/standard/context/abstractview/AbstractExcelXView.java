@@ -4,7 +4,8 @@ import com.github.bestheroz.standard.common.exception.CommonException;
 import com.github.bestheroz.standard.common.file.excel.ExcelVO;
 import com.github.bestheroz.standard.common.util.MyDateUtils;
 import com.github.bestheroz.standard.common.util.MyNullUtils;
-import com.google.gson.JsonElement;
+import com.github.bestheroz.standard.common.valuelabel.ValueLabelVO;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RegExUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -19,8 +20,6 @@ import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.LocalizedResourceHelper;
@@ -40,6 +39,7 @@ import java.util.Locale;
 import java.util.Map;
 
 @Component("AbstractExcelXView")
+@Slf4j
 public abstract class AbstractExcelXView extends AbstractView {
     /**
      * The extension to look for existing templates
@@ -55,7 +55,6 @@ public abstract class AbstractExcelXView extends AbstractView {
      */
     private static final String CONTENT_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
     private static final String ROW_NUMBER = "ROW_NUMBER";
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private XSSFCellStyle stringRightStyle;
     private XSSFCellStyle stringCenterStyle;
     private XSSFCellStyle numberStyle;
@@ -77,12 +76,12 @@ public abstract class AbstractExcelXView extends AbstractView {
         addHeader(excelVOList, title, dbColName, cellType, null);
     }
 
-    public static void addHeader(final List<ExcelVO> excelVOList, final String title, final String dbColName, final CellType cellType, final JsonElement codeObject) {
+    public static void addHeader(final List<ExcelVO> excelVOList, final String title, final String dbColName, final CellType cellType, final List<ValueLabelVO> codeList) {
         final ExcelVO excelVO = new ExcelVO();
         excelVO.setTitle(title);
         excelVO.setDbColName(dbColName);
         excelVO.setCellType(cellType);
-        excelVO.setCodeObject(codeObject);
+        excelVO.setCodeList(codeList);
         if (cellType.equals(CellType.STRING)) {
             excelVO.setCharByte(1.2D);
         }
@@ -133,11 +132,11 @@ public abstract class AbstractExcelXView extends AbstractView {
             this.dateStyle = (XSSFCellStyle) workbook.createCellStyle();
             this.dateStyle.setAlignment(HorizontalAlignment.CENTER);
 
-            this.logger.debug("Created Excel Workbook from scratch");
+            log.debug("Created Excel Workbook from scratch");
 
             this.buildExcelDocument(model, workbook, request, response);
 
-            this.logger.debug("Excel Password : {}", model.get(PASSWORD));
+            log.debug("Excel Password : {}", model.get(PASSWORD));
             if (StringUtils.isNotEmpty((String) model.get(PASSWORD))) {
                 final POIFSFileSystem fs = new POIFSFileSystem();
                 final EncryptionInfo info = new EncryptionInfo(EncryptionMode.standard);
@@ -155,7 +154,7 @@ public abstract class AbstractExcelXView extends AbstractView {
                 this.writeToResponse(response, baos);
             }
         } catch (final Throwable e) {
-            this.logger.warn(ExceptionUtils.getStackTrace(e));
+            log.warn(ExceptionUtils.getStackTrace(e));
             response.setContentType("text/html;charset=utf-8");
             try (final PrintWriter pw = response.getWriter()) {
                 pw.println("<script>");
@@ -163,7 +162,7 @@ public abstract class AbstractExcelXView extends AbstractView {
                 pw.println("history.back();");
                 pw.println("</script>");
             } catch (final IOException e1) {
-                this.logger.warn(ExceptionUtils.getStackTrace(e1));
+                log.warn(ExceptionUtils.getStackTrace(e1));
                 throw new CommonException(e1);
             }
         }
@@ -172,16 +171,16 @@ public abstract class AbstractExcelXView extends AbstractView {
     protected SXSSFWorkbook getTemplateSource(final String url, final HttpServletRequest request) throws Exception {
         final ApplicationContext applicationContext = this.getApplicationContext();
         if (applicationContext == null) {
-            this.logger.warn("applicationContext is null");
-            throw CommonException.EXCEPTION_FAIL_SYSTEM;
+            log.warn("applicationContext is null");
+            throw CommonException.FAIL_SYSTEM;
         }
         final LocalizedResourceHelper helper = new LocalizedResourceHelper(applicationContext);
         final Locale userLocale = RequestContextUtils.getLocale(request);
         final Resource inputFile = helper.findLocalizedResource(url, EXTENSION, userLocale);
 
         // Create the Excel document from the source.
-        if (this.logger.isDebugEnabled()) {
-            this.logger.debug("Loading Excel workbook from {}.", inputFile);
+        if (log.isDebugEnabled()) {
+            log.debug("Loading Excel workbook from {}.", inputFile);
         }
         // POIFSFileSystem fs = new POIFSFileSystem(inputFile.getInputStream());
         return new SXSSFWorkbook(new XSSFWorkbook(inputFile.getInputStream()));
@@ -234,25 +233,31 @@ public abstract class AbstractExcelXView extends AbstractView {
             this.setDate(cell, strData);
         } else {
             try {
-                if (MyNullUtils.isNotEmpty(excelVOs.get(columnIdx).getCodeObject()) && excelVOs.get(columnIdx).getCodeObject().getAsJsonObject().get(strData) != null) {
-                    if (excelVOs.get(columnIdx).getCellType().equals(CellType.STRING_CENTER)) {
-                        this.setStringCenter(cell, excelVOs.get(columnIdx).getCodeObject().getAsJsonObject().get(strData).getAsString());
-                    } else if (excelVOs.get(columnIdx).getCellType().equals(CellType.STRING_RIGHT)) {
-                        this.setStringRight(cell, excelVOs.get(columnIdx).getCodeObject().getAsJsonObject().get(strData).getAsString());
-                    } else {
-                        this.setString(cell, excelVOs.get(columnIdx).getCodeObject().getAsJsonObject().get(strData).getAsString());
-                    }
-                } else {
-                    if (excelVOs.get(columnIdx).getCellType().equals(CellType.STRING_CENTER)) {
-                        this.setStringCenter(cell, strData);
-                    } else if (excelVOs.get(columnIdx).getCellType().equals(CellType.STRING_RIGHT)) {
-                        this.setStringRight(cell, strData);
-                    } else {
-                        this.setString(cell, strData);
+                final List<ValueLabelVO> codeList = excelVOs.get(columnIdx).getCodeList();
+                if (MyNullUtils.isNotEmpty(codeList)) {
+                    for (final ValueLabelVO valueTextVO : codeList) {
+                        if (strData.equals(valueTextVO.getValue())) {
+                            final String value = valueTextVO.getLabel();
+                            if (excelVOs.get(columnIdx).getCellType().equals(CellType.STRING_CENTER)) {
+                                this.setStringCenter(cell, value);
+                            } else if (excelVOs.get(columnIdx).getCellType().equals(CellType.STRING_RIGHT)) {
+                                this.setStringRight(cell, value);
+                            } else {
+                                this.setString(cell, value);
+                            }
+                            return;
+                        }
                     }
                 }
+                if (excelVOs.get(columnIdx).getCellType().equals(CellType.STRING_CENTER)) {
+                    this.setStringCenter(cell, strData);
+                } else if (excelVOs.get(columnIdx).getCellType().equals(CellType.STRING_RIGHT)) {
+                    this.setStringRight(cell, strData);
+                } else {
+                    this.setString(cell, strData);
+                }
             } catch (final Throwable e) {
-                this.logger.warn(ExceptionUtils.getStackTrace(e));
+                log.warn(ExceptionUtils.getStackTrace(e));
                 this.setString(cell, strData);
             }
         }
@@ -281,7 +286,7 @@ public abstract class AbstractExcelXView extends AbstractView {
         try {
             cell.setCellValue((long) Double.parseDouble(this.getSecureCellText(text)));
         } catch (final Throwable e) {
-            this.logger.warn("Excel setInteger() error\n{}.", ExceptionUtils.getStackTrace(e));
+            log.warn("Excel setInteger() error\n{}.", ExceptionUtils.getStackTrace(e));
             cell.setCellValue(this.getSecureCellText(text));
         }
     }
@@ -292,7 +297,7 @@ public abstract class AbstractExcelXView extends AbstractView {
         try {
             cell.setCellValue(Double.parseDouble(this.getSecureCellText(text)));
         } catch (final Throwable e) {
-            this.logger.warn("Excel setDouble() error\n{}.", ExceptionUtils.getStackTrace(e));
+            log.warn("Excel setDouble() error\n{}.", ExceptionUtils.getStackTrace(e));
             cell.setCellValue(this.getSecureCellText(text));
         }
     }
@@ -303,13 +308,13 @@ public abstract class AbstractExcelXView extends AbstractView {
         try {
             cell.setCellValue(this.getSecureCellText(text));
         } catch (final Throwable e) {
-            this.logger.warn("Excel setDate() error\n{}.", ExceptionUtils.getStackTrace(e));
+            log.warn("Excel setDate() error\n{}.", ExceptionUtils.getStackTrace(e));
         }
     }
 
     private String getSecureCellText(final String text) {
         if (StringUtils.isEmpty(text) || StringUtils.equals(text, "null")) {
-            return "";
+            return StringUtils.EMPTY;
         } else {
             return text;
         }

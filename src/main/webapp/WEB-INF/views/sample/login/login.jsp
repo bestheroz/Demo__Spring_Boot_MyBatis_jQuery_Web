@@ -6,7 +6,7 @@
         <div class="container">
             <form class="form-signin">
                 <h1 class="h3 mt-5 mb-3 font-weight-normal">Bestheroz's Spring-Boot-Mybatis-jQuery Web Project
-                    <small>ver.191105</small>
+                    <small>ver.200327</small>
                 </h1>
                 <label for="memberId" class="sr-only">아이디</label>
                 <input type="email" class="form-control" id="memberId" title="아이디" placeholder="아이디를 입력하세요." maxlength="9" required autofocus>
@@ -80,6 +80,6 @@
             }
         }
     </script>
-    <script defer="defer" src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.min.js"></script>
+    <script defer="defer" src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
 
 </my:html>

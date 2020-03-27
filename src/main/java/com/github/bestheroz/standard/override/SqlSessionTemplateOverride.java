@@ -4,6 +4,7 @@ import com.github.bestheroz.standard.common.exception.CommonException;
 import com.github.bestheroz.standard.common.exception.CommonExceptionCode;
 import com.github.bestheroz.standard.common.util.MyMapperUtils;
 import com.google.gson.JsonObject;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.ibatis.cursor.Cursor;
@@ -12,8 +13,6 @@ import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionTemplate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
@@ -22,9 +21,8 @@ import org.springframework.jdbc.BadSqlGrammarException;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 public class SqlSessionTemplateOverride extends SqlSessionTemplate {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SqlSessionTemplateOverride.class);
-
     public SqlSessionTemplateOverride(final SqlSessionFactory sqlSessionFactory) {
         super(sqlSessionFactory);
     }
@@ -39,8 +37,8 @@ public class SqlSessionTemplateOverride extends SqlSessionTemplate {
         }
 
         if (result == 0) {
-            LOGGER.warn(CommonException.EXCEPTION_FAIL_NO_DATA_SUCCESS.getJsonObject().toString());
-            throw CommonException.EXCEPTION_FAIL_NO_DATA_SUCCESS;
+            log.warn(CommonException.FAIL_NO_DATA_SUCCESS.toString());
+            throw CommonException.FAIL_NO_DATA_SUCCESS;
         }
 
         return result;
@@ -56,8 +54,8 @@ public class SqlSessionTemplateOverride extends SqlSessionTemplate {
         }
 
         if (result == 0) {
-            LOGGER.warn(CommonException.EXCEPTION_FAIL_NO_DATA_SUCCESS.getJsonObject().toString());
-            throw CommonException.EXCEPTION_FAIL_NO_DATA_SUCCESS;
+            log.warn(CommonException.FAIL_NO_DATA_SUCCESS.toString());
+            throw CommonException.FAIL_NO_DATA_SUCCESS;
         }
 
         return result;
@@ -73,8 +71,8 @@ public class SqlSessionTemplateOverride extends SqlSessionTemplate {
         }
 
         if (result == 0) {
-            LOGGER.warn(CommonException.EXCEPTION_FAIL_NO_DATA_SUCCESS.getJsonObject().toString());
-            throw CommonException.EXCEPTION_FAIL_NO_DATA_SUCCESS;
+            log.warn(CommonException.FAIL_NO_DATA_SUCCESS.toString());
+            throw CommonException.FAIL_NO_DATA_SUCCESS;
         }
 
         return result;
@@ -90,14 +88,13 @@ public class SqlSessionTemplateOverride extends SqlSessionTemplate {
         }
 
         if (result == 0) {
-            LOGGER.warn(CommonException.EXCEPTION_FAIL_NO_DATA_SUCCESS.getJsonObject().toString());
-            throw CommonException.EXCEPTION_FAIL_NO_DATA_SUCCESS;
+            log.warn(CommonException.FAIL_NO_DATA_SUCCESS.toString());
+            throw CommonException.FAIL_NO_DATA_SUCCESS;
         }
 
         return result;
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
     public void select(final String statement, final Object parameter, final RowBounds rowBounds, final ResultHandler handler) throws CommonException {
         try {
@@ -107,7 +104,6 @@ public class SqlSessionTemplateOverride extends SqlSessionTemplate {
         }
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
     public void select(final String statement, final Object parameter, final ResultHandler handler) throws CommonException {
         try {
@@ -117,7 +113,6 @@ public class SqlSessionTemplateOverride extends SqlSessionTemplate {
         }
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
     public void select(final String statement, final ResultHandler handler) throws CommonException {
         try {
@@ -275,8 +270,8 @@ public class SqlSessionTemplateOverride extends SqlSessionTemplate {
         }
 
         if (result == 0) {
-            LOGGER.warn(CommonException.EXCEPTION_FAIL_NO_DATA_SUCCESS.getJsonObject().toString());
-            throw CommonException.EXCEPTION_FAIL_NO_DATA_SUCCESS;
+            log.warn(CommonException.FAIL_NO_DATA_SUCCESS.toString());
+            throw CommonException.FAIL_NO_DATA_SUCCESS;
         }
         return result;
     }
@@ -291,8 +286,8 @@ public class SqlSessionTemplateOverride extends SqlSessionTemplate {
         }
 
         if (result == 0) {
-            LOGGER.warn(CommonException.EXCEPTION_FAIL_NO_DATA_SUCCESS.getJsonObject().toString());
-            throw CommonException.EXCEPTION_FAIL_NO_DATA_SUCCESS;
+            log.warn(CommonException.FAIL_NO_DATA_SUCCESS.toString());
+            throw CommonException.FAIL_NO_DATA_SUCCESS;
         }
 
         return result;
@@ -300,9 +295,9 @@ public class SqlSessionTemplateOverride extends SqlSessionTemplate {
 
     private <T> void writeLog(final T result) {
         try {
-            LOGGER.debug(MyMapperUtils.writeObjectAsString(result));
+            log.debug(MyMapperUtils.writeObjectAsString(result));
         } catch (final Throwable e) {
-            LOGGER.warn(ExceptionUtils.getStackTrace(e));
+            log.warn(ExceptionUtils.getStackTrace(e));
         }
     }
 
@@ -315,8 +310,8 @@ public class SqlSessionTemplateOverride extends SqlSessionTemplate {
     }
 
     private void executeThrowsDataAccessException(final DataAccessException e) throws CommonException {
-        LOGGER.warn("exception.class.getSimpleName() ==> {}", ExceptionUtils.getThrowableList(e).get(0).getClass().getSimpleName());
-        LOGGER.warn(ExceptionUtils.getStackTrace(e));
+        log.warn("exception.class.getSimpleName() ==> {}", ExceptionUtils.getThrowableList(e).get(0).getClass().getSimpleName());
+        log.warn(ExceptionUtils.getStackTrace(e));
         final Throwable throwable = ExceptionUtils.getThrowableList(e).get(0);
 
         // 아래 정의된 에러는 sql-error-codes.xml 에 정의된 내용입니다. sql-error-codes.xml는 구글에서 검색하세요 ^^
@@ -343,8 +338,8 @@ public class SqlSessionTemplateOverride extends SqlSessionTemplate {
         } else if (StringUtils.containsIgnoreCase(stackTrace, "Fail to Decryption data")) {
             throw new CommonException(CommonExceptionCode.FAIL_TO_DECRYPTION_DATA);
         } else {
-            LOGGER.warn(CommonException.EXCEPTION_FAIL_INVALID_REQUEST.getJsonObject().toString());
-            throw CommonException.EXCEPTION_FAIL_INVALID_REQUEST;
+            log.warn(CommonException.FAIL_INVALID_REQUEST.toString());
+            throw CommonException.FAIL_INVALID_REQUEST;
         }
     }
 }

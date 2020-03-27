@@ -882,34 +882,6 @@ FROM SAMPLE_MENU_MST
 WHERE MENU_NAME = 'JSP 가이드';
 
 
-INSERT
-INTO SAMPLE_MENU_MST
-(MENU_NAME,
- MENU_TYPE,
- PAR_MENU_ID,
- USE_TF,
- POWER,
- DISPLAY_ORDER,
- URL,
- CREATED_BY,
- CREATED,
- UPDATED_BY,
- UPDATED)
-SELECT '파일관리',
-       'P',
-       MENU_ID,
-       TRUE,
-       700,
-       40,
-       '/sample/admin/file/adminFile.view',
-       'bestheroz',
-       SYSDATE,
-       'bestheroz',
-       SYSDATE
-FROM SAMPLE_MENU_MST
-WHERE MENU_NAME = '관리자';
-
-
 CREATE TABLE SAMPLE_CODE_MST
 (
     GROUP_CODE      VARCHAR(100) PRIMARY KEY NOT NULL,

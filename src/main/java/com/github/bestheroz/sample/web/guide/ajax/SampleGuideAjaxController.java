@@ -1,17 +1,17 @@
 package com.github.bestheroz.sample.web.guide.ajax;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class SampleGuideAjaxController {
-    @RequestMapping(value = "/sample/guide/ajax/sampleGuideAjax.view", method = RequestMethod.GET)
+    @GetMapping(value = "/sample/guide/ajax/sampleGuideAjax.view")
     public String view() {
         return "/sample/guide/ajax/sampleGuideAjax";
     }
 
-    @RequestMapping(value = "/sample/guide/ajax/sampleHtml.view", method = RequestMethod.POST)
+    @PostMapping(value = "/sample/guide/ajax/sampleHtml.view")
     public String sampleHtml() {
         return "/sample/guide/ajax/sampleHtml";
     }

@@ -1,5 +1,6 @@
 package com.github.bestheroz.standard.common.util;
 
+import lombok.experimental.UtilityClass;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -8,10 +9,8 @@ import org.joda.time.format.DateTimeFormat;
 
 import java.util.*;
 
+@UtilityClass
 public class MyDateUtils {
-    protected MyDateUtils() {
-        throw new UnsupportedOperationException();
-    }
 
     public static final DateTimeZone TIME_ZONE_ASIA_SEOUL = DateTimeZone.forID("Asia/Seoul");
     public static final Locale LOCALE_KOREAN = Locale.KOREAN;
@@ -39,7 +38,7 @@ public class MyDateUtils {
 
     public static String getString(final Date date, final String pattern) {
         if (date == null) {
-            return "";
+            return StringUtils.EMPTY;
         }
         return MyDateUtils.getString(date.getTime(), pattern);
     }
@@ -50,14 +49,14 @@ public class MyDateUtils {
 
     public static String getString(final DateTime dateTime, final String pattern) {
         if (dateTime == null) {
-            return "";
+            return StringUtils.EMPTY;
         }
         return dateTime.toString(pattern);
     }
 
     public static String getString(final String string, final String fromPattern, final String toPattern) {
         if (StringUtils.isEmpty(string)) {
-            return "";
+            return StringUtils.EMPTY;
         }
         return Objects.requireNonNull(getDateTime(string, fromPattern)).toString(toPattern);
     }
@@ -154,12 +153,12 @@ public class MyDateUtils {
         return res;
     }
 
-    public static LocalDateTime getLocalDateTimeIgnoreException(String arg0) {
+    public static LocalDateTime getLocalDateTimeIgnoreException(final String arg0) {
         final DateTime dateTimeIgnoreException = getDateTimeIgnoreException(arg0);
         return dateTimeIgnoreException == null ? null : dateTimeIgnoreException.toLocalDateTime();
     }
 
-    public static DateTime getDateTimeIgnoreException(String arg0) {
+    public static DateTime getDateTimeIgnoreException(final String arg0) {
         if (StringUtils.isNotEmpty(arg0)) {
             try {
                 // 1. long값(timestamp)
@@ -170,18 +169,28 @@ public class MyDateUtils {
                     return getDateTime(arg0, MyDateUtils.YYYY_MM_DD);
                 } catch (final Throwable e2) {
                     try {
-                        // 3. yyyy-MM-ddTHH:mm:ss.SSSZ
-                        return getDateTime(arg0, MyDateUtils.ISO_8601);
+                        // 3. yyyy-MM-dd HH:mm:ss
+                        return getDateTime(arg0, MyDateUtils.YYYY_MM_DD_HH_MM_SS);
                     } catch (final Throwable e3) {
                         try {
-                            // 4. yyyyMMdd
-                            return getDateTime(arg0, MyDateUtils.YYYYMMDD);
+                            // 4. yyyy-MM-dd HH:mm:ss.SSS
+                            return getDateTime(arg0, "yyyy-MM-dd HH:mm:ss.SSS");
                         } catch (final Throwable e4) {
                             try {
-                                // 5. yyyyMMddHHmmss
-                                return getDateTime(arg0, MyDateUtils.YYYYMMDDHHMMSS);
+                                // 5. yyyy-MM-ddTHH:mm:ss.SSSZ
+                                return getDateTime(arg0, MyDateUtils.ISO_8601);
                             } catch (final Throwable e5) {
-                                return null;
+                                try {
+                                    // 6. yyyyMMdd
+                                    return getDateTime(arg0, MyDateUtils.YYYYMMDD);
+                                } catch (final Throwable e6) {
+                                    try {
+                                        // 7. yyyyMMddHHmmss
+                                        return getDateTime(arg0, MyDateUtils.YYYYMMDDHHMMSS);
+                                    } catch (final Throwable e7) {
+                                        return null;
+                                    }
+                                }
                             }
                         }
                     }

@@ -374,7 +374,7 @@ public class MyFileUtils {
         WORD(ImmutableSet.of("docx", "doc", "dotx"), ImmutableSet.of("application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
                 "application/vnd.openxmlformats-officedocument.wordprocessingml.template")),
 
-        PDF(Collections.singleton("pdf"), ImmutableSet.of("application/pdf", "application/x-pdf")),
+        PDF(ImmutableSet.of("pdf"), ImmutableSet.of("application/pdf", "application/x-pdf")),
 
         ILLEGAL(ImmutableSet.of("exe", "sh", "csh", "ai"),
                 ImmutableSet.of("application/octet-stream", "application/x-sh", "application/x-shar", "text/x-script.sh", "application/x-csh", "text/x-script.csh", "application/postscript"));

@@ -1,12 +1,11 @@
 package com.github.bestheroz.sample.web.guide.popup;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class SampleGuidePopupController {
-    @RequestMapping(value = "/sample/guide/popup/sampleGuidePopup.view", method = RequestMethod.GET)
+    @GetMapping(value = "/sample/guide/popup/sampleGuidePopup.view")
     public String view() {
         return "/sample/guide/popup/sampleGuidePopup";
     }

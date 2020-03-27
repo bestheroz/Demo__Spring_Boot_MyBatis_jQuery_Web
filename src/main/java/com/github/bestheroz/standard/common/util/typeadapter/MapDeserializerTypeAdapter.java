@@ -12,8 +12,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 public class MapDeserializerTypeAdapter implements JsonDeserializer<Map<String, Object>> {
-    // private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
     @Override
     public Map<String, Object> deserialize(final JsonElement json, final Type typeOfT, final JsonDeserializationContext context) throws JsonParseException {
         final Map<String, Object> map = new LinkedHashMap<>();

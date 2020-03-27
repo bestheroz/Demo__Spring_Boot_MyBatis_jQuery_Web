@@ -3,9 +3,9 @@ package com.github.bestheroz.standard.common.util;
 import com.github.bestheroz.standard.common.exception.CommonException;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -14,19 +14,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+@Slf4j
+@UtilityClass
 public class MyNullUtils {
-    private static final Logger LOGGER = LoggerFactory.getLogger(MyNullUtils.class);
-
-    protected MyNullUtils() {
-        throw new UnsupportedOperationException();
-    }
 
     // int 도 함께 커버됨
     public static boolean equals(final Integer n1, final Integer n2) throws CommonException {
         try {
             return n1 != null && n2 != null && n1.intValue() == n2.intValue();
         } catch (final Throwable e) {
-            LOGGER.warn(ExceptionUtils.getStackTrace(e));
+            log.warn(ExceptionUtils.getStackTrace(e));
             return false;
         }
     }
@@ -35,7 +32,7 @@ public class MyNullUtils {
         try {
             return n1 != null && n2 != null && n1.longValue() == n2.longValue();
         } catch (final Throwable e) {
-            LOGGER.warn(ExceptionUtils.getStackTrace(e));
+            log.warn(ExceptionUtils.getStackTrace(e));
             return false;
         }
     }
@@ -44,7 +41,7 @@ public class MyNullUtils {
         try {
             return file != null && file.exists();
         } catch (final Throwable e) {
-            LOGGER.warn(ExceptionUtils.getStackTrace(e));
+            log.warn(ExceptionUtils.getStackTrace(e));
             return false;
         }
     }
@@ -53,7 +50,7 @@ public class MyNullUtils {
         try {
             return iterator != null && iterator.hasNext();
         } catch (final Throwable e) {
-            LOGGER.warn(ExceptionUtils.getStackTrace(e));
+            log.warn(ExceptionUtils.getStackTrace(e));
             return false;
         }
     }
@@ -71,7 +68,7 @@ public class MyNullUtils {
                 return json.isJsonNull();
             }
         } catch (final Throwable e) {
-            LOGGER.warn(ExceptionUtils.getStackTrace(e));
+            log.warn(ExceptionUtils.getStackTrace(e));
             return true;
         }
     }
@@ -80,7 +77,7 @@ public class MyNullUtils {
         try {
             return multipartFile == null || multipartFile.isEmpty();
         } catch (final Throwable e) {
-            LOGGER.warn(ExceptionUtils.getStackTrace(e));
+            log.warn(ExceptionUtils.getStackTrace(e));
             return true;
         }
     }
@@ -89,7 +86,7 @@ public class MyNullUtils {
         try {
             return size(list) == 0;
         } catch (final Throwable e) {
-            LOGGER.warn(ExceptionUtils.getStackTrace(e));
+            log.warn(ExceptionUtils.getStackTrace(e));
             return true;
         }
     }
@@ -98,7 +95,7 @@ public class MyNullUtils {
         try {
             return size(list) == 0;
         } catch (final Throwable e) {
-            LOGGER.warn(ExceptionUtils.getStackTrace(e));
+            log.warn(ExceptionUtils.getStackTrace(e));
             return true;
         }
     }
@@ -123,7 +120,7 @@ public class MyNullUtils {
         try {
             return list == null ? 0 : list.size();
         } catch (final Throwable e) {
-            LOGGER.warn(ExceptionUtils.getStackTrace(e));
+            log.warn(ExceptionUtils.getStackTrace(e));
             return 0;
         }
     }
@@ -132,7 +129,7 @@ public class MyNullUtils {
         try {
             return list == null ? 0 : list.size();
         } catch (final Throwable e) {
-            LOGGER.warn(ExceptionUtils.getStackTrace(e));
+            log.warn(ExceptionUtils.getStackTrace(e));
             return 0;
         }
     }
@@ -141,7 +138,7 @@ public class MyNullUtils {
         try {
             return list == null ? 0 : list.size();
         } catch (final Throwable e) {
-            LOGGER.warn(ExceptionUtils.getStackTrace(e));
+            log.warn(ExceptionUtils.getStackTrace(e));
             return 0;
         }
     }
@@ -150,7 +147,7 @@ public class MyNullUtils {
         try {
             return map == null ? 0 : map.size();
         } catch (final Throwable e) {
-            LOGGER.warn(ExceptionUtils.getStackTrace(e));
+            log.warn(ExceptionUtils.getStackTrace(e));
             return 0;
         }
     }

@@ -6,25 +6,23 @@ import com.github.bestheroz.standard.common.util.typeadapter.*;
 import com.google.gson.*;
 import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
+import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Type;
 import java.util.*;
 
+@Slf4j
+@UtilityClass
 public class MyMapperUtils {
-    private static final Logger LOGGER = LoggerFactory.getLogger(MyMapperUtils.class);
     private static final Gson GSON_INSTANCE = new GsonBuilder().registerTypeAdapter(Date.class, new DateDeserializerTypeAdapter()).registerTypeAdapter(Date.class, new DateSerializerTypeAdapter())
             .registerTypeAdapter(DateTime.class, new DateTimeDeserializerTypeAdapter()).registerTypeAdapter(DateTime.class, new DateTimeSerializerTypeAdapter())
             .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializerTypeAdapter()).registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializerTypeAdapter())
             .registerTypeAdapter(Map.class, new MapDeserializerTypeAdapter()).registerTypeAdapter(HashMap.class, new MapDeserializerTypeAdapter())
             .registerTypeAdapter(LinkedTreeMap.class, new MapDeserializerTypeAdapter()).disableHtmlEscaping().create();
 
-    protected MyMapperUtils() {
-        throw new UnsupportedOperationException();
-    }
 
     public static <T> T writeObjectAsObject(final Object content, final Class<T> returnType) throws CommonException {
         return GSON_INSTANCE.fromJson(writeObjectAsJsonElement(content), returnType);
@@ -87,7 +85,7 @@ public class MyMapperUtils {
     private static <T> T getCollectionTypeCatchException(final Object content, final Class<T> returnType) {
         final JsonElement jsonElement = writeObjectAsJsonElement(content);
         if (jsonElement.isJsonPrimitive()) {
-            LOGGER.warn(CommonExceptionCode.FAIL_TRANSFORM_DATA.toString());
+            log.warn(CommonExceptionCode.FAIL_TRANSFORM_DATA.toString());
             throw new CommonException(CommonExceptionCode.FAIL_TRANSFORM_DATA, jsonElement);
         } else if (jsonElement.isJsonNull()) {
             if (returnType == JsonObject.class) {

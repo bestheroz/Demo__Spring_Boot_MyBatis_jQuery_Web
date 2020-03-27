@@ -1,12 +1,11 @@
 package com.github.bestheroz.sample.web.guide.handlebarsjs;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class SampleGuideHandlebarsjsController {
-    @RequestMapping(value = "/sample/guide/handlebarsjs/sampleGuideHandlebarsjs.view", method = RequestMethod.GET)
+    @GetMapping(value = "/sample/guide/handlebarsjs/sampleGuideHandlebarsjs.view")
     public String view() {
         return "/sample/guide/handlebarsjs/sampleGuideHandlebarsjs";
     }

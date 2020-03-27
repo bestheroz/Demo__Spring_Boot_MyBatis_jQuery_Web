@@ -159,9 +159,6 @@ const MyAjax = {
                 } else {
                     message = response.responseMessage;
                 }
-                if (MyCommon.isNotEmpty(response.additionalMessage)) {
-                    message += "\n" + response.additionalMessage;
-                }
                 alert(message);
             }
         }

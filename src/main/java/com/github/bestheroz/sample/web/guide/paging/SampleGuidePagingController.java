@@ -2,24 +2,23 @@ package com.github.bestheroz.sample.web.guide.paging;
 
 import com.github.bestheroz.standard.common.exception.CommonException;
 import com.google.gson.JsonObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.annotation.Resource;
 
 @Controller
 public class SampleGuidePagingController {
+    @Resource SampleGuidePagingService sampleGuidePagingService;
 
-    @Autowired
-    private SampleGuidePagingService sampleGuidePagingService;
-
-    @RequestMapping(value = "/sample/guide/paging/sampleGuidePaging.view", method = RequestMethod.GET)
+    @GetMapping(value = "/sample/guide/paging/sampleGuidePaging.view")
     public String view() {
         return "/sample/guide/paging/sampleGuidePaging";
     }
 
-    @RequestMapping(value = "/sample/guide/paging/sampleGuidePaging.json", method = RequestMethod.POST)
+    @PostMapping(value = "/sample/guide/paging/sampleGuidePaging.json")
     @ResponseBody
     public JsonObject getSampleMenuMstVOList() throws CommonException {
         return this.sampleGuidePagingService.getSampleMenuMstVOList();

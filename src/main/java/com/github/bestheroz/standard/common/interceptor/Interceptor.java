@@ -2,6 +2,7 @@ package com.github.bestheroz.standard.common.interceptor;
 
 import com.github.bestheroz.standard.common.exception.CommonException;
 import com.github.bestheroz.standard.common.util.MySessionUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.time.StopWatch;
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+@Slf4j
 public class Interceptor extends HandlerInterceptorAdapter {
     private static final Logger LOGGER = LoggerFactory.getLogger(Interceptor.class);
     private static final String REQUEST_COMPLETE_EXECUTE_TIME_INCLUDE_JSP = "{} ....... Request Complete Execute Time(include JSP) viewName : {} ....... : {}";
@@ -26,11 +28,11 @@ public class Interceptor extends HandlerInterceptorAdapter {
     // preHandle : controller 이벤트 호출전
     public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler) throws CommonException {
         try {
-            if (MySessionUtils.isNotLogined(request.getSession())) {
+            if (MySessionUtils.isNotLoggedIn()) {
                 if (!StringUtils.contains(request.getHeader("accept"), "html") && (StringUtils.startsWith(request.getContentType(), MediaType.APPLICATION_FORM_URLENCODED_VALUE)
                         || StringUtils.startsWith(request.getContentType(), MediaType.APPLICATION_JSON_VALUE))) {
-                    LOGGER.warn(CommonException.EXCEPTION_FAIL_TRY_LOGIN_FIRST.getJsonObject().toString());
-                    throw CommonException.EXCEPTION_FAIL_TRY_LOGIN_FIRST;
+                    log.warn(CommonException.FAIL_TRY_LOGIN_FIRST.getJsonObject().toString());
+                    throw CommonException.FAIL_TRY_LOGIN_FIRST;
                 }
                 request.getSession().invalidate();
                 String pathWithinApplication = new UrlPathHelper().getPathWithinApplication(request);
@@ -43,7 +45,7 @@ public class Interceptor extends HandlerInterceptorAdapter {
                 return false;
             }
         } catch (final IOException e) {
-            LOGGER.warn(ExceptionUtils.getStackTrace(e));
+            log.warn(ExceptionUtils.getStackTrace(e));
             throw new CommonException(e);
         }
 
@@ -66,7 +68,7 @@ public class Interceptor extends HandlerInterceptorAdapter {
     public void afterCompletion(final HttpServletRequest request, final HttpServletResponse response, final Object handler, final Exception ex) {
         final StopWatch stopWatch = (StopWatch) request.getAttribute(STR_STOP_WATCH);
         stopWatch.stop();
-        LOGGER.info(REQUEST_COMPLETE_EXECUTE_TIME_INCLUDE_JSP, new UrlPathHelper().getPathWithinApplication(request), request.getAttribute(VIEW_NAME), stopWatch.toString());
+        log.info(REQUEST_COMPLETE_EXECUTE_TIME_INCLUDE_JSP, new UrlPathHelper().getPathWithinApplication(request), request.getAttribute(VIEW_NAME), stopWatch.toString());
         request.removeAttribute(STR_STOP_WATCH);
     }
 

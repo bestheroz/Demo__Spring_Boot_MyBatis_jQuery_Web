@@ -17,7 +17,7 @@ const MyTextEditor = {
             if (MyCommon.isNotEmpty($(element).attr('data-texteditor-height'))) {
                 options['height'] = $(element).attr('data-texteditor-height') + 'px';
             }
-            if ($(this).attr('data-texteditor-airmode') === 'true') {
+            if ($(element).attr('data-texteditor-airmode') === 'true') {
                 options['airMode'] = element;
             }
             MyTextEditor.instance(element, options);

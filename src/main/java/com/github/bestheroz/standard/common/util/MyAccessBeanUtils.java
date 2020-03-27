@@ -1,15 +1,15 @@
 package com.github.bestheroz.standard.common.util;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
 
 @Component
 public class MyAccessBeanUtils {
     private static MyAccessBeanUtils instance;
 
-    @Autowired
-    private ApplicationContext applicationContext;
+    @Resource ApplicationContext applicationContext;
 
     private MyAccessBeanUtils() {
         if (instance == null) {

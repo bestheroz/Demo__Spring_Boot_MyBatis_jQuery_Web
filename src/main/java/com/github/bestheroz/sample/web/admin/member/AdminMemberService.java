@@ -16,8 +16,7 @@ import java.util.Set;
 
 @Service
 public class AdminMemberService {
-    @Resource
-    private TableSampleMemberMstDAO tableMemberMstDAO;
+    @Resource TableSampleMemberMstDAO tableMemberMstDAO;
 
     List<AdminMemberVO> getSampleMemberMstVOList(final AdminMemberVO vo) throws CommonException {
         final Set<String> whereKeys = new HashSet<>();

@@ -20,8 +20,6 @@ import java.io.Serializable;
 @EnableTransactionManagement
 @MapperScan(basePackages = "com.github.bestheroz", annotationClass = Mapper.class)
 public class DbMybatisContext {
-//    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
     /**
      * 마이바티스 {@link org.apache.ibatis.session.SqlSession} 빈을 등록한다.
      * <p>
@@ -37,7 +35,7 @@ public class DbMybatisContext {
     @Bean(name = "transactionManager")
     @Primary
     @Autowired
-    public PlatformTransactionManager getPlatformTransactionManager(final HikariDataSource hikariDataSource) throws Exception {
+    public PlatformTransactionManager getPlatformTransactionManager(final HikariDataSource hikariDataSource) {
         return new DataSourceTransactionManager(hikariDataSource);
     }
 

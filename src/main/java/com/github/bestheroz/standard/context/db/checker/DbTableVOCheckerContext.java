@@ -3,12 +3,11 @@ package com.github.bestheroz.standard.context.db.checker;
 import com.github.bestheroz.standard.common.tablevo.SqlForTableVO;
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.ImmutableSet;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -16,7 +15,6 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.core.type.classreading.CachingMetadataReaderFactory;
 import org.springframework.core.type.classreading.MetadataReader;
 import org.springframework.core.type.classreading.MetadataReaderFactory;
-import org.springframework.stereotype.Component;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.SystemPropertyUtils;
 
@@ -26,17 +24,18 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
-@Component
+@Slf4j
+//@Component
 public class DbTableVOCheckerContext {
     public static final String DEFAULT_DATE_TYPE = "LocalDateTime";
     public static final Set<String> STRING_JDBC_TYPE_SET = ImmutableSet.of("VARCHAR", "VARCHAR2", "CHAR", "CLOB");
-    public static final Set<String> NUMBER_JDBC_TYPE_SET = ImmutableSet.of("INTEGER", "TINYINT", "INT", "INT UNSIGNED", "NUMBER");
+    public static final Set<String> NUMBER_JDBC_TYPE_SET = ImmutableSet.of("INTEGER", "TINYINT", "INT", "INT UNSIGNED", "NUMBER", "DECIMAL", "DECIMAL UNSIGNED", "BIGINT UNSIGNED", "BIGINT");
     public static final Set<String> DATETIME_JDBC_TYPE_SET = ImmutableSet.of("TIMESTAMP", "DATE", "DATETIME");
     public static final Set<String> BOOLEAN_JDBC_TYPE_SET = ImmutableSet.of("BOOLEAN");
     public static final Set<String> BYTE_JDBC_TYPE_SET = ImmutableSet.of("BLOB");
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired(required = false)
     public void validDbTableVO(final SqlSession sqlSession) {
@@ -44,11 +43,13 @@ public class DbTableVOCheckerContext {
             final Set<Class<?>> targetClassList = this.findMyTypes();
             final Set<String> filedList = new HashSet<>();
             for (final Class<?> class1 : targetClassList) {
+                log.debug("{}", class1.getSimpleName());
                 filedList.clear();
                 for (final Field field : class1.getDeclaredFields()) {
                     filedList.add(field.getName());
                 }
-                final String tableName = CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, StringUtils.substringBetween(class1.getSimpleName(), "Table", "VO"));
+                final String tableName = SqlForTableVO.getTableName(class1.getSimpleName());
+                log.debug(tableName);
                 try (final ResultSet rs = stmt.executeQuery("SELECT * FROM " + tableName + " LIMIT 0")) {
                     final ResultSetMetaData metaInfo = rs.getMetaData();
                     final String className = class1.getSimpleName();
@@ -60,7 +61,7 @@ public class DbTableVOCheckerContext {
                         fieldSize--;
                     }
                     if (metaInfo.getColumnCount() != fieldSize) {
-                        this.logger.warn("{} VO 필드 개수({}) != ({}){} 테이블 컬럼 개수", className, fieldSize, tableName, metaInfo.getColumnCount());
+                        log.warn("{} VO 필드 개수({}) != ({}){} 테이블 컬럼 개수", className, fieldSize, tableName, metaInfo.getColumnCount());
                         isInvalid = true;
                     }
                     if (!isInvalid) {
@@ -76,11 +77,11 @@ public class DbTableVOCheckerContext {
                                         || DATETIME_JDBC_TYPE_SET.contains(columnTypeName) && !SqlForTableVO.TIMESTAMP_JAVA_TYPE_SET.contains(fieldClassName)
                                         || BOOLEAN_JDBC_TYPE_SET.contains(columnTypeName) && !SqlForTableVO.BOOLEAN_JAVA_TYPE_SET.contains(fieldClassName)
                                         || BYTE_JDBC_TYPE_SET.contains(columnTypeName) && !SqlForTableVO.BLOB_JAVA_TYPE_SET.contains(fieldClassName)) {
-                                    this.logger.warn("자료형이 일치하지 않음 {}.{}({}) != {}.{}({})", tableName, columnName, columnTypeName, className, camelColumnName, fieldClassName);
+                                    log.warn("자료형이 일치하지 않음 {}.{}({}) != {}.{}({})", tableName, columnName, columnTypeName, className, camelColumnName, fieldClassName);
                                     isInvalid = true;
                                 }
                             } else {
-                                this.logger.warn("VO에 해당컬럼없음 {}.{} : {}.{}", tableName, columnName, className, camelColumnName);
+                                log.warn("VO에 해당컬럼없음 {}.{} : {}.{}", tableName, columnName, className, camelColumnName);
                                 isInvalid = true;
                             }
 
@@ -95,7 +96,7 @@ public class DbTableVOCheckerContext {
                             final String camelColumnName = CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, columnName);
                             if (STRING_JDBC_TYPE_SET.contains(columnTypeName)) {
                                 fieldType = "String";
-                            } else if (StringUtils.equals(columnTypeName, "NUMBER")) {
+                            } else if (StringUtils.equalsAny(columnTypeName, "NUMBER", "DECIMAL")) {
                                 if (metaInfo.getScale(i + 1) > 0) { // 소수점이 있으면
                                     fieldType = "Double";
                                 } else {
@@ -119,22 +120,22 @@ public class DbTableVOCheckerContext {
                                 fieldType = "Boolean";
                             } else if (BYTE_JDBC_TYPE_SET.contains(columnTypeName)) {
                                 fieldType = "Byte[];";
-                                this.logger.debug("private Byte[] {}{}", camelColumnName, "; // XXX: spotbugs 피하기 : Arrays.copyOf(value, value.length)");
+                                log.debug("private Byte[] {}{}", camelColumnName, "; // XXX: spotbugs 피하기 : Arrays.copyOf(value, value.length)");
                             } else {
                                 fieldType = "Unknown";
-                                this.logger.warn("케이스 빠짐 {} : {}", columnName, columnTypeName);
+                                log.warn("케이스 빠짐 {} : {}", columnName, columnTypeName);
                             }
                             voSb.append("private ").append(fieldType).append(" ").append(camelColumnName).append(";\n");
                         }
-                        this.logger.warn("\n" + voSb.toString() + "\n");
+                        log.warn("\n" + voSb.toString() + "\n");
                     }
                 } catch (final Throwable e) {
-                    this.logger.warn(ExceptionUtils.getStackTrace(e));
+                    log.warn(ExceptionUtils.getStackTrace(e));
                 }
             }
-            this.logger.debug("Complete TableVOChecker");
+            log.debug("Complete TableVOChecker");
         } catch (final Throwable e) {
-            this.logger.warn(ExceptionUtils.getStackTrace(e));
+            log.warn(ExceptionUtils.getStackTrace(e));
         }
     }
 
@@ -142,7 +143,7 @@ public class DbTableVOCheckerContext {
         final ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
         final MetadataReaderFactory metadataReaderFactory = new CachingMetadataReaderFactory(resourcePatternResolver);
 
-        final Set<Class<?>> candidates = new HashSet<>();
+        final Set<Class<?>> candidates = new LinkedHashSet<>();
         final String packageSearchPath = ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX + this.resolveBasePackage("com.github.bestheroz") + "/" + "**/Table*VO.class";
         for (final Resource resource : resourcePatternResolver.getResources(packageSearchPath)) {
             if (resource.isReadable()) {
@@ -159,3 +160,4 @@ public class DbTableVOCheckerContext {
         return ClassUtils.convertClassNameToResourcePath(SystemPropertyUtils.resolvePlaceholders(basePackage));
     }
 }
+

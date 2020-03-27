@@ -5,6 +5,7 @@ import com.github.bestheroz.standard.common.util.MyDateUtils;
 import com.github.bestheroz.standard.common.util.MyFileUtils;
 import com.github.bestheroz.standard.context.abstractview.AbstractExcelXView;
 import com.google.common.base.CaseFormat;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.poi.ss.usermodel.FillPatternType;
@@ -18,10 +19,8 @@ import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFFont;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.sql.Connection;
@@ -30,16 +29,15 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 public class HugeExcelService extends AbstractExcelXView {
     public static final String VIEW_NAME = "hugeExcelView";
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
-    private SqlSession sqlSession;
+    @Resource SqlSession sqlSession;
 
     @SuppressWarnings("DuplicatedCode")
     @Override
-    protected void buildExcelDocument(final Map<String, Object> model, final SXSSFWorkbook workbook, final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+    protected void buildExcelDocument(final Map<String, Object> model, final SXSSFWorkbook workbook, final HttpServletRequest request, final HttpServletResponse response) {
         @SuppressWarnings("unchecked") final List<ExcelVO> excelVOs = (List<ExcelVO>) model.get(AbstractExcelXView.EXCEL_VOS);
         final String sql = (String) model.get(AbstractExcelXView.SQL);
         final String fileName = MyFileUtils.getEncodedFileName(request, (String) model.get(AbstractExcelXView.FILE_NAME));
@@ -88,7 +86,7 @@ public class HugeExcelService extends AbstractExcelXView {
 
             for (int i = 0; executeQuery.next(); i++) {
                 if (i != 0 && i % 200 == 0) {
-                    this.logger.debug("[Excel]{} writed {} rows", sheet.getSheetName(), i + 1);
+                    log.debug("[Excel]{} writed {} rows", sheet.getSheetName(), i + 1);
                 }
 
                 final SXSSFRow row = sheet.createRow(3 + i);
@@ -104,7 +102,7 @@ public class HugeExcelService extends AbstractExcelXView {
                 }
             }
         } catch (final Throwable e) {
-            this.logger.warn(ExceptionUtils.getStackTrace(e));
+            log.warn(ExceptionUtils.getStackTrace(e));
             throw new CommonException(e);
         }
     }

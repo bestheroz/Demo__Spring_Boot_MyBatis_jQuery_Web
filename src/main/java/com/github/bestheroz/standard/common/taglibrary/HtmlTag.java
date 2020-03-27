@@ -2,21 +2,22 @@ package com.github.bestheroz.standard.common.taglibrary;
 
 import com.github.bestheroz.standard.common.constant.CommonCode;
 import com.github.bestheroz.standard.common.exception.CommonException;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.servlet.jsp.tagext.TagSupport;
 import java.text.MessageFormat;
 
-@SuppressWarnings("serial")
+
+@Slf4j
+@Data
 public class HtmlTag extends TagSupport {
-    private static final Logger LOGGER = LoggerFactory.getLogger(HtmlTag.class);
+    private static final long serialVersionUID = 491839523317391051L;
     private final StringBuilder sb = new StringBuilder();
 
     private String title;
-
     /**
      * Plugin JS, CSS
      */
@@ -45,7 +46,7 @@ public class HtmlTag extends TagSupport {
             this.sb.append("<head>");
             this.sb.append("<title>");
             if (StringUtils.isEmpty(this.title)) {
-                this.sb.append("Bestheroz's Spring-Boot-Mybatis-jQuery Web Project ver.191105");
+                this.sb.append("Bestheroz's Spring-Boot-Mybatis-jQuery Web Project ver.200327");
             } else {
                 this.sb.append(this.title);
             }
@@ -57,11 +58,11 @@ public class HtmlTag extends TagSupport {
 
             // <!-- 페이지 필수 공통 내용 START -->
             this.makeLinkTag("https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css");
-            this.makeLinkTag("https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css");
+            this.makeLinkTag("https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css");
             this.makeLinkTag(CommonCode.PATH_CSS + "/MyCommon.css");
             this.makeScriptTag("https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js");
             this.makeScriptTag("https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.15.0/umd/popper.min.js");
-            this.makeScriptTag("https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js");
+            this.makeScriptTag("https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js");
             this.makeScriptTag("https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min.js");
             this.makeScriptTag("https://cdn.jsdelivr.net/npm/moment@2.24.0/moment.min.js");
             this.makeScriptTag("https://cdn.jsdelivr.net/npm/moment@2.24.0/locale/ko.js");
@@ -78,7 +79,7 @@ public class HtmlTag extends TagSupport {
             // 이놈이 사이즈가 꾀 커서 다른 plugin의 property name을 먹어버린다. 그래서 상단에 선언
             if (StringUtils.equals(this.table, CommonCode.YES)) {
                 this.makeLinkTag("https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css");
-                this.makeLinkTag("https://cdn.datatables.net/buttons/1.6.0/css/buttons.bootstrap4.min.css");
+                this.makeLinkTag("https://cdn.datatables.net/buttons/1.6.1/css/buttons.bootstrap4.min.css");
                 this.makeLinkTag("https://cdn.datatables.net/responsive/2.2.3/css/responsive.bootstrap4.min.css");
                 this.makeLinkTag("https://cdn.datatables.net/fixedcolumns/3.3.0/css/fixedColumns.bootstrap4.min.css");
                 this.makeLinkTag("https://cdn.datatables.net/fixedheader/3.1.6/css/fixedHeader.bootstrap4.min.css");
@@ -90,11 +91,11 @@ public class HtmlTag extends TagSupport {
                 this.makeScriptTag("https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js");
                 this.makeScriptTag("https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js");
                 this.makeScriptTag("https://cdn.datatables.net/responsive/2.2.3/js/responsive.bootstrap4.min.js");
-                this.makeScriptTag("https://cdn.datatables.net/buttons/1.6.0/js/dataTables.buttons.min.js");
-                this.makeScriptTag("https://cdn.datatables.net/buttons/1.6.0/js/buttons.bootstrap4.min.js");
-                this.makeScriptTag("https://cdn.datatables.net/buttons/1.6.0/js/buttons.colVis.min.js");
-                this.makeScriptTag("https://cdn.datatables.net/buttons/1.6.0/js/buttons.html5.min.js");
-                this.makeScriptTag("https://cdn.datatables.net/buttons/1.6.0/js/buttons.print.min.js");
+                this.makeScriptTag("https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js");
+                this.makeScriptTag("https://cdn.datatables.net/buttons/1.6.1/js/buttons.bootstrap4.min.js");
+                this.makeScriptTag("https://cdn.datatables.net/buttons/1.6.1/js/buttons.colVis.min.js");
+                this.makeScriptTag("https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js");
+                this.makeScriptTag("https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js");
                 this.makeScriptTag("https://cdn.datatables.net/fixedcolumns/3.3.0/js/dataTables.fixedColumns.min.js");
                 this.makeScriptTag("https://cdn.datatables.net/fixedheader/3.1.6/js/dataTables.fixedHeader.min.js");
                 this.makeScriptTag("https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js");
@@ -113,14 +114,14 @@ public class HtmlTag extends TagSupport {
                 this.makeScriptTag("https://cdn.jsdelivr.net/npm/jquery-file-download@1.4.6/src/Scripts/jquery.fileDownload.js");
             }
             if (StringUtils.equals(this.handlebars, CommonCode.YES)) {
-                this.makeScriptTag("https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.4.2/handlebars.min.js");
+                this.makeScriptTag("https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.3/handlebars.min.js");
                 this.makeScriptTag(CommonCode.PATH_JS + "/MyHandlebars.js");
             }
             if (!StringUtils.equals(this.icon, CommonCode.NO)) {
-                this.makeLinkTag("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css");
+                this.makeLinkTag("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css");
             }
             if (!StringUtils.equals(this.maxLength, CommonCode.NO)) {
-                this.makeScriptTag("https://cdnjs.cloudflare.com/ajax/libs/bootstrap-maxlength/1.7.0/bootstrap-maxlength.min.js");
+                this.makeScriptTag("https://cdnjs.cloudflare.com/ajax/libs/bootstrap-maxlength/1.9.0/bootstrap-maxlength.min.js");
                 this.makeScriptTag(CommonCode.PATH_JS + "/MyMaxlength.js");
             }
             if (StringUtils.equals(this.modal, CommonCode.YES)) {
@@ -148,15 +149,15 @@ public class HtmlTag extends TagSupport {
             }
 
             if (StringUtils.equals(this.textEditor, CommonCode.YES)) {
-                this.makeLinkTag("https://cdn.jsdelivr.net/npm/summernote@0.8.12/dist/summernote-bs4.css");
+                this.makeLinkTag("https://cdn.jsdelivr.net/npm/summernote@0.8.16/dist/summernote-bs4.css");
                 this.makeLinkTag(CommonCode.PATH_CSS + "/MyTextEditor.css");
-                this.makeScriptTag("https://cdn.jsdelivr.net/npm/summernote@0.8.12/dist/summernote-bs4.js");
-                this.makeScriptTag("https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/lang/summernote-ko-KR.min.js");
+                this.makeScriptTag("https://cdn.jsdelivr.net/npm/summernote@0.8.16/dist/summernote-bs4.js");
+                this.makeScriptTag("https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.16/lang/summernote-ko-KR.min.js");
                 this.makeScriptTag(CommonCode.PATH_JS + "/MyTextEditor.js");
             }
 
             if (StringUtils.equals(this.validator, CommonCode.YES)) {
-                this.makeScriptTag("https://cdnjs.cloudflare.com/ajax/libs/validator/11.1.0/validator.min.js");
+                this.makeScriptTag("https://cdnjs.cloudflare.com/ajax/libs/validator/13.0.0/validator.min.js");
                 this.makeScriptTag("https://cdnjs.cloudflare.com/ajax/libs/parsley.js/2.9.1/parsley.min.js");
                 this.makeScriptTag("https://cdn.jsdelivr.net/npm/parsleyjs@2.9.1/dist/i18n/ko.js");
                 this.makeScriptTag(CommonCode.PATH_JS + "/MyValidator.js");
@@ -171,7 +172,7 @@ public class HtmlTag extends TagSupport {
             this.pageContext.getOut().print(this.sb.toString());
             return EVAL_BODY_INCLUDE;
         } catch (final Throwable e) {
-            LOGGER.warn(ExceptionUtils.getStackTrace(e));
+            log.warn(ExceptionUtils.getStackTrace(e));
             throw new CommonException(e);
         }
     }
@@ -182,7 +183,7 @@ public class HtmlTag extends TagSupport {
             this.pageContext.getOut().print("</body></html>");
             return SKIP_PAGE;
         } catch (final Throwable e) {
-            LOGGER.warn(ExceptionUtils.getStackTrace(e));
+            log.warn(ExceptionUtils.getStackTrace(e));
             throw new CommonException(e);
         }
     }
@@ -194,69 +195,4 @@ public class HtmlTag extends TagSupport {
     private void makeLinkTag(final String path) {
         this.sb.append("<link rel=\"stylesheet\" href=\"").append(path).append("\" />");
     }
-
-    public void setTitle(final String title) {
-        this.title = title;
-    }
-
-    public void setCookie(final String cookie) {
-        this.cookie = cookie;
-    }
-
-    public void setDatetimePicker(final String datetimePicker) {
-        this.datetimePicker = datetimePicker;
-    }
-
-    public void setFileDownloader(final String fileDownloader) {
-        this.fileDownloader = fileDownloader;
-    }
-
-    public void setIcon(final String icon) {
-        this.icon = icon;
-    }
-
-    public void setHandlebars(final String handlebars) {
-        this.handlebars = handlebars;
-    }
-
-    public void setMaxLength(final String maxLength) {
-        this.maxLength = maxLength;
-    }
-
-    public void setModal(final String modal) {
-        this.modal = modal;
-    }
-
-    public void setNumberFormatter(final String numberFormatter) {
-        this.numberFormatter = numberFormatter;
-    }
-
-    public void setPaging(final String paging) {
-        this.paging = paging;
-    }
-
-    public void setProgressBar(final String progressBar) {
-        this.progressBar = progressBar;
-    }
-
-    public void setPopup(final String popup) {
-        this.popup = popup;
-    }
-
-    public void setScrollUp(final String scrollUp) {
-        this.scrollUp = scrollUp;
-    }
-
-    public void setTable(final String table) {
-        this.table = table;
-    }
-
-    public void setTextEditor(final String textEditor) {
-        this.textEditor = textEditor;
-    }
-
-    public void setValidator(final String validator) {
-        this.validator = validator;
-    }
-
 }

@@ -1,40 +1,37 @@
 import com.github.bestheroz.standard.context.db.checker.DbTableVOCheckerContext;
 import com.github.bestheroz.standard.context.web.WebConfig;
 import com.google.common.base.CaseFormat;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.boot.test.autoconfigure.AutoConfigureMybatis;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 
+@Slf4j
 @SpringBootTest(classes = {WebConfig.class})
 @AutoConfigureMybatis
 public class TestCreateTableVO {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    @Qualifier("dataSource") @Autowired(required = false)
+    @Qualifier("dataSource") @Resource
     private DataSource dataSource;
 
     @Test
     public void test11() {
         try (final Statement stmt = this.dataSource.getConnection().createStatement()) {
 
-            final String tableName = "sample_member_mst";
-
+            final String tableName = "emsm_session_his";
             try (final ResultSet rs = stmt.executeQuery("SELECT * FROM " + tableName + " LIMIT 0")) {
                 final ResultSetMetaData metaInfo = rs.getMetaData();
-
+                System.out.println("Table" + CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, tableName) + "VO\n");
                 // 1. VO만들기
                 final StringBuilder voSb = new StringBuilder();
-
                 for (int i = 0; i < metaInfo.getColumnCount(); i++) {
                     final String fieldType;
                     final String columnTypeName = metaInfo.getColumnTypeName(i + 1);
@@ -42,7 +39,7 @@ public class TestCreateTableVO {
                     final String camelColumnName = CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, columnName);
                     if (DbTableVOCheckerContext.STRING_JDBC_TYPE_SET.contains(columnTypeName)) {
                         fieldType = "String";
-                    } else if (StringUtils.equalsAny(columnTypeName, "NUMBER", "DECIMAL")) {
+                    } else if (StringUtils.equalsAny(columnTypeName, "NUMBER", "DECIMAL", "DECIMAL UNSIGNED", "BIGINT UNSIGNED", "BIGINT", "SMALLINT UNSIGNED", "SMALLINT")) {
                         if (metaInfo.getScale(i + 1) > 0) { // 소수점이 있으면
                             fieldType = "Double";
                         } else {
@@ -66,10 +63,10 @@ public class TestCreateTableVO {
                         fieldType = "Boolean";
                     } else if (DbTableVOCheckerContext.BYTE_JDBC_TYPE_SET.contains(columnTypeName)) {
                         fieldType = "Byte[];";
-                        this.logger.debug("private Byte[] {}{}", camelColumnName, "; // XXX: spotbugs 피하기 : Arrays.copyOf(value, value.length)");
+                        log.debug("private Byte[] {}{}", camelColumnName, "; // XXX: spotbugs 피하기 : Arrays.copyOf(value, value.length)");
                     } else {
                         fieldType = "Unknown";
-                        this.logger.warn("케이스 빠짐 {} : {}", columnName, columnTypeName);
+                        log.warn("케이스 빠짐 {} : {}", columnName, columnTypeName);
                     }
                     voSb.append("private ").append(fieldType).append(" ").append(camelColumnName).append(";\n");
                 }
@@ -77,7 +74,7 @@ public class TestCreateTableVO {
             }
             System.out.println();
         } catch (final Throwable e) {
-            this.logger.warn(ExceptionUtils.getStackTrace(e));
+            log.warn(ExceptionUtils.getStackTrace(e));
         }
     }
 }

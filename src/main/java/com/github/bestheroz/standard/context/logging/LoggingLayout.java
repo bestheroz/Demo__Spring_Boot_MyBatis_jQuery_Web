@@ -1,4 +1,4 @@
-package com.github.bestheroz.standard.context.aop.logging.encoder;
+package com.github.bestheroz.standard.context.logging;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.CoreConstants;
@@ -15,10 +15,7 @@ public class LoggingLayout extends LayoutBase<ILoggingEvent> {
     public String doLayout(final ILoggingEvent event) {
         final StringBuffer sbuf = new StringBuffer(1024);
 
-        if (StringUtils.endsWith(event.getLoggerName(), "LoggingInAOP") && StringUtils.equals(event.getLevel().levelStr, "INFO")
-                || StringUtils.endsWith(event.getLoggerName(), "MyTestUtils") && StringUtils.equals(event.getCallerData()[0].getMethodName(), "logReponse")
-                && StringUtils.equals(event.getLevel().levelStr, "DEBUG")
-                || StringUtils.equals(event.getCallerData()[0].getMethodName(), "debug") && event.getCallerData()[0].getLineNumber() == 159) {
+        if (StringUtils.endsWith(event.getLoggerName(), "TraceLoggingInAOP")) {
             this.getMessageOnylyFormattedMessage(event, sbuf);
         } else if (StringUtils.startsWithAny(event.getLoggerName(), "org.jdbcdslog.StatementLogger", "org.jdbcdslog.ResultSetLogger")) {
             if (StringUtils.startsWithAny(event.getFormattedMessage(), "java.sql.ResultSet.next")) {
@@ -26,10 +23,18 @@ public class LoggingLayout extends LayoutBase<ILoggingEvent> {
             } else {
                 this.getSql(event, sbuf);
             }
-        } else if (StringUtils.endsWithAny(event.getLoggerName(), "RequestResponseBodyMethodProcessor", "RequestLoggingFilter")) {
+        } else if (StringUtils.endsWithAny(event.getLoggerName(), "RequestResponseBodyMethodProcessor")) {
             this.getMessageStartWithMethod(event, sbuf);
-        } else if (StringUtils.endsWith(event.getLoggerName(), "LoggingInAOP") && StringUtils.equals(event.getLevel().levelStr, "WARN") && event.getCallerData()[0].getLineNumber() == 43) {
+        } else if (StringUtils.endsWith(event.getLoggerName(), "TraceLoggingInAOP") && StringUtils.equals(event.getLevel().levelStr, "WARN") && event.getCallerData()[0].getLineNumber() == 43) {
             this.getExceptionMessage(event, sbuf);
+        } else if (StringUtils.endsWith(event.getLoggerName(), "SqlForTableVO") && StringUtils.equals(event.getLevel().levelStr, "DEBUG") &&
+                StringUtils.equalsAny(event.getCallerData()[0].getMethodName(), "selectOneTableVO", "selectTableVO", "countTableVO", "insertTableVO", "updateTableVO", "deleteTableVO")) {
+            this.getMessageStartWithMethod(event, sbuf);
+        } else if (StringUtils.endsWith(event.getLoggerName(), "SqlSessionTemplateOverride") && StringUtils.equals(event.getLevel().levelStr, "DEBUG") &&
+                StringUtils.equals(event.getCallerData()[0].getMethodName(), "writeLog")) {
+            this.getMessageStartWithMethod(event, sbuf);
+        } else if (StringUtils.startsWithAny(event.getFormattedMessage(), "==>  Preparing:", "==> Parameters:", "<==    Updates:", "<==      Total:")) {
+            this.getMessageOnylyFormattedMessage(event, sbuf);
         } else {
             this.getMessageByStdPattern(event, sbuf);
         }
@@ -117,8 +122,8 @@ public class LoggingLayout extends LayoutBase<ILoggingEvent> {
                     logString = StringUtils.replace(logString, str, STR_SKIP_TOO_LONG_TEXT);
                 }
             }
-            if (logString.length() > 4096) {
-                logString = StringUtils.abbreviate(logString, STR_SKIP_TOO_LONG_TEXT, 4000).concat(TOTAL_LENGTH).concat(String.valueOf(logString.length()));
+            if (logString.length() > 10000) {
+                logString = StringUtils.abbreviate(logString, STR_SKIP_TOO_LONG_TEXT, 10000).concat(TOTAL_LENGTH).concat(String.valueOf(logString.length()));
             }
         }
         return logString;

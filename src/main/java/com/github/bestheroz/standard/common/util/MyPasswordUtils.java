@@ -1,12 +1,10 @@
 package com.github.bestheroz.standard.common.util;
 
+import lombok.experimental.UtilityClass;
 import org.apache.commons.lang3.StringUtils;
 
+@UtilityClass
 public class MyPasswordUtils {
-
-    protected MyPasswordUtils() {
-        throw new UnsupportedOperationException();
-    }
 
     /**
      * <pre>

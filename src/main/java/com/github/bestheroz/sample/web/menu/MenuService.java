@@ -5,23 +5,21 @@ import com.github.bestheroz.standard.common.util.MyMapperUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.Map;
 
 @Service
+@Slf4j
 public class MenuService {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    @Autowired
-    private MenuDAO menuDAO;
+    @Resource MenuDAO menuDAO;
 
-    public JsonArray getMenuVOObject(final JsonObject param, final boolean isNotLogined) throws CommonException {
-        if (isNotLogined) {
-            this.logger.warn(CommonException.EXCEPTION_FAIL_NOT_ALLOWED_MEMBER.getJsonObject().toString());
-            throw CommonException.EXCEPTION_FAIL_NOT_ALLOWED_MEMBER;
+    public JsonArray getMenuVOObject(final JsonObject param, final boolean isNotLoggedIn) throws CommonException {
+        if (isNotLoggedIn) {
+            log.warn(CommonException.FAIL_NOT_ALLOWED_MEMBER.getJsonObject().toString());
+            throw CommonException.FAIL_NOT_ALLOWED_MEMBER;
         }
 
         final JsonObject temp = new JsonObject();

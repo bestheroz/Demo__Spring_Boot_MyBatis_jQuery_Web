@@ -4,27 +4,22 @@ import com.github.bestheroz.standard.common.exception.CommonException;
 import com.github.bestheroz.standard.common.util.MySessionUtils;
 import com.google.gson.JsonObject;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpSession;
+import javax.annotation.Resource;
 
 @Controller
 public class LoginController {
-    //    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    @Autowired
-    private LoginService loginService;
-    @Autowired
-    private HttpSession session;
+    @Resource LoginService loginService;
 
-    @RequestMapping(value = {"/", "/sample/login/login.view"}, method = RequestMethod.GET)
+    @GetMapping(value = {"/", "/sample/login/login.view"})
     public String view() {
-        if (MySessionUtils.getLoginVO(this.session) != null) {
-            final String returnUrl = MySessionUtils.getAttribute(this.session, "returnUrl");
-            this.session.removeAttribute("returnUrl");
+        if (MySessionUtils.isLoggedIn()) {
+            final String returnUrl = MySessionUtils.getAttribute("returnUrl");
+            MySessionUtils.removeAttribute("returnUrl");
             if (StringUtils.isEmpty(returnUrl) || StringUtils.equals(returnUrl, "null") || !StringUtils.endsWith(returnUrl, ".view")) {
                 return "redirect:/sample/admin/menu/adminMenu.view";
             } else {
@@ -34,16 +29,16 @@ public class LoginController {
         return "/sample/login/login";
     }
 
-    @RequestMapping(value = "/sample/login/loginProcess.json", method = RequestMethod.POST)
+    @PostMapping(value = "/sample/login/loginProcess.json")
     @ResponseBody
     public JsonObject loginProcess(final LoginVO vo) throws CommonException {
-        this.loginService.loginProcess(vo, this.session);
-        return CommonException.EXCEPTION_SUCCESS_NORMAL.getJsonObject();
+        this.loginService.loginProcess(vo);
+        return CommonException.SUCCESS_NORMAL.getJsonObject();
     }
 
-    @RequestMapping(value = "/sample/login/logout.view", method = RequestMethod.GET)
+    @GetMapping(value = "/sample/login/logout.view")
     public String logoutView() throws CommonException {
-        MySessionUtils.logout(this.session);
+        MySessionUtils.logout();
         return "redirect:/sample/login/login.view";
     }
 }

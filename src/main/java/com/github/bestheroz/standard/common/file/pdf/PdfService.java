@@ -11,12 +11,11 @@ import com.github.bestheroz.standard.context.abstractview.AbstractPdfboxView;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,11 +30,11 @@ import java.util.Map;
  *
  * @author www.codejava.net
  */
+@Slf4j
 public class PdfService extends AbstractPdfboxView {
     public static final String VIEW_NAME = "pdfView";
     private static final String FONT_PATH = "/font/MALGUNBD.TTF";
     private static final Double PAGE_MARGIN = 20.0;
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
     protected void buildPdfDocument(final Map<String, Object> model, final PDDocument document, final HttpServletRequest request, final HttpServletResponse response) throws IOException {
@@ -83,7 +82,7 @@ public class PdfService extends AbstractPdfboxView {
     private void addRowData(final PDDocument document, final BaseTable table, final List<PdfVO> pdfVOs, final JsonArray listData) throws IOException {
         for (int i = 0; i < listData.size(); i++) {
             if (i != 0 && i % 200 == 0) {
-                this.logger.debug("[PDF] writed {} rows", i + 1);
+                log.debug("[PDF] writed {} rows", i + 1);
             }
 
             final Row<PDPage> row = table.createRow(10F);

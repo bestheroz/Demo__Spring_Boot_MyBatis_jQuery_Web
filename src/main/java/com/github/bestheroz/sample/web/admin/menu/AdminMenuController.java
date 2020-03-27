@@ -13,75 +13,70 @@ import com.github.bestheroz.standard.common.valuelabel.ValueLabelVO;
 import com.github.bestheroz.standard.context.abstractview.AbstractExcelXView;
 import com.github.bestheroz.standard.context.abstractview.AbstractPdfboxView;
 import com.google.gson.JsonObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpSession;
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 public class AdminMenuController {
-    @Autowired
-    private AdminMenuService adminMenuService;
-    @Autowired
-    private ValueLabelService valueLabelService;
-    @Autowired
-    private HttpSession session;
+    @Resource AdminMenuService adminMenuService;
+    @Resource ValueLabelService valueLabelService;
 
-    @RequestMapping(value = "/sample/admin/menu/adminMenu.view", method = RequestMethod.GET)
+    @GetMapping(value = "/sample/admin/menu/adminMenu.view")
     public String home() {
         return "/sample/admin/menu/AdminMenu";
     }
 
-    @RequestMapping(value = "/sample/admin/menu/getSampleMenuMstVOList.json", method = RequestMethod.POST)
+    @PostMapping(value = "/sample/admin/menu/getSampleMenuMstVOList.json")
     @ResponseBody
     public List<AdminMenuVO> getSampleMenuMstVOList(final AdminMenuVO vo) throws CommonException {
         return this.adminMenuService.getSampleMenuMstVOList(vo);
     }
 
-    @RequestMapping(value = "/sample/admin/menu/insertSampleMenuMst.json", method = RequestMethod.POST)
+    @PostMapping(value = "/sample/admin/menu/insertSampleMenuMst.json")
     @ResponseBody
     public JsonObject insertSampleMenuMst(final TableSampleMenuMstVO vo) throws CommonException {
-        this.adminMenuService.insertSampleMenuMst(vo, MySessionUtils.getLoginVO(this.session));
-        return CommonException.EXCEPTION_SUCCESS_NORMAL.getJsonObject();
+        this.adminMenuService.insertSampleMenuMst(vo, MySessionUtils.getLoginVO());
+        return CommonException.SUCCESS_NORMAL.getJsonObject();
     }
 
-    @RequestMapping(value = "/sample/admin/menu/updateSampleMenuMst.json", method = RequestMethod.POST)
+    @PostMapping(value = "/sample/admin/menu/updateSampleMenuMst.json")
     @ResponseBody
     public JsonObject updateSampleMenuMst(final TableSampleMenuMstVO vo) throws CommonException {
-        this.adminMenuService.updateSampleMenuMst(vo, MySessionUtils.getLoginVO(this.session));
-        return CommonException.EXCEPTION_SUCCESS_NORMAL.getJsonObject();
+        this.adminMenuService.updateSampleMenuMst(vo, MySessionUtils.getLoginVO());
+        return CommonException.SUCCESS_NORMAL.getJsonObject();
     }
 
-    @RequestMapping(value = "/sample/admin/menu/deleteSampleMenuMst.json", method = RequestMethod.POST)
+    @PostMapping(value = "/sample/admin/menu/deleteSampleMenuMst.json")
     @ResponseBody
     public JsonObject deleteSampleMenuMst(final TableSampleMenuMstVO vo) throws CommonException {
         this.adminMenuService.deleteSampleMenuMst(vo);
-        return CommonException.EXCEPTION_SUCCESS_NORMAL.getJsonObject();
+        return CommonException.SUCCESS_NORMAL.getJsonObject();
     }
 
-    @RequestMapping(value = "/sample/admin/menu/getPMenuValueLableVOList.json", method = RequestMethod.POST)
+    @PostMapping(value = "/sample/admin/menu/getPMenuValueLableVOList.json")
     @ResponseBody
     public List<ValueLabelVO> getPMenuValueLableVOList(final AdminMenuVO vo) throws CommonException {
         return this.adminMenuService.getPMenuValueLableVOList(null);
     }
 
-    @RequestMapping(value = "/sample/admin/menu/adminMenu.xlsx", method = RequestMethod.POST)
+    @PostMapping(value = "/sample/admin/menu/adminMenu.xlsx")
     public String getExcel(final Model model, final AdminMenuVO vo) throws CommonException {
         model.addAttribute(AbstractExcelXView.FILE_NAME, "메뉴리스트");
 
         final List<ExcelVO> excelVOList = new ArrayList<>();
         AbstractExcelXView.addHeader(excelVOList, "메뉴ID", "menuId", ExcelService.CellType.STRING_CENTER);
         AbstractExcelXView.addHeader(excelVOList, "메뉴명", "menuName", ExcelService.CellType.STRING);
-        AbstractExcelXView.addHeader(excelVOList, "메뉴구분", "menuType", ExcelService.CellType.STRING_CENTER, this.valueLabelService.getValueLabelVoListToJsonObject("MENU_TYPE"));
+        AbstractExcelXView.addHeader(excelVOList, "메뉴구분", "menuType", ExcelService.CellType.STRING_CENTER, this.valueLabelService.getValueLabelVOList("MENU_TYPE"));
         AbstractExcelXView.addHeader(excelVOList, "부모메뉴ID", "parMenuId", ExcelService.CellType.STRING_CENTER);
-        AbstractExcelXView.addHeader(excelVOList, "사용여부", "useTf", ExcelService.CellType.STRING_CENTER, this.valueLabelService.getValueLabelVoListToJsonObject("USE_TF"));
-        AbstractExcelXView.addHeader(excelVOList, "권한", "power", ExcelService.CellType.STRING_RIGHT, this.valueLabelService.getValueLabelVoListToJsonObject("MEMBER_TYPE"));
+        AbstractExcelXView.addHeader(excelVOList, "사용여부", "useTf", ExcelService.CellType.STRING_CENTER, this.valueLabelService.getValueLabelVOList("USE_TF"));
+        AbstractExcelXView.addHeader(excelVOList, "권한", "power", ExcelService.CellType.STRING_RIGHT, this.valueLabelService.getValueLabelVOList("MEMBER_TYPE"));
         AbstractExcelXView.addHeader(excelVOList, "(같은그룹내)출력순서", "displayOrder", ExcelService.CellType.INTEGER);
         AbstractExcelXView.addHeader(excelVOList, "URL", "url", ExcelService.CellType.STRING);
         AbstractExcelXView.addHeader(excelVOList, "비고", "remark1", ExcelService.CellType.STRING);
@@ -96,17 +91,17 @@ public class AdminMenuController {
         return ExcelService.VIEW_NAME;
     }
 
-    @RequestMapping(value = "/sample/admin/menu/adminMenuHugeExcel.xlsx", method = RequestMethod.POST)
+    @PostMapping(value = "/sample/admin/menu/adminMenuHugeExcel.xlsx")
     public String getHugeExcel(final Model model, final AdminMenuVO vo) {
         model.addAttribute(AbstractExcelXView.FILE_NAME, "메뉴리스트");
 
         final List<ExcelVO> excelVOList = new ArrayList<>();
         AbstractExcelXView.addHeader(excelVOList, "메뉴ID", "menuId", ExcelService.CellType.STRING_CENTER);
         AbstractExcelXView.addHeader(excelVOList, "메뉴명", "menuName", ExcelService.CellType.STRING);
-        AbstractExcelXView.addHeader(excelVOList, "메뉴구분", "menuType", ExcelService.CellType.STRING_CENTER, this.valueLabelService.getValueLabelVoListToJsonObject("MENU_TYPE"));
+        AbstractExcelXView.addHeader(excelVOList, "메뉴구분", "menuType", ExcelService.CellType.STRING_CENTER, this.valueLabelService.getValueLabelVOList("MENU_TYPE"));
         AbstractExcelXView.addHeader(excelVOList, "부모메뉴ID", "parMenuId", ExcelService.CellType.STRING_CENTER);
-        AbstractExcelXView.addHeader(excelVOList, "사용여부", "useTf", ExcelService.CellType.STRING_CENTER, this.valueLabelService.getValueLabelVoListToJsonObject("USE_TF"));
-        AbstractExcelXView.addHeader(excelVOList, "권한", "power", ExcelService.CellType.STRING_RIGHT, this.valueLabelService.getValueLabelVoListToJsonObject("MEMBER_TYPE"));
+        AbstractExcelXView.addHeader(excelVOList, "사용여부", "useTf", ExcelService.CellType.STRING_CENTER, this.valueLabelService.getValueLabelVOList("USE_TF"));
+        AbstractExcelXView.addHeader(excelVOList, "권한", "power", ExcelService.CellType.STRING_RIGHT, this.valueLabelService.getValueLabelVOList("MEMBER_TYPE"));
         AbstractExcelXView.addHeader(excelVOList, "(같은그룹내)출력순서", "displayOrder", ExcelService.CellType.INTEGER);
         AbstractExcelXView.addHeader(excelVOList, "URL", "url", ExcelService.CellType.STRING);
         AbstractExcelXView.addHeader(excelVOList, "비고", "remark1", ExcelService.CellType.STRING);
@@ -122,7 +117,7 @@ public class AdminMenuController {
         return HugeExcelService.VIEW_NAME;
     }
 
-    @RequestMapping(value = "/sample/admin/menu/adminMenu.pdf", method = RequestMethod.POST)
+    @PostMapping(value = "/sample/admin/menu/adminMenu.pdf")
     public String getPdf(final Model model, final AdminMenuVO vo) throws CommonException {
         model.addAttribute(AbstractPdfboxView.FILE_NAME, "메뉴리스트");
 

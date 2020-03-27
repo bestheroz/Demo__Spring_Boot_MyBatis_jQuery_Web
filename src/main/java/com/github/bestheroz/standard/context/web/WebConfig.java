@@ -7,7 +7,6 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
@@ -18,17 +17,11 @@ import java.util.List;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
-
-    @Override
-    public void addResourceHandlers(final ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
-    }
-
     @Override
     public void addInterceptors(final InterceptorRegistry registry) {
-        registry.addInterceptor(new Interceptor()).addPathPatterns("/**").excludePathPatterns("/sample/login/**").excludePathPatterns("/resources/**")
-                .excludePathPatterns("/common/valuelabel/getValueLabelVOList.json")
-                .excludePathPatterns("/favicon.*").excludePathPatterns("/common/exception/**");
+        registry.addInterceptor(new Interceptor()).addPathPatterns("/**")
+                .excludePathPatterns("/", "/fonts/**", "/webjars/**", "/img/**", "/js/**", "/**/*.css", "/**/*.ico", "/**/*.js", "/**/*.json", "/**/*.html", "/**/*.map", "/csrf", "/auth/login",
+                        "/error", "/common/exception/error", "/valueText/**", "/variable/**", "/actuator/**", "/sample/login/**");
     }
 
     @Override
@@ -54,5 +47,4 @@ public class WebConfig implements WebMvcConfigurer {
 
         WebMvcConfigurer.super.configureMessageConverters(converters);
     }
-
 }

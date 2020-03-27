@@ -7,36 +7,30 @@ import com.github.bestheroz.sample.web.tablevo.samplecodemst.TableSampleCodeMstD
 import com.github.bestheroz.sample.web.tablevo.samplecodemst.TableSampleCodeMstVO;
 import com.github.bestheroz.standard.common.exception.CommonException;
 import com.github.bestheroz.standard.common.util.MyMapperUtils;
+import com.github.bestheroz.standard.common.util.MySessionUtils;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
-import javax.servlet.http.HttpSession;
+import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @Service
+@Slf4j
 public class AdminValueLabelService {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    @Autowired
-    private PlatformTransactionManager platformTransactionManager;
-    @Autowired
-    private HttpSession session;
-    @Autowired
-    private TableSampleCodeMstDAO tableSampleCodeMstDAO;
-    @Autowired
-    private TableSampleCodeDetDAO tableSampleCodeDetDAO;
+    @Resource PlatformTransactionManager platformTransactionManager;
+    @Resource TableSampleCodeMstDAO tableSampleCodeMstDAO;
+    @Resource TableSampleCodeDetDAO tableSampleCodeDetDAO;
 
     public List<AdminValueLabelVO> getSampleCodeMstVOList(final AdminValueLabelVO vo) throws CommonException {
         final TableSampleCodeMstVO tableSampleCodeMstVO = MyMapperUtils.writeObjectAsObject(vo, TableSampleCodeMstVO.class);
@@ -51,13 +45,13 @@ public class AdminValueLabelService {
         vo.setCreatedBy(loginVO.getMemberId());
         vo.setUpdatedBy(loginVO.getMemberId());
         this.tableSampleCodeMstDAO.insert(vo);
-        this.session.removeAttribute("ValueLabel." + vo.getGroupCode());
+        MySessionUtils.removeAttribute("ValueLabel." + vo.getGroupCode());
     }
 
     public void updateSampleCodeMst(final TableSampleCodeMstVO vo, final LoginVO loginVO) throws CommonException {
         vo.setUpdatedBy(loginVO.getMemberId());
         this.tableSampleCodeMstDAO.update(vo, Collections.singleton("groupCode"), null);
-        this.session.removeAttribute("ValueLabel." + vo.getGroupCode());
+        MySessionUtils.removeAttribute("ValueLabel." + vo.getGroupCode());
     }
 
     // @Transactional
@@ -77,20 +71,20 @@ public class AdminValueLabelService {
             try {
                 this.tableSampleCodeDetDAO.delete(tableSampleCodeDetVO, Collections.singleton("groupCode"));
             } catch (final CommonException e) {
-                if (!e.isExceptionNoDataSuccesss()) {
-                    this.logger.warn(ExceptionUtils.getStackTrace(e));
+                if (!e.isExceptionNoDataSuccess()) {
+                    log.warn(ExceptionUtils.getStackTrace(e));
                     throw e;
                 }
             }
             final TableSampleCodeMstVO tableSampleCodeMstVO = MyMapperUtils.writeObjectAsObject(vo, TableSampleCodeMstVO.class);
             this.tableSampleCodeMstDAO.delete(tableSampleCodeMstVO, Collections.singleton("groupCode"));
-            this.session.removeAttribute("ValueLabel." + tableSampleCodeMstVO.getGroupCode());
+            MySessionUtils.removeAttribute("ValueLabel." + tableSampleCodeMstVO.getGroupCode());
             this.platformTransactionManager.commit(status);
         } catch (final CommonException e) {
             if (!status.isCompleted()) {
                 this.platformTransactionManager.rollback(status);
             }
-            this.logger.warn(ExceptionUtils.getStackTrace(e));
+            log.warn(ExceptionUtils.getStackTrace(e));
             throw e;
         }
     }
@@ -109,18 +103,18 @@ public class AdminValueLabelService {
         vo.setCreatedBy(loginVO.getMemberId());
         vo.setUpdatedBy(loginVO.getMemberId());
         this.tableSampleCodeDetDAO.insert(vo);
-        this.session.removeAttribute("ValueLabel." + vo.getGroupCode());
+        MySessionUtils.removeAttribute("ValueLabel." + vo.getGroupCode());
     }
 
     public void updateSampleCodeDet(final TableSampleCodeDetVO vo, final LoginVO loginVO) throws CommonException {
         vo.setUpdatedBy(loginVO.getMemberId());
         this.tableSampleCodeDetDAO.update(vo, ImmutableSet.of("groupCode", "code"), null);
-        this.session.removeAttribute("ValueLabel." + vo.getGroupCode());
+        MySessionUtils.removeAttribute("ValueLabel." + vo.getGroupCode());
     }
 
     public void deleteSampleCodeDet(final TableSampleCodeDetVO vo) throws CommonException {
         this.tableSampleCodeDetDAO.delete(vo, ImmutableSet.of("groupCode", "code"));
-        this.session.removeAttribute("ValueLabel." + vo.getGroupCode());
+        MySessionUtils.removeAttribute("ValueLabel." + vo.getGroupCode());
     }
 
 }
