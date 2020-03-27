@@ -8,13 +8,12 @@ import com.github.bestheroz.standard.common.file.pdf.PdfVO;
 import com.github.bestheroz.standard.common.util.MyDateUtils;
 import com.github.bestheroz.standard.common.util.MyNullUtils;
 import com.google.gson.JsonElement;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.view.AbstractView;
 
@@ -27,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 @Component("AbstractPdfboxView")
+@Slf4j
 public abstract class AbstractPdfboxView extends AbstractView {
     /**
      * The extension to look for existing templates
@@ -35,7 +35,6 @@ public abstract class AbstractPdfboxView extends AbstractView {
     public static final String FILE_NAME = "fileName";
     public static final String PDF_VOS = "pdfVOs";
     public static final String LIST_DATA = "listData";
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     protected PDType0Font font = null;
 
     /**
@@ -83,7 +82,7 @@ public abstract class AbstractPdfboxView extends AbstractView {
             // Flush to HTTP response.
             this.writeToResponse(response, baos);
         } catch (final Throwable e) {
-            this.logger.warn(ExceptionUtils.getStackTrace(e));
+            log.warn(ExceptionUtils.getStackTrace(e));
             response.setContentType("text/html;charset=utf-8");
             try (final PrintWriter pw = response.getWriter()) {
                 pw.println("<script>");
@@ -91,7 +90,7 @@ public abstract class AbstractPdfboxView extends AbstractView {
                 pw.println("history.back();");
                 pw.println("</script>");
             } catch (final IOException e1) {
-                this.logger.warn(ExceptionUtils.getStackTrace(e1));
+                log.warn(ExceptionUtils.getStackTrace(e1));
                 throw new CommonException(e1);
             }
         }
@@ -152,7 +151,7 @@ public abstract class AbstractPdfboxView extends AbstractView {
                     }
                 }
             } catch (final Throwable e) {
-                this.logger.warn(ExceptionUtils.getStackTrace(e));
+                log.warn(ExceptionUtils.getStackTrace(e));
                 this.setString(row, pdfVOs.get(j).getWidth(), strData);
             }
         }
@@ -174,7 +173,7 @@ public abstract class AbstractPdfboxView extends AbstractView {
         try {
             row.createCell(columnWidth, this.getSecureCellText(text), HorizontalAlignment.RIGHT, VerticalAlignment.MIDDLE).setFont(this.font);
         } catch (final Throwable e) {
-            this.logger.warn("Excel setInteger() error\n{}.", ExceptionUtils.getStackTrace(e));
+            log.warn("Excel setInteger() error\n{}.", ExceptionUtils.getStackTrace(e));
             row.createCell(columnWidth, this.getSecureCellText(text), HorizontalAlignment.RIGHT, VerticalAlignment.MIDDLE).setFont(this.font);
         }
     }
@@ -183,7 +182,7 @@ public abstract class AbstractPdfboxView extends AbstractView {
         try {
             row.createCell(columnWidth, this.getSecureCellText(text), HorizontalAlignment.RIGHT, VerticalAlignment.MIDDLE).setFont(this.font);
         } catch (final Throwable e) {
-            this.logger.warn("Excel setDouble() error\n{}.", ExceptionUtils.getStackTrace(e));
+            log.warn("Excel setDouble() error\n{}.", ExceptionUtils.getStackTrace(e));
             row.createCell(columnWidth, this.getSecureCellText(text), HorizontalAlignment.RIGHT, VerticalAlignment.MIDDLE).setFont(this.font);
         }
     }
@@ -192,7 +191,7 @@ public abstract class AbstractPdfboxView extends AbstractView {
         try {
             this.setStringCenter(row, columnWidth, this.getSecureCellText(text));
         } catch (final Throwable e) {
-            this.logger.warn("Excel setDate() error\n{}.", ExceptionUtils.getStackTrace(e));
+            log.warn("Excel setDate() error\n{}.", ExceptionUtils.getStackTrace(e));
         }
     }
 
