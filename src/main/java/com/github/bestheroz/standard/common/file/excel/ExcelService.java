@@ -77,7 +77,7 @@ public class ExcelService extends AbstractExcelXView {
     private void addRowData(final SXSSFSheet sheet, final List<ExcelVO> excelVOs, final JsonArray listData) {
         for (int i = 0; i < listData.size(); i++) {
             if (i != 0 && i % 100 == 0) {
-                log.debug("[Excel]{} writed {} rows", sheet.getSheetName(), i + 1);
+                log.debug("[Excel]{} write {} rows", sheet.getSheetName(), i + 1);
             }
             final SXSSFRow row = sheet.createRow(3 + i);
             final JsonObject jo = listData.get(i).getAsJsonObject();

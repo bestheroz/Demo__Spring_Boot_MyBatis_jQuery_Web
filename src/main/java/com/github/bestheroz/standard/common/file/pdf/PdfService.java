@@ -82,7 +82,7 @@ public class PdfService extends AbstractPdfboxView {
     private void addRowData(final PDDocument document, final BaseTable table, final List<PdfVO> pdfVOs, final JsonArray listData) throws IOException {
         for (int i = 0; i < listData.size(); i++) {
             if (i != 0 && i % 200 == 0) {
-                log.debug("[PDF] writed {} rows", i + 1);
+                log.debug("[PDF] write {} rows", i + 1);
             }
 
             final Row<PDPage> row = table.createRow(10F);

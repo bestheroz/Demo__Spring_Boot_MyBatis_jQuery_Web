@@ -86,7 +86,7 @@ public class HugeExcelService extends AbstractExcelXView {
 
             for (int i = 0; executeQuery.next(); i++) {
                 if (i != 0 && i % 200 == 0) {
-                    log.debug("[Excel]{} writed {} rows", sheet.getSheetName(), i + 1);
+                    log.debug("[Excel]{} write {} rows", sheet.getSheetName(), i + 1);
                 }
 
                 final SXSSFRow row = sheet.createRow(3 + i);
