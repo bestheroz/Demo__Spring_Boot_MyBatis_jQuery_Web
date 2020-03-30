@@ -1,8 +1,8 @@
 package com.github.bestheroz.standard.override;
 
-import com.github.bestheroz.standard.common.exception.CommonException;
-import com.github.bestheroz.standard.common.exception.CommonExceptionCode;
-import com.github.bestheroz.standard.common.util.MyMapperUtils;
+import com.github.bestheroz.standard.common.exception.BusinessException;
+import com.github.bestheroz.standard.common.exception.ExceptionCode;
+import com.github.bestheroz.standard.common.util.MapperUtils;
 import com.google.gson.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -28,7 +28,7 @@ public class SqlSessionTemplateOverride extends SqlSessionTemplate {
     }
 
     @Override
-    public int delete(final String statement, final Object parameter) throws CommonException {
+    public int delete(final String statement, final Object parameter) {
         int result = 0;
         try {
             result = super.delete(statement, this.convertJsonToMap(parameter));
@@ -37,15 +37,15 @@ public class SqlSessionTemplateOverride extends SqlSessionTemplate {
         }
 
         if (result == 0) {
-            log.warn(CommonException.FAIL_NO_DATA_SUCCESS.toString());
-            throw CommonException.FAIL_NO_DATA_SUCCESS;
+            log.warn(BusinessException.FAIL_NO_DATA_SUCCESS.toString());
+            throw BusinessException.FAIL_NO_DATA_SUCCESS;
         }
 
         return result;
     }
 
     @Override
-    public int delete(final String statement) throws CommonException {
+    public int delete(final String statement) {
         int result = 0;
         try {
             result = super.delete(statement);
@@ -54,15 +54,15 @@ public class SqlSessionTemplateOverride extends SqlSessionTemplate {
         }
 
         if (result == 0) {
-            log.warn(CommonException.FAIL_NO_DATA_SUCCESS.toString());
-            throw CommonException.FAIL_NO_DATA_SUCCESS;
+            log.warn(BusinessException.FAIL_NO_DATA_SUCCESS.toString());
+            throw BusinessException.FAIL_NO_DATA_SUCCESS;
         }
 
         return result;
     }
 
     @Override
-    public int insert(final String statement) throws CommonException {
+    public int insert(final String statement) {
         int result = 0;
         try {
             result = super.insert(statement);
@@ -71,15 +71,15 @@ public class SqlSessionTemplateOverride extends SqlSessionTemplate {
         }
 
         if (result == 0) {
-            log.warn(CommonException.FAIL_NO_DATA_SUCCESS.toString());
-            throw CommonException.FAIL_NO_DATA_SUCCESS;
+            log.warn(BusinessException.FAIL_NO_DATA_SUCCESS.toString());
+            throw BusinessException.FAIL_NO_DATA_SUCCESS;
         }
 
         return result;
     }
 
     @Override
-    public int insert(final String statement, final Object parameter) throws CommonException {
+    public int insert(final String statement, final Object parameter) {
         int result = 0;
         try {
             result = super.insert(statement, this.convertJsonToMap(parameter));
@@ -88,15 +88,15 @@ public class SqlSessionTemplateOverride extends SqlSessionTemplate {
         }
 
         if (result == 0) {
-            log.warn(CommonException.FAIL_NO_DATA_SUCCESS.toString());
-            throw CommonException.FAIL_NO_DATA_SUCCESS;
+            log.warn(BusinessException.FAIL_NO_DATA_SUCCESS.toString());
+            throw BusinessException.FAIL_NO_DATA_SUCCESS;
         }
 
         return result;
     }
 
     @Override
-    public void select(final String statement, final Object parameter, final RowBounds rowBounds, final ResultHandler handler) throws CommonException {
+    public void select(final String statement, final Object parameter, final RowBounds rowBounds, final ResultHandler handler) {
         try {
             super.select(statement, this.convertJsonToMap(parameter), rowBounds, handler);
         } catch (final DataAccessException e) {
@@ -105,7 +105,7 @@ public class SqlSessionTemplateOverride extends SqlSessionTemplate {
     }
 
     @Override
-    public void select(final String statement, final Object parameter, final ResultHandler handler) throws CommonException {
+    public void select(final String statement, final Object parameter, final ResultHandler handler) {
         try {
             super.select(statement, this.convertJsonToMap(parameter), handler);
         } catch (final DataAccessException e) {
@@ -114,7 +114,7 @@ public class SqlSessionTemplateOverride extends SqlSessionTemplate {
     }
 
     @Override
-    public void select(final String statement, final ResultHandler handler) throws CommonException {
+    public void select(final String statement, final ResultHandler handler) {
         try {
             super.select(statement, handler);
         } catch (final DataAccessException e) {
@@ -124,7 +124,7 @@ public class SqlSessionTemplateOverride extends SqlSessionTemplate {
 
     @SuppressWarnings("unchecked")
     @Override
-    public Cursor<?> selectCursor(final String statement, final Object parameter, final RowBounds rowBounds) throws CommonException {
+    public Cursor<?> selectCursor(final String statement, final Object parameter, final RowBounds rowBounds) {
         Cursor<?> result = null;
         try {
             result = super.selectCursor(statement, this.convertJsonToMap(parameter), rowBounds);
@@ -136,7 +136,7 @@ public class SqlSessionTemplateOverride extends SqlSessionTemplate {
 
     @SuppressWarnings("unchecked")
     @Override
-    public Cursor<?> selectCursor(final String statement) throws CommonException {
+    public Cursor<?> selectCursor(final String statement) {
         Cursor<?> result = null;
         try {
             result = super.selectCursor(statement);
@@ -148,7 +148,7 @@ public class SqlSessionTemplateOverride extends SqlSessionTemplate {
 
     @SuppressWarnings("unchecked")
     @Override
-    public Cursor<?> selectCursor(final String statement, final Object parameter) throws CommonException {
+    public Cursor<?> selectCursor(final String statement, final Object parameter) {
         Cursor<?> result = null;
         try {
             result = super.selectCursor(statement, this.convertJsonToMap(parameter));
@@ -160,7 +160,7 @@ public class SqlSessionTemplateOverride extends SqlSessionTemplate {
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<?> selectList(final String statement, final Object parameter) throws CommonException {
+    public List<?> selectList(final String statement, final Object parameter) {
         List<?> result = null;
         try {
             result = super.selectList(statement, this.convertJsonToMap(parameter));
@@ -173,7 +173,7 @@ public class SqlSessionTemplateOverride extends SqlSessionTemplate {
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<?> selectList(final String statement, final Object parameter, final RowBounds rowBounds) throws CommonException {
+    public List<?> selectList(final String statement, final Object parameter, final RowBounds rowBounds) {
         List<?> result = null;
         try {
             result = super.selectList(statement, this.convertJsonToMap(parameter), rowBounds);
@@ -186,7 +186,7 @@ public class SqlSessionTemplateOverride extends SqlSessionTemplate {
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<?> selectList(final String statement) throws CommonException {
+    public List<?> selectList(final String statement) {
         List<?> result = null;
         try {
             result = super.selectList(statement);
@@ -199,7 +199,7 @@ public class SqlSessionTemplateOverride extends SqlSessionTemplate {
 
     @SuppressWarnings("unchecked")
     @Override
-    public Map<?, ?> selectMap(final String statement, final String mapKey) throws CommonException {
+    public Map<?, ?> selectMap(final String statement, final String mapKey) {
         Map<?, ?> result = null;
         try {
             result = super.selectMap(statement, mapKey);
@@ -212,7 +212,7 @@ public class SqlSessionTemplateOverride extends SqlSessionTemplate {
 
     @SuppressWarnings("unchecked")
     @Override
-    public Map<?, ?> selectMap(final String statement, final Object parameter, final String mapKey, final RowBounds rowBounds) throws CommonException {
+    public Map<?, ?> selectMap(final String statement, final Object parameter, final String mapKey, final RowBounds rowBounds) {
         Map<?, ?> result = null;
         try {
             result = super.selectMap(statement, this.convertJsonToMap(parameter), mapKey, rowBounds);
@@ -225,7 +225,7 @@ public class SqlSessionTemplateOverride extends SqlSessionTemplate {
 
     @SuppressWarnings("unchecked")
     @Override
-    public Map<?, ?> selectMap(final String statement, final Object parameter, final String mapKey) throws CommonException {
+    public Map<?, ?> selectMap(final String statement, final Object parameter, final String mapKey) {
         Map<?, ?> result = null;
         try {
             result = super.selectMap(statement, this.convertJsonToMap(parameter), mapKey);
@@ -237,7 +237,7 @@ public class SqlSessionTemplateOverride extends SqlSessionTemplate {
     }
 
     @Override
-    public <T> T selectOne(final String statement, final Object parameter) throws CommonException {
+    public <T> T selectOne(final String statement, final Object parameter) {
         T result = null;
         try {
             result = super.selectOne(statement, this.convertJsonToMap(parameter));
@@ -249,7 +249,7 @@ public class SqlSessionTemplateOverride extends SqlSessionTemplate {
     }
 
     @Override
-    public <T> T selectOne(final String statement) throws CommonException {
+    public <T> T selectOne(final String statement) {
         T result = null;
         try {
             result = super.selectOne(statement);
@@ -261,7 +261,7 @@ public class SqlSessionTemplateOverride extends SqlSessionTemplate {
     }
 
     @Override
-    public int update(final String statement, final Object parameter) throws CommonException {
+    public int update(final String statement, final Object parameter) {
         int result = 0;
         try {
             result = super.update(statement, this.convertJsonToMap(parameter));
@@ -270,14 +270,14 @@ public class SqlSessionTemplateOverride extends SqlSessionTemplate {
         }
 
         if (result == 0) {
-            log.warn(CommonException.FAIL_NO_DATA_SUCCESS.toString());
-            throw CommonException.FAIL_NO_DATA_SUCCESS;
+            log.warn(BusinessException.FAIL_NO_DATA_SUCCESS.toString());
+            throw BusinessException.FAIL_NO_DATA_SUCCESS;
         }
         return result;
     }
 
     @Override
-    public int update(final String statement) throws CommonException {
+    public int update(final String statement) {
         int result = 0;
         try {
             result = super.update(statement);
@@ -286,8 +286,8 @@ public class SqlSessionTemplateOverride extends SqlSessionTemplate {
         }
 
         if (result == 0) {
-            log.warn(CommonException.FAIL_NO_DATA_SUCCESS.toString());
-            throw CommonException.FAIL_NO_DATA_SUCCESS;
+            log.warn(BusinessException.FAIL_NO_DATA_SUCCESS.toString());
+            throw BusinessException.FAIL_NO_DATA_SUCCESS;
         }
 
         return result;
@@ -295,7 +295,7 @@ public class SqlSessionTemplateOverride extends SqlSessionTemplate {
 
     private <T> void writeLog(final T result) {
         try {
-            log.debug(MyMapperUtils.writeObjectAsString(result));
+            log.debug(MapperUtils.toString(result));
         } catch (final Throwable e) {
             log.warn(ExceptionUtils.getStackTrace(e));
         }
@@ -303,13 +303,13 @@ public class SqlSessionTemplateOverride extends SqlSessionTemplate {
 
     private Object convertJsonToMap(final Object parameter) {
         if (parameter instanceof JsonObject) {
-            return MyMapperUtils.writeObjectAsHashMap(parameter);
+            return MapperUtils.toHashMap(parameter);
         } else {
             return parameter;
         }
     }
 
-    private void executeThrowsDataAccessException(final DataAccessException e) throws CommonException {
+    private void executeThrowsDataAccessException(final DataAccessException e) {
         log.warn("exception.class.getSimpleName() ==> {}", ExceptionUtils.getThrowableList(e).get(0).getClass().getSimpleName());
         log.warn(ExceptionUtils.getStackTrace(e));
         final Throwable throwable = ExceptionUtils.getThrowableList(e).get(0);
@@ -317,29 +317,29 @@ public class SqlSessionTemplateOverride extends SqlSessionTemplate {
         // 아래 정의된 에러는 sql-error-codes.xml 에 정의된 내용입니다. sql-error-codes.xml는 구글에서 검색하세요 ^^
         final String stackTrace = ExceptionUtils.getStackTrace(throwable);
         if (throwable instanceof DuplicateKeyException) {
-            throw new CommonException(CommonExceptionCode.FAIL_UNIQUE_CONSTRAINT_VIOLATED);
+            throw new BusinessException(ExceptionCode.FAIL_UNIQUE_CONSTRAINT_VIOLATED);
         } else if (throwable instanceof BadSqlGrammarException) {
-            throw new CommonException(CommonExceptionCode.FAIL_BAD_SQL_GRAMMER);
+            throw new BusinessException(ExceptionCode.FAIL_BAD_SQL_GRAMMER);
         } else if (throwable instanceof TooManyResultsException) {
-            throw new CommonException(CommonExceptionCode.FAIL_TOO_MANY_RESULT);
+            throw new BusinessException(ExceptionCode.FAIL_TOO_MANY_RESULT);
         } else if (throwable instanceof DataIntegrityViolationException) {
             if (StringUtils.containsIgnoreCase(stackTrace, "child record found")) {
-                throw new CommonException(CommonExceptionCode.FAIL_VIOLATED_CHILD_RECORD_FOUND);
+                throw new BusinessException(ExceptionCode.FAIL_VIOLATED_CHILD_RECORD_FOUND);
             } else {
-                throw new CommonException(CommonExceptionCode.FAIL_CANNOT_INSERT_NULL);
+                throw new BusinessException(ExceptionCode.FAIL_CANNOT_INSERT_NULL);
             }
         } else if (StringUtils.containsIgnoreCase(stackTrace, "value too large for column") || StringUtils.containsIgnoreCase(stackTrace, "value too long for column")) {
             final String substring = StringUtils.substringBetween(stackTrace.toLowerCase(), "value too", ")");
-            throw new CommonException(CommonExceptionCode.FAIL_VALUE_TOO_LARGE_FOR_COLUMN, StringUtils.substring(substring, StringUtils.lastIndexOf(substring, "\".\"") + 2));
+            throw new BusinessException(ExceptionCode.FAIL_VALUE_TOO_LARGE_FOR_COLUMN, StringUtils.substring(substring, StringUtils.lastIndexOf(substring, "\".\"") + 2));
         } else if (StringUtils.containsIgnoreCase(stackTrace, "SelectKey returned no data")) {
-            throw new CommonException(CommonExceptionCode.FAIL_SELECTKEY_RETURN_NO_DATA);
+            throw new BusinessException(ExceptionCode.FAIL_SELECTKEY_RETURN_NO_DATA);
         } else if (StringUtils.containsIgnoreCase(stackTrace, "Mapped Statements collection does not contain value for")) {
-            throw new CommonException(CommonExceptionCode.FAIL_MAPPED_STATMENTS_COLLECTION_DOES_NOT_CONTAIN);
+            throw new BusinessException(ExceptionCode.FAIL_MAPPED_STATMENTS_COLLECTION_DOES_NOT_CONTAIN);
         } else if (StringUtils.containsIgnoreCase(stackTrace, "Fail to Decryption data")) {
-            throw new CommonException(CommonExceptionCode.FAIL_TO_DECRYPTION_DATA);
+            throw new BusinessException(ExceptionCode.FAIL_TO_DECRYPTION_DATA);
         } else {
-            log.warn(CommonException.FAIL_INVALID_REQUEST.toString());
-            throw CommonException.FAIL_INVALID_REQUEST;
+            log.warn(BusinessException.FAIL_INVALID_REQUEST.toString());
+            throw BusinessException.FAIL_INVALID_REQUEST;
         }
     }
 }

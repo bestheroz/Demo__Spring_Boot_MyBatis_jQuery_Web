@@ -1,10 +1,10 @@
 package com.github.bestheroz.standard.context.abstractview;
 
-import com.github.bestheroz.standard.common.exception.CommonException;
+import com.github.bestheroz.standard.common.code.CodeVO;
+import com.github.bestheroz.standard.common.exception.BusinessException;
 import com.github.bestheroz.standard.common.file.excel.ExcelVO;
-import com.github.bestheroz.standard.common.util.MyDateUtils;
-import com.github.bestheroz.standard.common.util.MyNullUtils;
-import com.github.bestheroz.standard.common.valuelabel.ValueLabelVO;
+import com.github.bestheroz.standard.common.util.DateUtils;
+import com.github.bestheroz.standard.common.util.NullUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RegExUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -76,7 +76,7 @@ public abstract class AbstractExcelXView extends AbstractView {
         addHeader(excelVOList, title, dbColName, cellType, null);
     }
 
-    public static void addHeader(final List<ExcelVO> excelVOList, final String title, final String dbColName, final CellType cellType, final List<ValueLabelVO> codeList) {
+    public static void addHeader(final List<ExcelVO> excelVOList, final String title, final String dbColName, final CellType cellType, final List<CodeVO> codeList) {
         final ExcelVO excelVO = new ExcelVO();
         excelVO.setTitle(title);
         excelVO.setDbColName(dbColName);
@@ -163,7 +163,7 @@ public abstract class AbstractExcelXView extends AbstractView {
                 pw.println("</script>");
             } catch (final IOException e1) {
                 log.warn(ExceptionUtils.getStackTrace(e1));
-                throw new CommonException(e1);
+                throw new BusinessException(e1);
             }
         }
     }
@@ -172,7 +172,7 @@ public abstract class AbstractExcelXView extends AbstractView {
         final ApplicationContext applicationContext = this.getApplicationContext();
         if (applicationContext == null) {
             log.warn("applicationContext is null");
-            throw CommonException.FAIL_SYSTEM;
+            throw BusinessException.FAIL_SYSTEM;
         }
         final LocalizedResourceHelper helper = new LocalizedResourceHelper(applicationContext);
         final Locale userLocale = RequestContextUtils.getLocale(request);
@@ -222,22 +222,22 @@ public abstract class AbstractExcelXView extends AbstractView {
         } else if (excelVOs.get(columnIdx).getCellType().equals(CellType.DATE) || excelVOs.get(columnIdx).getCellType().equals(CellType.DATE_YYYYMMDDHHMMSS)) {
             strData = RegExUtils.removeAll(strData, "\\.0");
             if (StringUtils.isNumeric(strData)) {
-                strData = MyDateUtils.getString(Long.parseLong(strData), MyDateUtils.YYYY_MM_DD_HH_MM_SS);
+                strData = DateUtils.getString(Long.parseLong(strData), DateUtils.YYYY_MM_DD_HH_MM_SS);
             }
             this.setDate(cell, strData);
         } else if (excelVOs.get(columnIdx).getCellType().equals(CellType.DATE_YYYYMMDD)) {
             strData = RegExUtils.removeAll(strData, "\\.0");
             if (StringUtils.isNumeric(strData)) {
-                strData = MyDateUtils.getString(Long.parseLong(strData), MyDateUtils.YYYY_MM_DD);
+                strData = DateUtils.getString(Long.parseLong(strData), DateUtils.YYYY_MM_DD);
             }
             this.setDate(cell, strData);
         } else {
             try {
-                final List<ValueLabelVO> codeList = excelVOs.get(columnIdx).getCodeList();
-                if (MyNullUtils.isNotEmpty(codeList)) {
-                    for (final ValueLabelVO valueTextVO : codeList) {
-                        if (strData.equals(valueTextVO.getValue())) {
-                            final String value = valueTextVO.getLabel();
+                final List<CodeVO> codeList = excelVOs.get(columnIdx).getCodeList();
+                if (NullUtils.isNotEmpty(codeList)) {
+                    for (final CodeVO codeVO : codeList) {
+                        if (strData.equals(codeVO.getValue())) {
+                            final String value = codeVO.getLabel();
                             if (excelVOs.get(columnIdx).getCellType().equals(CellType.STRING_CENTER)) {
                                 this.setStringCenter(cell, value);
                             } else if (excelVOs.get(columnIdx).getCellType().equals(CellType.STRING_RIGHT)) {

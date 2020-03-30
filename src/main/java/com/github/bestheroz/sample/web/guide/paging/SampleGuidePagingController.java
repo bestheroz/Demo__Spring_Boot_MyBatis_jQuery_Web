@@ -1,6 +1,5 @@
 package com.github.bestheroz.sample.web.guide.paging;
 
-import com.github.bestheroz.standard.common.exception.CommonException;
 import com.google.gson.JsonObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +19,7 @@ public class SampleGuidePagingController {
 
     @PostMapping(value = "/sample/guide/paging/sampleGuidePaging.json")
     @ResponseBody
-    public JsonObject getSampleMenuMstVOList() throws CommonException {
+    public JsonObject getSampleMenuMstVOList() {
         return this.sampleGuidePagingService.getSampleMenuMstVOList();
     }
 }

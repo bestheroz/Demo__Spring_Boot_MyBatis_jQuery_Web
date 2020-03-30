@@ -1,6 +1,6 @@
 package com.github.bestheroz.standard.common.exception;
 
-public enum CommonExceptionCode {
+public enum ExceptionCode {
     SUCCESS_NORMAL("S000", "성공"),
 
     FAIL_SYSTEM_ERROR("F000", "시스템에러"),
@@ -81,7 +81,7 @@ public enum CommonExceptionCode {
     private final String code;
     private final String message;
 
-    CommonExceptionCode(final String code, final String message) {
+    ExceptionCode(final String code, final String message) {
         this.code = code;
         this.message = message;
     }

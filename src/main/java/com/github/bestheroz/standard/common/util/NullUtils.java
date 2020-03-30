@@ -1,6 +1,5 @@
 package com.github.bestheroz.standard.common.util;
 
-import com.github.bestheroz.standard.common.exception.CommonException;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import lombok.experimental.UtilityClass;
@@ -16,10 +15,10 @@ import java.util.Set;
 
 @Slf4j
 @UtilityClass
-public class MyNullUtils {
+public class NullUtils {
 
     // int 도 함께 커버됨
-    public static boolean equals(final Integer n1, final Integer n2) throws CommonException {
+    public static boolean equals(final Integer n1, final Integer n2) {
         try {
             return n1 != null && n2 != null && n1.intValue() == n2.intValue();
         } catch (final Throwable e) {
@@ -28,7 +27,7 @@ public class MyNullUtils {
         }
     }
 
-    public static boolean equals(final Long n1, final Long n2) throws CommonException {
+    public static boolean equals(final Long n1, final Long n2) {
         try {
             return n1 != null && n2 != null && n1.longValue() == n2.longValue();
         } catch (final Throwable e) {
@@ -116,7 +115,7 @@ public class MyNullUtils {
         return !isEmpty(list);
     }
 
-    public static int size(final List<?> list) throws CommonException {
+    public static int size(final List<?> list) {
         try {
             return list == null ? 0 : list.size();
         } catch (final Throwable e) {
@@ -125,7 +124,7 @@ public class MyNullUtils {
         }
     }
 
-    public static int size(final Set<?> list) throws CommonException {
+    public static int size(final Set<?> list) {
         try {
             return list == null ? 0 : list.size();
         } catch (final Throwable e) {
@@ -134,7 +133,7 @@ public class MyNullUtils {
         }
     }
 
-    public static int size(final JsonArray list) throws CommonException {
+    public static int size(final JsonArray list) {
         try {
             return list == null ? 0 : list.size();
         } catch (final Throwable e) {
@@ -143,7 +142,7 @@ public class MyNullUtils {
         }
     }
 
-    public static int size(final Map<String, ?> map) throws CommonException {
+    public static int size(final Map<String, ?> map) {
         try {
             return map == null ? 0 : map.size();
         } catch (final Throwable e) {

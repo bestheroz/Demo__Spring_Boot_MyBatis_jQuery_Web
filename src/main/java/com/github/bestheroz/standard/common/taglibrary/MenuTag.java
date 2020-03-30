@@ -2,10 +2,10 @@ package com.github.bestheroz.standard.common.taglibrary;
 
 import com.github.bestheroz.sample.web.login.LoginVO;
 import com.github.bestheroz.sample.web.menu.MenuService;
-import com.github.bestheroz.standard.common.exception.CommonException;
-import com.github.bestheroz.standard.common.util.MyAccessBeanUtils;
-import com.github.bestheroz.standard.common.util.MyMapperUtils;
-import com.github.bestheroz.standard.common.util.MySessionUtils;
+import com.github.bestheroz.standard.common.exception.BusinessException;
+import com.github.bestheroz.standard.common.util.AccessBeanUtils;
+import com.github.bestheroz.standard.common.util.MapperUtils;
+import com.github.bestheroz.standard.common.util.SessionUtils;
 import com.google.gson.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
@@ -27,27 +27,27 @@ public class MenuTag extends TagSupport {
         final HttpSession session = ((HttpServletRequest) this.pageContext.getRequest()).getSession();
 
         try {
-            if (MySessionUtils.getAttribute(MENU_TAG) == null) {
+            if (SessionUtils.getAttribute(MENU_TAG) == null) {
                 final StringBuilder bodyHtml = new StringBuilder(1024 * 100);
-                final LoginVO loginVO = MySessionUtils.getLoginVO();
+                final LoginVO loginVO = SessionUtils.getLoginVO();
                 if (loginVO != null) {
                     final JsonObject param = new JsonObject();
                     final Integer memberType = Integer.parseInt(loginVO.getMemberType());
                     if (memberType != null && memberType.intValue() >= 800) {
                         param.addProperty("power", memberType);
                         bodyHtml.append("<script> const menuData = ")
-                                .append(MyMapperUtils.writeObjectAsString(MyAccessBeanUtils.getBean(MenuService.class).getMenuVOObject(param, MySessionUtils.isNotLoggedIn())))
+                                .append(MapperUtils.toString(AccessBeanUtils.getBean(MenuService.class).getMenuVOObject(param, SessionUtils.isNotLoggedIn())))
                                 .append("</script>");
                         bodyHtml.append("<script> const menuMemberName = ").append(loginVO.getMemberName()).append("</script>");
                     }
                     bodyHtml.append(IOUtils.toString(new File(session.getServletContext().getRealPath("/WEB-INF/views/common/menu.html")).toURI(), StandardCharsets.UTF_8));
                 }
-                MySessionUtils.setAttribute(MENU_TAG, bodyHtml.toString());
+                SessionUtils.setAttribute(MENU_TAG, bodyHtml.toString());
             }
             this.pageContext.getOut().print(session.getAttribute(MENU_TAG));
         } catch (final Throwable e) {
             log.warn(ExceptionUtils.getStackTrace(e));
-            throw new CommonException(e);
+            throw new BusinessException(e);
         }
         return SKIP_PAGE;
     }

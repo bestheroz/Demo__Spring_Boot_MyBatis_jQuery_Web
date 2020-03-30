@@ -1,10 +1,8 @@
 package com.github.bestheroz.sample.web.admin.member;
 
-import com.github.bestheroz.sample.web.login.LoginVO;
 import com.github.bestheroz.sample.web.tablevo.samplemembermst.TableSampleMemberMstDAO;
 import com.github.bestheroz.sample.web.tablevo.samplemembermst.TableSampleMemberMstVO;
-import com.github.bestheroz.standard.common.exception.CommonException;
-import com.github.bestheroz.standard.common.util.MyMapperUtils;
+import com.github.bestheroz.standard.common.util.MapperUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
@@ -18,27 +16,24 @@ import java.util.Set;
 public class AdminMemberService {
     @Resource TableSampleMemberMstDAO tableMemberMstDAO;
 
-    List<AdminMemberVO> getSampleMemberMstVOList(final AdminMemberVO vo) throws CommonException {
+    List<AdminMemberVO> getSampleMemberMstVOList(final AdminMemberVO vo) {
         final Set<String> whereKeys = new HashSet<>();
         if (StringUtils.isNotEmpty(vo.getMemberId())) {
             whereKeys.add("memberId");
         }
-        return MyMapperUtils.writeObjectAsArrayList(this.tableMemberMstDAO.getList(MyMapperUtils.writeObjectAsObject(vo, TableSampleMemberMstVO.class), whereKeys, "UPDATED DESC"),
+        return MapperUtils.toArrayList(this.tableMemberMstDAO.getList(MapperUtils.toObject(vo, TableSampleMemberMstVO.class), whereKeys, "UPDATED DESC"),
                 AdminMemberVO.class);
     }
 
-    void insertSampleMemberMst(final TableSampleMemberMstVO vo, final LoginVO loginVO) throws CommonException {
-        vo.setCreatedBy(loginVO.getMemberId());
-        vo.setUpdatedBy(loginVO.getMemberId());
+    void insertSampleMemberMst(final TableSampleMemberMstVO vo) {
         this.tableMemberMstDAO.insert(vo);
     }
 
-    void updateSampleMemberMst(final TableSampleMemberMstVO vo, final LoginVO loginVO) throws CommonException {
-        vo.setUpdatedBy(loginVO.getMemberId());
+    void updateSampleMemberMst(final TableSampleMemberMstVO vo) {
         this.tableMemberMstDAO.update(vo, Collections.singleton("memberId"), null);
     }
 
-    void deleteSampleMemberMst(final TableSampleMemberMstVO vo) throws CommonException {
+    void deleteSampleMemberMst(final TableSampleMemberMstVO vo) {
         this.tableMemberMstDAO.delete(vo, Collections.singleton("memberId"));
     }
 }

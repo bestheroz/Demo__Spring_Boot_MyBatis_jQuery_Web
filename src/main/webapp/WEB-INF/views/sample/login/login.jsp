@@ -60,8 +60,8 @@
                 autoResultFunctionTF: false,
                 type: "POST"
             });
-            if (!_.startsWith(response.responseCode, 'S')) {
-                alert(response.responseMessage);
+            if (!_.startsWith(response.code, 'S')) {
+                alert(response.message);
                 return;
             }
             if ($('#save_id').hasClass('fa-check-square')) {

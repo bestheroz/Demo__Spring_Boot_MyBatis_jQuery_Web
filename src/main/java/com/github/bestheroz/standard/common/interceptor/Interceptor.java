@@ -1,7 +1,7 @@
 package com.github.bestheroz.standard.common.interceptor;
 
-import com.github.bestheroz.standard.common.exception.CommonException;
-import com.github.bestheroz.standard.common.util.MySessionUtils;
+import com.github.bestheroz.standard.common.exception.BusinessException;
+import com.github.bestheroz.standard.common.util.SessionUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -26,13 +26,13 @@ public class Interceptor extends HandlerInterceptorAdapter {
 
     @Override
     // preHandle : controller 이벤트 호출전
-    public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler) throws CommonException {
+    public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler) {
         try {
-            if (MySessionUtils.isNotLoggedIn()) {
+            if (SessionUtils.isNotLoggedIn()) {
                 if (!StringUtils.contains(request.getHeader("accept"), "html") && (StringUtils.startsWith(request.getContentType(), MediaType.APPLICATION_FORM_URLENCODED_VALUE)
                         || StringUtils.startsWith(request.getContentType(), MediaType.APPLICATION_JSON_VALUE))) {
-                    log.warn(CommonException.FAIL_TRY_LOGIN_FIRST.getJsonObject().toString());
-                    throw CommonException.FAIL_TRY_LOGIN_FIRST;
+                    log.warn(BusinessException.FAIL_TRY_LOGIN_FIRST.getJsonObject().toString());
+                    throw BusinessException.FAIL_TRY_LOGIN_FIRST;
                 }
                 request.getSession().invalidate();
                 String pathWithinApplication = new UrlPathHelper().getPathWithinApplication(request);
@@ -46,7 +46,7 @@ public class Interceptor extends HandlerInterceptorAdapter {
             }
         } catch (final IOException e) {
             log.warn(ExceptionUtils.getStackTrace(e));
-            throw new CommonException(e);
+            throw new BusinessException(e);
         }
 
         final StopWatch stopWatch = new StopWatch();

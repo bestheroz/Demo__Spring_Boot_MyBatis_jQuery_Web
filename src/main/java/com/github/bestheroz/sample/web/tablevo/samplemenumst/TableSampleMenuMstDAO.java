@@ -1,6 +1,5 @@
 package com.github.bestheroz.sample.web.tablevo.samplemenumst;
 
-import com.github.bestheroz.standard.common.exception.CommonException;
 import com.github.bestheroz.standard.common.tablevo.SqlForTableDAO;
 import com.github.bestheroz.standard.common.tablevo.SqlForTableVO;
 import org.apache.ibatis.annotations.InsertProvider;
@@ -16,13 +15,13 @@ import java.util.Set;
 public interface TableSampleMenuMstDAO extends SqlForTableDAO {
 
     @SelectProvider(type = SqlForTableVO.class, method = SqlForTableVO.SELECT)
-    List<TableSampleMenuMstVO> getList(final TableSampleMenuMstVO vo, final Set<String> whereKeys, final String orderByColumns) throws CommonException;
+    List<TableSampleMenuMstVO> getList(final TableSampleMenuMstVO vo, final Set<String> whereKeys, final String orderByColumns);
 
     @SelectProvider(type = SqlForTableVO.class, method = SqlForTableVO.SELECT_ONE)
-    TableSampleMenuMstVO getVO(final TableSampleMenuMstVO vo, final Set<String> whereKeys) throws CommonException;
+    TableSampleMenuMstVO getVO(final TableSampleMenuMstVO vo, final Set<String> whereKeys);
 
     @Override
     @InsertProvider(type = SqlForTableVO.class, method = SqlForTableVO.INSERT)
-    <T> void insert(final T vo) throws CommonException;
+    <T> void insert(final T vo);
 
 }

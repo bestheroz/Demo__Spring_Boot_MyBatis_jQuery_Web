@@ -15,6 +15,7 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.core.type.classreading.CachingMetadataReaderFactory;
 import org.springframework.core.type.classreading.MetadataReader;
 import org.springframework.core.type.classreading.MetadataReaderFactory;
+import org.springframework.stereotype.Component;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.SystemPropertyUtils;
 
@@ -28,7 +29,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Slf4j
-//@Component
+@Component
 public class DbTableVOCheckerContext {
     public static final String DEFAULT_DATE_TYPE = "LocalDateTime";
     public static final Set<String> STRING_JDBC_TYPE_SET = ImmutableSet.of("VARCHAR", "VARCHAR2", "CHAR", "CLOB");
@@ -160,4 +161,3 @@ public class DbTableVOCheckerContext {
         return ClassUtils.convertClassNameToResourcePath(SystemPropertyUtils.resolvePlaceholders(basePackage));
     }
 }
-

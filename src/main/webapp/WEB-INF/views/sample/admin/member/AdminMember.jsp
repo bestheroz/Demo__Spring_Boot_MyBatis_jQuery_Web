@@ -129,7 +129,7 @@
     <my:footer/>
     <script data-for="ready">
         jQuery(($) => {
-            $.when(drawTable1(), MyAjax.getSelectOptions($("#memberType"), "${CONTEXT_PATH}/common/valuelabel/getValueLabelVOList.json", {
+            $.when(drawTable1(), MyAjax.getSelectOptions($("#memberType"), "${CONTEXT_PATH}/common/code/getCodeVOList.json", {
                 groupCode: "MEMBER_TYPE"
             })).done(() => {
                 selectList();
@@ -292,7 +292,7 @@
             }, {
                 autoResultFunctionTF: true
             });
-            if (_.startsWith(response.responseCode, 'S')) {
+            if (_.startsWith(response.code, 'S')) {
                 MyModal.close($('#modalMember'));
                 await selectList();
             }
@@ -312,7 +312,7 @@
                 }, {
                     autoResultFunctionTF: true
                 });
-                if (_.startsWith(response.responseCode, 'S')) {
+                if (_.startsWith(response.code, 'S')) {
                     MyModal.close($('#modalMember'));
                     await selectList();
                 }

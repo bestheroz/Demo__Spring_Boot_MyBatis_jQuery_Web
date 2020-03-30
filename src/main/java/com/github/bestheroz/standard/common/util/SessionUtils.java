@@ -1,7 +1,7 @@
 package com.github.bestheroz.standard.common.util;
 
 import com.github.bestheroz.sample.web.login.LoginVO;
-import com.github.bestheroz.standard.common.exception.CommonException;
+import com.github.bestheroz.standard.common.exception.BusinessException;
 import com.google.gson.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -14,11 +14,11 @@ import javax.servlet.http.HttpSession;
 import java.util.Enumeration;
 
 @Slf4j
-public class MySessionUtils {
+public class SessionUtils {
     public static final String SESSION_VALUE_OF_LOGIN_VO = "loginVO";
-    private static final Logger LOGGER = LoggerFactory.getLogger(MySessionUtils.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SessionUtils.class);
 
-    protected MySessionUtils() {
+    protected SessionUtils() {
         throw new UnsupportedOperationException();
     }
 
@@ -39,8 +39,8 @@ public class MySessionUtils {
         try {
             final LoginVO loginVO = (LoginVO) getSession().getAttribute(SESSION_VALUE_OF_LOGIN_VO);
             if (loginVO == null) {
-                log.warn(CommonException.FAIL_TRY_LOGIN_FIRST.toString());
-                throw CommonException.FAIL_TRY_LOGIN_FIRST;
+                log.warn(BusinessException.FAIL_TRY_LOGIN_FIRST.toString());
+                throw BusinessException.FAIL_TRY_LOGIN_FIRST;
             }
             return loginVO;
         } catch (final Throwable e) {
@@ -53,15 +53,14 @@ public class MySessionUtils {
         getSession().setAttribute(SESSION_VALUE_OF_LOGIN_VO, loginVO);
         getSession().setAttribute("memberId", loginVO.getMemberId());
         getSession().setAttribute("memberName", loginVO.getMemberName());
-        getSession().setAttribute("memberType", loginVO.getMemberType());
     }
 
     public static String getMemberId() {
         try {
             final String memberId = (String) getSession().getAttribute("memberId");
             if (memberId == null) {
-                log.warn(CommonException.FAIL_TRY_LOGIN_FIRST.toString());
-                throw CommonException.FAIL_TRY_LOGIN_FIRST;
+                log.warn(BusinessException.FAIL_TRY_LOGIN_FIRST.toString());
+                throw BusinessException.FAIL_TRY_LOGIN_FIRST;
             }
             return memberId;
         } catch (final Throwable e) {
@@ -134,7 +133,7 @@ public class MySessionUtils {
             for (final Enumeration<String> attributeNames = getSession().getAttributeNames();
                  attributeNames.hasMoreElements(); ) {
                 final String nextElement = attributeNames.nextElement();
-                result.addProperty(nextElement, MyMapperUtils.writeObjectAsString(getSession().getAttribute(nextElement)));
+                result.addProperty(nextElement, MapperUtils.toString(getSession().getAttribute(nextElement)));
             }
             LOGGER.debug(result.toString());
         } catch (final Throwable e) {
@@ -148,7 +147,7 @@ public class MySessionUtils {
             for (final Enumeration<String> attributeNames = session.getAttributeNames();
                  attributeNames.hasMoreElements(); ) {
                 final String nextElement = attributeNames.nextElement();
-                result.addProperty(nextElement, MyMapperUtils.writeObjectAsString(session.getAttribute(nextElement)));
+                result.addProperty(nextElement, MapperUtils.toString(session.getAttribute(nextElement)));
             }
         } catch (final Throwable e) {
             LOGGER.warn(ExceptionUtils.getStackTrace(e));

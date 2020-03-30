@@ -1,6 +1,6 @@
 package com.github.bestheroz.standard.common.taglibrary;
 
-import com.github.bestheroz.standard.common.exception.CommonException;
+import com.github.bestheroz.standard.common.exception.BusinessException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -27,7 +27,7 @@ public class FooterTag extends TagSupport {
             this.pageContext.getOut().print(servletContext.getAttribute(FOOTER_TAG));
         } catch (final Throwable e) {
             log.warn(ExceptionUtils.getStackTrace(e));
-            throw new CommonException(e);
+            throw new BusinessException(e);
         }
         return SKIP_PAGE;
     }

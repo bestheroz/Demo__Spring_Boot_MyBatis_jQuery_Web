@@ -1,10 +1,9 @@
 package com.github.bestheroz.standard.common.util;
 
-import com.github.bestheroz.standard.common.exception.CommonException;
-import com.github.bestheroz.standard.common.exception.CommonExceptionCode;
+import com.github.bestheroz.standard.common.exception.BusinessException;
+import com.github.bestheroz.standard.common.exception.ExceptionCode;
 import com.google.common.collect.ImmutableSet;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.RegExUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -26,40 +25,40 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-public class MyFileUtils {
-    private static final Logger LOGGER = LoggerFactory.getLogger(MyFileUtils.class);
+public class FileUtils {
+    private static final Logger LOGGER = LoggerFactory.getLogger(FileUtils.class);
     private static final String FILE_ROOT_PATH = "/workspace/uploadRootPath/";
     private static final String STR_DOT = ".";
     private static final String STR_INFO_MESSAGE = "Target for uploading file : {}";
     private static final String STR_UNDERLINE = "_";
     private static final Tika TIKA_INSTANCE = new Tika();
 
-    protected MyFileUtils() {
+    protected FileUtils() {
         throw new UnsupportedOperationException();
     }
 
-    public static boolean deleteDirectory(final File file) throws CommonException {
+    public static boolean deleteDirectory(final File file) {
         forceDelete(file);
         LOGGER.info("Target for deleting dir : {}", file.getAbsolutePath());
         return true;
     }
 
-    public static void deleteDirectory(final String filePath) throws CommonException {
+    public static void deleteDirectory(final String filePath) {
         deleteFile(getFile(filePath));
     }
 
-    public static void deleteFile(final File file) throws CommonException {
+    public static void deleteFile(final File file) {
         forceDelete(file);
         LOGGER.info("Target for deleting file : {}", file.getAbsolutePath());
     }
 
-    public static void deleteFile(final String filePath) throws CommonException {
+    public static void deleteFile(final String filePath) {
         deleteFile(getFile(filePath));
     }
 
-    private static File forceDelete(final File file) throws CommonException {
+    private static File forceDelete(final File file) {
         try {
-            FileUtils.forceDelete(file);
+            org.apache.commons.io.FileUtils.forceDelete(file);
         } catch (final IOException e) {
             LOGGER.warn(ExceptionUtils.getStackTrace(e));
             // throw new CommonResponseException(e);
@@ -67,7 +66,7 @@ public class MyFileUtils {
         return file;
     }
 
-    public static String getEncodedFileName(final HttpServletRequest request, final String fileName) throws CommonException {
+    public static String getEncodedFileName(final HttpServletRequest request, final String fileName) {
         try {
             final String header = request.getHeader("User-Agent");
 
@@ -100,30 +99,30 @@ public class MyFileUtils {
             return encodedFilename;
         } catch (final UnsupportedEncodingException e) {
             LOGGER.warn(ExceptionUtils.getStackTrace(e));
-            throw new CommonException(e);
+            throw new BusinessException(e);
         }
     }
 
-    public static File getFile(final String filePath) throws CommonException {
+    public static File getFile(final String filePath) {
         final String path = RegExUtils.replaceAll(getFileRoot() + filePath, "\\\\", "/").replaceAll("//", "/");
-        final File file = FileUtils.getFile(path);
+        final File file = org.apache.commons.io.FileUtils.getFile(path);
         if (file.isDirectory() && !StringUtils.endsWith(path, "/")) {
-            LOGGER.warn("{} : {}", path, CommonExceptionCode.FAIL_DIR_PATH_MUST_ENDS_WITH_SLASH.toString());
-            throw new CommonException(CommonExceptionCode.FAIL_DIR_PATH_MUST_ENDS_WITH_SLASH);
+            LOGGER.warn("{} : {}", path, ExceptionCode.FAIL_DIR_PATH_MUST_ENDS_WITH_SLASH.toString());
+            throw new BusinessException(ExceptionCode.FAIL_DIR_PATH_MUST_ENDS_WITH_SLASH);
         }
         return file;
     }
 
-    public static File getDirectory(final String dirPath) throws CommonException {
+    public static File getDirectory(final String dirPath) {
         final String path = RegExUtils.replaceAll(getFileRoot() + dirPath, "\\\\", "/").replaceAll("//", "/");
         if (!StringUtils.endsWith(path, "/")) {
-            LOGGER.warn("{} : {}", path, CommonExceptionCode.FAIL_DIR_PATH_MUST_ENDS_WITH_SLASH.toString());
-            throw new CommonException(CommonExceptionCode.FAIL_DIR_PATH_MUST_ENDS_WITH_SLASH);
+            LOGGER.warn("{} : {}", path, ExceptionCode.FAIL_DIR_PATH_MUST_ENDS_WITH_SLASH.toString());
+            throw new BusinessException(ExceptionCode.FAIL_DIR_PATH_MUST_ENDS_WITH_SLASH);
         }
         final File file = getFile(path);
-        if (!MyNullUtils.exists(file)) {
+        if (!NullUtils.exists(file)) {
             try {
-                FileUtils.forceMkdir(file);
+                org.apache.commons.io.FileUtils.forceMkdir(file);
             } catch (final IOException e) {
                 LOGGER.warn(ExceptionUtils.getStackTrace(e));
                 // ignored
@@ -140,19 +139,19 @@ public class MyFileUtils {
         }
     }
 
-    public static boolean isExistsFile(final String filePath) throws CommonException {
-        return MyNullUtils.exists(getFile(filePath));
+    public static boolean isExistsFile(final String filePath) {
+        return NullUtils.exists(getFile(filePath));
     }
 
-    public static List<File> uploadAllFiles(final MultipartHttpServletRequest mRequest, final String targetDirPath) throws CommonException {
+    public static List<File> uploadAllFiles(final MultipartHttpServletRequest mRequest, final String targetDirPath) {
         final Map<String, MultipartFile> fileMap = mRequest.getFileMap();
-        if (MyNullUtils.size(fileMap) < 1) {
+        if (NullUtils.size(fileMap) < 1) {
             return null;
         }
         getDirectory(targetDirPath);
         final Iterator<String> fileNames = mRequest.getFileNames();
         final List<File> savedFiles = new ArrayList<>();
-        while (MyNullUtils.hasNext(fileNames)) {
+        while (NullUtils.hasNext(fileNames)) {
             final MultipartFile multipartFile = fileMap.get(fileNames.next());
             validateFile(multipartFile);
 
@@ -165,7 +164,7 @@ public class MyFileUtils {
 
     private static File uploadMultipartFile(final String targetDirPath, final MultipartFile multipartFile) {
         final StringBuilder fileName = new StringBuilder(80);
-        fileName.append(DateTime.now().toString(MyDateUtils.YYYYMMDDHHMMSS)).append(STR_UNDERLINE).append(DigestUtils.md5Hex(multipartFile.getOriginalFilename()));
+        fileName.append(DateTime.now().toString(DateUtils.YYYYMMDDHHMMSS)).append(STR_UNDERLINE).append(DigestUtils.md5Hex(multipartFile.getOriginalFilename()));
         if (StringUtils.isNotEmpty(getExtension(multipartFile))) {
             fileName.append(STR_DOT).append(getExtension(multipartFile));
         }
@@ -174,13 +173,13 @@ public class MyFileUtils {
             FileCopyUtils.copy(multipartFile.getBytes(), file);
         } catch (final IOException e) {
             LOGGER.warn(ExceptionUtils.getStackTrace(e));
-            throw new CommonException(e);
+            throw new BusinessException(e);
         }
         return file;
     }
 
-    public static File uploadFile(final MultipartFile multipartFile, final String targetDirPath) throws CommonException {
-        if (MyNullUtils.isEmpty(multipartFile)) {
+    public static File uploadFile(final MultipartFile multipartFile, final String targetDirPath) {
+        if (NullUtils.isEmpty(multipartFile)) {
             return null;
         }
         validateFile(multipartFile);
@@ -191,103 +190,103 @@ public class MyFileUtils {
     }
 
     // 업로드 하려는 파일의 검증(MultipartFile 이용)
-    public static void validateFile(final MultipartFile multipartFile) throws CommonException {
+    public static void validateFile(final MultipartFile multipartFile) {
         if (FileType.ILLEGAL.extList.contains(getExtension(multipartFile))) {
-            LOGGER.warn("{}{}", CommonExceptionCode.FAIL_FILE_SIZE.toString(), multipartFile.getOriginalFilename());
-            throw new CommonException(CommonExceptionCode.FAIL_FILE_SIZE);
+            LOGGER.warn("{}{}", ExceptionCode.FAIL_FILE_SIZE.toString(), multipartFile.getOriginalFilename());
+            throw new BusinessException(ExceptionCode.FAIL_FILE_SIZE);
         }
         if (FileType.ILLEGAL.mimeTypeList.contains(getMimeType(multipartFile))) {
-            LOGGER.warn("{}{}", CommonExceptionCode.FAIL_FILE_MIMETYPE.toString(), multipartFile.getOriginalFilename());
-            throw new CommonException(CommonExceptionCode.FAIL_FILE_MIMETYPE);
+            LOGGER.warn("{}{}", ExceptionCode.FAIL_FILE_MIMETYPE.toString(), multipartFile.getOriginalFilename());
+            throw new BusinessException(ExceptionCode.FAIL_FILE_MIMETYPE);
         }
     }
 
     // 업로드된 파일의 검증(File 이용)
-    public static void validateFile(final File file) throws CommonException {
+    public static void validateFile(final File file) {
         if (FileType.ILLEGAL.extList.contains(getExtension(file))) {
-            LOGGER.warn("{}{}", CommonExceptionCode.FAIL_FILE_SIZE.toString(), file.getAbsolutePath());
-            throw new CommonException(CommonExceptionCode.FAIL_FILE_SIZE);
+            LOGGER.warn("{}{}", ExceptionCode.FAIL_FILE_SIZE.toString(), file.getAbsolutePath());
+            throw new BusinessException(ExceptionCode.FAIL_FILE_SIZE);
         }
         if (FileType.ILLEGAL.mimeTypeList.contains(getMimeType(file))) {
-            LOGGER.warn("{}{}", CommonExceptionCode.FAIL_FILE_MIMETYPE.toString(), file.getAbsolutePath());
-            throw new CommonException(CommonExceptionCode.FAIL_FILE_MIMETYPE);
+            LOGGER.warn("{}{}", ExceptionCode.FAIL_FILE_MIMETYPE.toString(), file.getAbsolutePath());
+            throw new BusinessException(ExceptionCode.FAIL_FILE_MIMETYPE);
         }
     }
 
     // 업로드 하려는 파일의 검증(MultipartFile 이용)
-    public static void validateFile(final MultipartFile multipartFile, final FileType fileType) throws CommonException {
+    public static void validateFile(final MultipartFile multipartFile, final FileType fileType) {
         try {
             if (!fileType.extList.contains(getExtension(multipartFile))) {
-                LOGGER.warn("{}{}", CommonExceptionCode.FAIL_FILE_SIZE.toString(), multipartFile.getOriginalFilename());
-                throw new CommonException(CommonExceptionCode.FAIL_FILE_SIZE);
+                LOGGER.warn("{}{}", ExceptionCode.FAIL_FILE_SIZE.toString(), multipartFile.getOriginalFilename());
+                throw new BusinessException(ExceptionCode.FAIL_FILE_SIZE);
             }
             if (!fileType.mimeTypeList.contains(getMimeType(multipartFile))) {
-                LOGGER.warn("{}{}", CommonExceptionCode.FAIL_FILE_MIMETYPE.toString(), multipartFile.getOriginalFilename());
-                throw new CommonException(CommonExceptionCode.FAIL_FILE_MIMETYPE);
+                LOGGER.warn("{}{}", ExceptionCode.FAIL_FILE_MIMETYPE.toString(), multipartFile.getOriginalFilename());
+                throw new BusinessException(ExceptionCode.FAIL_FILE_MIMETYPE);
             }
 
             validateFile(multipartFile);
-        } catch (final CommonException e) {
+        } catch (final BusinessException e) {
             throw setResultCodeByFileType(e, fileType);
         }
     }
 
     // 업로드된 파일의 검증(File 이용)
-    public static void validateFile(final File file, final FileType fileType) throws CommonException {
+    public static void validateFile(final File file, final FileType fileType) {
         try {
             if (!fileType.extList.contains(getExtension(file))) {
-                LOGGER.warn("{}{}", CommonExceptionCode.FAIL_FILE_SIZE.toString(), file.getAbsolutePath());
-                throw new CommonException(CommonExceptionCode.FAIL_FILE_SIZE);
+                LOGGER.warn("{}{}", ExceptionCode.FAIL_FILE_SIZE.toString(), file.getAbsolutePath());
+                throw new BusinessException(ExceptionCode.FAIL_FILE_SIZE);
             }
             if (!fileType.mimeTypeList.contains(getMimeType(file))) {
-                LOGGER.warn("{}{}", CommonExceptionCode.FAIL_FILE_MIMETYPE.toString(), file.getAbsolutePath());
-                throw new CommonException(CommonExceptionCode.FAIL_FILE_MIMETYPE);
+                LOGGER.warn("{}{}", ExceptionCode.FAIL_FILE_MIMETYPE.toString(), file.getAbsolutePath());
+                throw new BusinessException(ExceptionCode.FAIL_FILE_MIMETYPE);
             }
 
             validateFile(file);
-        } catch (final CommonException e) {
+        } catch (final BusinessException e) {
             throw setResultCodeByFileType(e, fileType);
         }
     }
 
-    private static CommonException setResultCodeByFileType(final CommonException e, final FileType fileType) {
+    private static BusinessException setResultCodeByFileType(final BusinessException e, final FileType fileType) {
         if (FileType.IMAGE.equals(fileType)) {
-            if (e.isEquals(CommonExceptionCode.FAIL_FILE_SIZE)) {
-                return new CommonException(CommonExceptionCode.FAIL_IMAGE_EXT);
-            } else if (e.isEquals(CommonExceptionCode.FAIL_FILE_MIMETYPE)) {
-                return new CommonException(CommonExceptionCode.FAIL_IMAGE_MIMETYPE);
+            if (e.isEquals(ExceptionCode.FAIL_FILE_SIZE)) {
+                return new BusinessException(ExceptionCode.FAIL_IMAGE_EXT);
+            } else if (e.isEquals(ExceptionCode.FAIL_FILE_MIMETYPE)) {
+                return new BusinessException(ExceptionCode.FAIL_IMAGE_MIMETYPE);
             }
         } else if (FileType.EXCEL.equals(fileType)) {
-            if (e.isEquals(CommonExceptionCode.FAIL_FILE_SIZE)) {
-                return new CommonException(CommonExceptionCode.FAIL_EXCEL_EXT);
-            } else if (e.isEquals(CommonExceptionCode.FAIL_FILE_MIMETYPE)) {
-                return new CommonException(CommonExceptionCode.FAIL_EXCEL_MIMETYPE);
+            if (e.isEquals(ExceptionCode.FAIL_FILE_SIZE)) {
+                return new BusinessException(ExceptionCode.FAIL_EXCEL_EXT);
+            } else if (e.isEquals(ExceptionCode.FAIL_FILE_MIMETYPE)) {
+                return new BusinessException(ExceptionCode.FAIL_EXCEL_MIMETYPE);
             }
         } else if (FileType.WORD.equals(fileType)) {
-            if (e.isEquals(CommonExceptionCode.FAIL_FILE_SIZE)) {
-                throw new CommonException(CommonExceptionCode.FAIL_WORD_EXT);
-            } else if (e.isEquals(CommonExceptionCode.FAIL_FILE_MIMETYPE)) {
-                throw new CommonException(CommonExceptionCode.FAIL_WORD_MIMETYPE);
+            if (e.isEquals(ExceptionCode.FAIL_FILE_SIZE)) {
+                throw new BusinessException(ExceptionCode.FAIL_WORD_EXT);
+            } else if (e.isEquals(ExceptionCode.FAIL_FILE_MIMETYPE)) {
+                throw new BusinessException(ExceptionCode.FAIL_WORD_MIMETYPE);
             }
         } else if (FileType.PDF.equals(fileType)) {
-            if (e.isEquals(CommonExceptionCode.FAIL_FILE_SIZE)) {
-                throw new CommonException(CommonExceptionCode.FAIL_PDF_EXT);
-            } else if (e.isEquals(CommonExceptionCode.FAIL_FILE_MIMETYPE)) {
-                throw new CommonException(CommonExceptionCode.FAIL_PDF_MIMETYPE);
+            if (e.isEquals(ExceptionCode.FAIL_FILE_SIZE)) {
+                throw new BusinessException(ExceptionCode.FAIL_PDF_EXT);
+            } else if (e.isEquals(ExceptionCode.FAIL_FILE_MIMETYPE)) {
+                throw new BusinessException(ExceptionCode.FAIL_PDF_MIMETYPE);
             }
         }
         return e;
     }
 
-    public static boolean isFileType(final MultipartFile multipartFile, final FileType fileType) throws CommonException {
+    public static boolean isFileType(final MultipartFile multipartFile, final FileType fileType) {
         return fileType.extList.contains(getExtension(multipartFile)) && fileType.mimeTypeList.contains(getMimeType(multipartFile));
     }
 
-    public static boolean isFileType(final File file, final FileType fileType) throws CommonException {
+    public static boolean isFileType(final File file, final FileType fileType) {
         return fileType.extList.contains(getExtension(file)) && fileType.mimeTypeList.contains(getMimeType(file));
     }
 
-    public static String getMimeType(final MultipartFile multipartFile) throws CommonException {
+    public static String getMimeType(final MultipartFile multipartFile) {
         try {
             if (multipartFile == null) {
                 return null;
@@ -295,11 +294,11 @@ public class MyFileUtils {
             return TIKA_INSTANCE.detect(multipartFile.getBytes()).toLowerCase();
         } catch (final IOException e) {
             LOGGER.warn(ExceptionUtils.getStackTrace(e));
-            throw new CommonException(e);
+            throw new BusinessException(e);
         }
     }
 
-    public static String getMimeType(final File file) throws CommonException {
+    public static String getMimeType(final File file) {
         try {
             if (file == null) {
                 return null;
@@ -307,11 +306,11 @@ public class MyFileUtils {
             return TIKA_INSTANCE.detect(file).toLowerCase();
         } catch (final IOException e) {
             LOGGER.warn(ExceptionUtils.getStackTrace(e));
-            throw new CommonException(e);
+            throw new BusinessException(e);
         }
     }
 
-    public static String getFullName(final MultipartFile multipartFile) throws CommonException {
+    public static String getFullName(final MultipartFile multipartFile) {
         if (multipartFile == null) {
             return null;
         }
@@ -329,7 +328,7 @@ public class MyFileUtils {
         return FilenameUtils.getName(fileName);
     }
 
-    public static String getBaseName(final MultipartFile multipartFile) throws CommonException {
+    public static String getBaseName(final MultipartFile multipartFile) {
         if (multipartFile == null) {
             return null;
         }
@@ -347,7 +346,7 @@ public class MyFileUtils {
         return FilenameUtils.getBaseName(fileName);
     }
 
-    public static String getExtension(final MultipartFile multipartFile) throws CommonException {
+    public static String getExtension(final MultipartFile multipartFile) {
         if (multipartFile == null) {
             return null;
         }

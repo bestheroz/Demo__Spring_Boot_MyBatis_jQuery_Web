@@ -122,9 +122,9 @@
     </div>
     <script data-for="ready">
         jQuery(($) => {
-            $.when(drawTable1(), MyAjax.getSelectOptions($("#menuType"), "${CONTEXT_PATH}/common/valuelabel/getValueLabelVOList.json", {
+            $.when(drawTable1(), MyAjax.getSelectOptions($("#menuType"), "${CONTEXT_PATH}/common/code/getCodeVOList.json", {
                 groupCode: "MENU_TYPE"
-            }), MyAjax.getSelectOptions($("#power"), "${CONTEXT_PATH}/common/valuelabel/getValueLabelVOList.json", {
+            }), MyAjax.getSelectOptions($("#power"), "${CONTEXT_PATH}/common/code/getCodeVOList.json", {
                 groupCode: "MEMBER_TYPE"
             }), MyAjax.getSelectOptions($("#parMenuId"), "${CONTEXT_PATH}/sample/admin/menu/getPMenuValueLableVOList.json")).done(() => {
                 selectList();
@@ -342,7 +342,7 @@
             }, {
                 autoResultFunctionTF: true
             });
-            if (_.startsWith(response.responseCode, 'S')) {
+            if (_.startsWith(response.code, 'S')) {
                 MyModal.close($('#modalMenu'));
                 await selectList();
             }
@@ -362,7 +362,7 @@
                 }, {
                     autoResultFunctionTF: true
                 });
-                if (_.startsWith(response.responseCode, 'S')) {
+                if (_.startsWith(response.code, 'S')) {
                     MyModal.close($('#modalMenu'));
                     await selectList();
                 }

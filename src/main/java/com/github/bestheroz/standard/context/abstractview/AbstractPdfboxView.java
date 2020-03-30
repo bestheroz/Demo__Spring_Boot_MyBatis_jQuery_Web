@@ -3,10 +3,10 @@ package com.github.bestheroz.standard.context.abstractview;
 import be.quodlibet.boxable.HorizontalAlignment;
 import be.quodlibet.boxable.Row;
 import be.quodlibet.boxable.VerticalAlignment;
-import com.github.bestheroz.standard.common.exception.CommonException;
+import com.github.bestheroz.standard.common.exception.BusinessException;
 import com.github.bestheroz.standard.common.file.pdf.PdfVO;
-import com.github.bestheroz.standard.common.util.MyDateUtils;
-import com.github.bestheroz.standard.common.util.MyNullUtils;
+import com.github.bestheroz.standard.common.util.DateUtils;
+import com.github.bestheroz.standard.common.util.NullUtils;
 import com.google.gson.JsonElement;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -91,7 +91,7 @@ public abstract class AbstractPdfboxView extends AbstractView {
                 pw.println("</script>");
             } catch (final IOException e1) {
                 log.warn(ExceptionUtils.getStackTrace(e1));
-                throw new CommonException(e1);
+                throw new BusinessException(e1);
             }
         }
     }
@@ -128,12 +128,12 @@ public abstract class AbstractPdfboxView extends AbstractView {
             this.setDouble(row, pdfVOs.get(j).getWidth(), strData);
         } else if (pdfVOs.get(j).getCellType().equals(CellType.DATE)) {
             if (StringUtils.isNumeric(strData)) {
-                strData = MyDateUtils.getString(Long.parseLong(strData), MyDateUtils.YYYY_MM_DD_HH_MM_SS);
+                strData = DateUtils.getString(Long.parseLong(strData), DateUtils.YYYY_MM_DD_HH_MM_SS);
             }
             this.setDate(row, pdfVOs.get(j).getWidth(), strData);
         } else {
             try {
-                if (MyNullUtils.isNotEmpty(pdfVOs.get(j).getCodeObject()) && pdfVOs.get(j).getCodeObject().getAsJsonObject().get(strData) != null) {
+                if (NullUtils.isNotEmpty(pdfVOs.get(j).getCodeObject()) && pdfVOs.get(j).getCodeObject().getAsJsonObject().get(strData) != null) {
                     if (pdfVOs.get(j).getCellType().equals(CellType.STRING_CENTER)) {
                         this.setStringCenter(row, pdfVOs.get(j).getWidth(), pdfVOs.get(j).getCodeObject().getAsJsonObject().get(strData).getAsString());
                     } else if (pdfVOs.get(j).getCellType().equals(CellType.STRING_RIGHT)) {

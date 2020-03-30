@@ -1,8 +1,8 @@
 package com.github.bestheroz.standard.common.file.excel;
 
-import com.github.bestheroz.standard.common.exception.CommonException;
-import com.github.bestheroz.standard.common.util.MyDateUtils;
-import com.github.bestheroz.standard.common.util.MyFileUtils;
+import com.github.bestheroz.standard.common.exception.BusinessException;
+import com.github.bestheroz.standard.common.util.DateUtils;
+import com.github.bestheroz.standard.common.util.FileUtils;
 import com.github.bestheroz.standard.context.abstractview.AbstractExcelXView;
 import com.google.common.base.CaseFormat;
 import lombok.extern.slf4j.Slf4j;
@@ -33,16 +33,16 @@ import java.util.Map;
 public class HugeExcelService extends AbstractExcelXView {
     public static final String VIEW_NAME = "hugeExcelView";
 
-    @Resource SqlSession sqlSession;
+    @Resource private SqlSession sqlSession;
 
     @SuppressWarnings("DuplicatedCode")
     @Override
     protected void buildExcelDocument(final Map<String, Object> model, final SXSSFWorkbook workbook, final HttpServletRequest request, final HttpServletResponse response) {
         @SuppressWarnings("unchecked") final List<ExcelVO> excelVOs = (List<ExcelVO>) model.get(AbstractExcelXView.EXCEL_VOS);
         final String sql = (String) model.get(AbstractExcelXView.SQL);
-        final String fileName = MyFileUtils.getEncodedFileName(request, (String) model.get(AbstractExcelXView.FILE_NAME));
+        final String fileName = FileUtils.getEncodedFileName(request, (String) model.get(AbstractExcelXView.FILE_NAME));
 
-        response.setHeader("Content-Disposition", "attachment;filename=" + fileName + "_" + MyDateUtils.getStringNow(MyDateUtils.YYYYMMDDHHMMSS) + AbstractExcelXView.EXTENSION + ";");
+        response.setHeader("Content-Disposition", "attachment;filename=" + fileName + "_" + DateUtils.getStringNow(DateUtils.YYYYMMDDHHMMSS) + AbstractExcelXView.EXTENSION + ";");
 
         final SXSSFSheet sheet = workbook.createSheet("report");
         sheet.setRandomAccessWindowSize(100);
@@ -59,7 +59,7 @@ public class HugeExcelService extends AbstractExcelXView {
         final CellRangeAddress mergedRegion = new CellRangeAddress(0, 0, 0, excelVOs.size() - 1);
         sheet.addMergedRegion(mergedRegion);
         final SXSSFCell cell10 = row0.createCell(0);
-        cell10.setCellValue("This report was generated at " + MyDateUtils.getStringNow(MyDateUtils.YYYY_MM_DD_HH_MM_SS));
+        cell10.setCellValue("This report was generated at " + DateUtils.getStringNow(DateUtils.YYYY_MM_DD_HH_MM_SS));
 
         final XSSFCellStyle cellStyle = (XSSFCellStyle) sheet.getWorkbook().createCellStyle();
         cellStyle.setAlignment(HorizontalAlignment.CENTER);
@@ -103,7 +103,7 @@ public class HugeExcelService extends AbstractExcelXView {
             }
         } catch (final Throwable e) {
             log.warn(ExceptionUtils.getStackTrace(e));
-            throw new CommonException(e);
+            throw new BusinessException(e);
         }
     }
 }

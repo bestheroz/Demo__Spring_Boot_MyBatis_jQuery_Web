@@ -1,6 +1,5 @@
 package com.github.bestheroz.standard.common.tablevo;
 
-import com.github.bestheroz.standard.common.exception.CommonException;
 import org.apache.ibatis.annotations.DeleteProvider;
 import org.apache.ibatis.annotations.InsertProvider;
 import org.apache.ibatis.annotations.SelectProvider;
@@ -10,21 +9,21 @@ import java.util.Set;
 
 public interface SqlForTableDAO {
     // @SelectProvider(type = SqlForTableVO.class, method = SqlForTableVO.SELECT)
-    // List<Object> getList(final Object vo, final Set<String> whereKeys, final String orderByColumns) throws CommonException;
+    // List<Object> getList(final Object vo, final Set<String> whereKeys, final String orderByColumns) throws Response;
     //
     // @SelectProvider(type = SqlForTableVO.class, method = SqlForTableVO.SELECT_ONE)
-    // Object getOne(final Object vo, final Set<String> whereKeys) throws CommonException;
+    // Object getOne(final Object vo, final Set<String> whereKeys) throws Response;
 
     @SelectProvider(type = SqlForTableVO.class, method = SqlForTableVO.COUNT)
-    int count(final Object vo, final Set<String> whereKeys) throws CommonException;
+    int count(final Object vo, final Set<String> whereKeys);
 
     @InsertProvider(type = SqlForTableVO.class, method = SqlForTableVO.INSERT)
         // @SelectKey(statement = "SELECT SEQSEQSEQSEQ.NEXTVAL FROM DUAL", keyProperty = "seq", before = true, resultType = Long.class)
-    <T> void insert(final T vo) throws CommonException;
+    <T> void insert(final T vo);
 
     @UpdateProvider(type = SqlForTableVO.class, method = SqlForTableVO.UPDATE)
-    <T> void update(final T vo, final Set<String> whereKeys, final Set<String> forcedUpdateKeys) throws CommonException;
+    <T> void update(final T vo, final Set<String> whereKeys, final Set<String> forcedUpdateKeys);
 
     @DeleteProvider(type = SqlForTableVO.class, method = SqlForTableVO.DELETE)
-    <T> void delete(final T vo, final Set<String> whereKeys) throws CommonException;
+    <T> void delete(final T vo, final Set<String> whereKeys);
 }

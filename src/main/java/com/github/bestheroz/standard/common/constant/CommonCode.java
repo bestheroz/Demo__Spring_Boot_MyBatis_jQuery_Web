@@ -20,10 +20,9 @@ public class CommonCode {
     public static final String YES = "YES";
     public static final String NO = "NO";
     // CommonResponseException 에 정의된 필드와 같다.
-    public static final String RESPONSE_CODE = "responseCode";
-    public static final String RESPONSE_MESSAGE = "responseMessage";
-    public static final String RESPONSE_DATA = "responseData";
-    public static final String ADDITIONAL_MESSAGE = "additionalMessage";
+    public static final String RESPONSE_CODE = "code";
+    public static final String RESPONSE_MESSAGE = "message";
+    public static final String RESPONSE_DATA = "data";
 
     protected CommonCode() {
         throw new UnsupportedOperationException();

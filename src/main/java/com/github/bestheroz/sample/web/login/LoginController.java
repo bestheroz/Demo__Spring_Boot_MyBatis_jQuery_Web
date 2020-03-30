@@ -1,7 +1,7 @@
 package com.github.bestheroz.sample.web.login;
 
-import com.github.bestheroz.standard.common.exception.CommonException;
-import com.github.bestheroz.standard.common.util.MySessionUtils;
+import com.github.bestheroz.standard.common.exception.BusinessException;
+import com.github.bestheroz.standard.common.util.SessionUtils;
 import com.google.gson.JsonObject;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
@@ -17,9 +17,9 @@ public class LoginController {
 
     @GetMapping(value = {"/", "/sample/login/login.view"})
     public String view() {
-        if (MySessionUtils.isLoggedIn()) {
-            final String returnUrl = MySessionUtils.getAttribute("returnUrl");
-            MySessionUtils.removeAttribute("returnUrl");
+        if (SessionUtils.isLoggedIn()) {
+            final String returnUrl = SessionUtils.getAttribute("returnUrl");
+            SessionUtils.removeAttribute("returnUrl");
             if (StringUtils.isEmpty(returnUrl) || StringUtils.equals(returnUrl, "null") || !StringUtils.endsWith(returnUrl, ".view")) {
                 return "redirect:/sample/admin/menu/adminMenu.view";
             } else {
@@ -31,14 +31,14 @@ public class LoginController {
 
     @PostMapping(value = "/sample/login/loginProcess.json")
     @ResponseBody
-    public JsonObject loginProcess(final LoginVO vo) throws CommonException {
+    public JsonObject loginProcess(final LoginVO vo) {
         this.loginService.loginProcess(vo);
-        return CommonException.SUCCESS_NORMAL.getJsonObject();
+        return BusinessException.SUCCESS_NORMAL.getJsonObject();
     }
 
     @GetMapping(value = "/sample/login/logout.view")
-    public String logoutView() throws CommonException {
-        MySessionUtils.logout();
+    public String logoutView() {
+        SessionUtils.logout();
         return "redirect:/sample/login/login.view";
     }
 }

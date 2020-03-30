@@ -10,7 +10,7 @@ import org.joda.time.format.DateTimeFormat;
 import java.util.*;
 
 @UtilityClass
-public class MyDateUtils {
+public class DateUtils {
 
     public static final DateTimeZone TIME_ZONE_ASIA_SEOUL = DateTimeZone.forID("Asia/Seoul");
     public static final Locale LOCALE_KOREAN = Locale.KOREAN;
@@ -40,7 +40,7 @@ public class MyDateUtils {
         if (date == null) {
             return StringUtils.EMPTY;
         }
-        return MyDateUtils.getString(date.getTime(), pattern);
+        return DateUtils.getString(date.getTime(), pattern);
     }
 
     // public static String getString(final DateTime dateTime, final String pattern) {
@@ -87,8 +87,8 @@ public class MyDateUtils {
     }
 
     public static List<LocalDateTime> getBeetwenAllLocolDate(final String from, final String to, final String pattern) {
-        LocalDateTime fromDt = MyDateUtils.getLocalDateTime(from, pattern);
-        final LocalDateTime toDt = MyDateUtils.getLocalDateTime(to, pattern);
+        LocalDateTime fromDt = DateUtils.getLocalDateTime(from, pattern);
+        final LocalDateTime toDt = DateUtils.getLocalDateTime(to, pattern);
 
         if (fromDt == null || toDt == null) {
             return null;
@@ -133,8 +133,8 @@ public class MyDateUtils {
     }
 
     public static List<DateTime> getBeetwenAllDate(final String from, final String to, final String pattern) {
-        DateTime fromDt = MyDateUtils.getDateTime(from, pattern);
-        final DateTime toDt = MyDateUtils.getDateTime(to, pattern);
+        DateTime fromDt = DateUtils.getDateTime(from, pattern);
+        final DateTime toDt = DateUtils.getDateTime(to, pattern);
 
         if (fromDt == null || toDt == null) {
             return null;
@@ -166,11 +166,11 @@ public class MyDateUtils {
             } catch (final Throwable e) {
                 try {
                     // 2. yyyy-MM-dd
-                    return getDateTime(arg0, MyDateUtils.YYYY_MM_DD);
+                    return getDateTime(arg0, DateUtils.YYYY_MM_DD);
                 } catch (final Throwable e2) {
                     try {
                         // 3. yyyy-MM-dd HH:mm:ss
-                        return getDateTime(arg0, MyDateUtils.YYYY_MM_DD_HH_MM_SS);
+                        return getDateTime(arg0, DateUtils.YYYY_MM_DD_HH_MM_SS);
                     } catch (final Throwable e3) {
                         try {
                             // 4. yyyy-MM-dd HH:mm:ss.SSS
@@ -178,15 +178,15 @@ public class MyDateUtils {
                         } catch (final Throwable e4) {
                             try {
                                 // 5. yyyy-MM-ddTHH:mm:ss.SSSZ
-                                return getDateTime(arg0, MyDateUtils.ISO_8601);
+                                return getDateTime(arg0, DateUtils.ISO_8601);
                             } catch (final Throwable e5) {
                                 try {
                                     // 6. yyyyMMdd
-                                    return getDateTime(arg0, MyDateUtils.YYYYMMDD);
+                                    return getDateTime(arg0, DateUtils.YYYYMMDD);
                                 } catch (final Throwable e6) {
                                     try {
                                         // 7. yyyyMMddHHmmss
-                                        return getDateTime(arg0, MyDateUtils.YYYYMMDDHHMMSS);
+                                        return getDateTime(arg0, DateUtils.YYYYMMDDHHMMSS);
                                     } catch (final Throwable e7) {
                                         return null;
                                     }

@@ -3,10 +3,10 @@ package com.github.bestheroz.standard.common.file.pdf;
 import be.quodlibet.boxable.BaseTable;
 import be.quodlibet.boxable.Cell;
 import be.quodlibet.boxable.Row;
-import com.github.bestheroz.standard.common.util.MyDateUtils;
-import com.github.bestheroz.standard.common.util.MyFileUtils;
-import com.github.bestheroz.standard.common.util.MyMapperUtils;
-import com.github.bestheroz.standard.common.util.MyNullUtils;
+import com.github.bestheroz.standard.common.util.DateUtils;
+import com.github.bestheroz.standard.common.util.FileUtils;
+import com.github.bestheroz.standard.common.util.MapperUtils;
+import com.github.bestheroz.standard.common.util.NullUtils;
 import com.github.bestheroz.standard.context.abstractview.AbstractPdfboxView;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -40,10 +40,10 @@ public class PdfService extends AbstractPdfboxView {
     protected void buildPdfDocument(final Map<String, Object> model, final PDDocument document, final HttpServletRequest request, final HttpServletResponse response) throws IOException {
         // get data model which is passed by the Spring container
         @SuppressWarnings("unchecked") final List<PdfVO> pdfVOs = (List<PdfVO>) model.get(AbstractPdfboxView.PDF_VOS);
-        final JsonArray listData = MyMapperUtils.writeObjectAsJsonArray(model.get(AbstractPdfboxView.LIST_DATA));
-        final String fileName = MyFileUtils.getEncodedFileName(request, (String) model.get(AbstractPdfboxView.FILE_NAME));
+        final JsonArray listData = MapperUtils.toJsonArray(model.get(AbstractPdfboxView.LIST_DATA));
+        final String fileName = FileUtils.getEncodedFileName(request, (String) model.get(AbstractPdfboxView.FILE_NAME));
 
-        response.setHeader("Content-Disposition", "attachment; filename=" + fileName + "_" + MyDateUtils.getStringNow(MyDateUtils.YYYYMMDDHHMMSS) + AbstractPdfboxView.EXTENSION + ";");
+        response.setHeader("Content-Disposition", "attachment; filename=" + fileName + "_" + DateUtils.getStringNow(DateUtils.YYYYMMDDHHMMSS) + AbstractPdfboxView.EXTENSION + ";");
 
 //        final float[] widths = new float[pdfVOs.size()];
 //        for (int i = 0; i < pdfVOs.size(); i++) {
@@ -90,7 +90,7 @@ public class PdfService extends AbstractPdfboxView {
             for (int j = 0; j < pdfVOs.size(); j++) {
                 final JsonElement jsonElement = rowData.get(pdfVOs.get(j).getDbColName());
                 String strData = "";
-                if (MyNullUtils.isNotEmpty(jsonElement)) {
+                if (NullUtils.isNotEmpty(jsonElement)) {
                     strData = jsonElement.getAsString();
                 }
                 this.writeColumnData(pdfVOs, row, j, strData);

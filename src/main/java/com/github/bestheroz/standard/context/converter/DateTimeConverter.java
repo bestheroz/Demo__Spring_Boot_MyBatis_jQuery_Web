@@ -1,6 +1,6 @@
 package com.github.bestheroz.standard.context.converter;
 
-import com.github.bestheroz.standard.common.util.MyDateUtils;
+import com.github.bestheroz.standard.common.util.DateUtils;
 import org.joda.time.DateTime;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
@@ -9,6 +9,6 @@ import org.springframework.stereotype.Component;
 public class DateTimeConverter implements Converter<String, DateTime> {
     @Override
     public DateTime convert(final String arg0) {
-        return MyDateUtils.getDateTimeIgnoreException(arg0);
+        return DateUtils.getDateTimeIgnoreException(arg0);
     }
 }

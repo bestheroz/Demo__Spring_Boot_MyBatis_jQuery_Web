@@ -1,9 +1,9 @@
 package com.github.bestheroz.standard.context.abstractview;
 
-import com.github.bestheroz.standard.common.exception.CommonException;
-import com.github.bestheroz.standard.common.exception.CommonExceptionCode;
-import com.github.bestheroz.standard.common.util.MyFileUtils;
-import com.github.bestheroz.standard.common.util.MyNullUtils;
+import com.github.bestheroz.standard.common.exception.BusinessException;
+import com.github.bestheroz.standard.common.exception.ExceptionCode;
+import com.github.bestheroz.standard.common.util.FileUtils;
+import com.github.bestheroz.standard.common.util.NullUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -22,10 +22,10 @@ public class AbstractDownloadView extends AbstractView {
     public static final String DOWNLOAD_ORI_FILE_NAME = "oriDownloadFileName";
 
     @Override
-    protected void renderMergedOutputModel(final Map<String, Object> model, final HttpServletRequest request, final HttpServletResponse response) throws CommonException {
+    protected void renderMergedOutputModel(final Map<String, Object> model, final HttpServletRequest request, final HttpServletResponse response) {
         final File file = (File) model.get(DOWNLOAD_FILE);
-        if (!MyNullUtils.exists(file)) {
-            log.warn("{} {}", CommonExceptionCode.FAIL_FILE_NOT_FOUND.getMessage(), file.getAbsolutePath());
+        if (!NullUtils.exists(file)) {
+            log.warn("{} {}", ExceptionCode.FAIL_FILE_NOT_FOUND.toString(), file.getAbsolutePath());
             response.setContentType("text/html;charset=utf-8");
             try (final PrintWriter pw = response.getWriter()) {
                 pw.println("<script>");
@@ -35,14 +35,14 @@ public class AbstractDownloadView extends AbstractView {
                 return;
             } catch (final IOException e) {
                 log.warn(ExceptionUtils.getStackTrace(e));
-                throw new CommonException(e);
+                throw new BusinessException(e);
             }
         }
         try (final OutputStream out = response.getOutputStream(); final FileInputStream fis = new FileInputStream(file)) {
             log.info("file.getPath() : {}", file.getPath());
             log.info("file.getName() : {}", file.getName());
 
-            if (MyFileUtils.isFileType(file, MyFileUtils.FileType.PDF)) {
+            if (FileUtils.isFileType(file, FileUtils.FileType.PDF)) {
                 response.setContentType("application/pdf");
             } else {
                 response.setContentType("application/download;charset=utf-8");
@@ -51,9 +51,9 @@ public class AbstractDownloadView extends AbstractView {
 
                 String oriFileName = (String) model.get(AbstractDownloadView.DOWNLOAD_ORI_FILE_NAME);
                 if (StringUtils.isEmpty(oriFileName)) {
-                    oriFileName = MyFileUtils.getEncodedFileName(request, file.getName());
+                    oriFileName = FileUtils.getEncodedFileName(request, file.getName());
                 }
-                response.setHeader("Content-Disposition", "attachment; filename=\"" + MyFileUtils.getEncodedFileName(request, oriFileName) + "\";");
+                response.setHeader("Content-Disposition", "attachment; filename=\"" + FileUtils.getEncodedFileName(request, oriFileName) + "\";");
                 response.setHeader("Content-Transfer-Encoding", "binary");
             }
 
@@ -61,7 +61,7 @@ public class AbstractDownloadView extends AbstractView {
             out.flush();
         } catch (final IOException e) {
             log.warn(ExceptionUtils.getStackTrace(e));
-            throw new CommonException(e);
+            throw new BusinessException(e);
         }
     }
 }

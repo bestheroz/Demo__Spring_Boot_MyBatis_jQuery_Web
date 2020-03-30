@@ -6,12 +6,12 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 
 @Component
-public class MyAccessBeanUtils {
-    private static MyAccessBeanUtils instance;
+public class AccessBeanUtils {
+    private static AccessBeanUtils instance;
 
-    @Resource ApplicationContext applicationContext;
+    @Resource private ApplicationContext applicationContext;
 
-    private MyAccessBeanUtils() {
+    private AccessBeanUtils() {
         if (instance == null) {
             instance = this;
         }

@@ -54,7 +54,7 @@
             </div>
         </div>
         <!-- Modal -->
-        <div id="modalValueLabel" class="modal" tabindex="-1" role="dialog">
+        <div id="modalCode" class="modal" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -87,7 +87,7 @@
                     </div>
                     <div class="modal-footer">
                         <div class="btn-group" role="group">
-                            <button type="button" class="btn btn-outline-primary" onclick="MyModal.close($('#modalValueLabel'));">
+                            <button type="button" class="btn btn-outline-primary" onclick="MyModal.close($('#modalCode'));">
                                 <i class="far fa-window-close"></i>
                             </button>
 
@@ -96,13 +96,13 @@
                                     <i class="fas fa-trash-alt"></i>
                                 </button>
                                 <div class="dropdown-menu color-danger" aria-labelledby="btnGroupDrop1">
-                                    <a class="dropdown-item" href="javascript:void(0);" onclick="deleteValueLabel();">
+                                    <a class="dropdown-item" href="javascript:void(0);" onclick="deleteCode();">
                                         <i class="fas fa-trash-alt"></i>
                                     </a>
                                 </div>
                             </div>
 
-                            <button type="button" class="btn btn-outline-success" onclick="saveValueLabel();">
+                            <button type="button" class="btn btn-outline-success" onclick="saveCode();">
                                 <i class="far fa-save"></i>
                             </button>
                         </div>
@@ -111,7 +111,7 @@
             </div>
         </div>
         <!-- Modal -->
-        <div id="modalValueLabelDet" class="modal" tabindex="-1" role="dialog">
+        <div id="modalCodeDet" class="modal" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -162,7 +162,7 @@
                     </div>
                     <div class="modal-footer">
                         <div class="btn-group" role="group">
-                            <button type="button" class="btn btn-outline-primary" onclick="MyModal.close($('#modalValueLabelDet'));">
+                            <button type="button" class="btn btn-outline-primary" onclick="MyModal.close($('#modalCodeDet'));">
                                 <i class="far fa-window-close"></i>
                             </button>
 
@@ -171,13 +171,13 @@
                                     <i class="fas fa-trash-alt"></i>
                                 </button>
                                 <div class="dropdown-menu color-danger" aria-labelledby="btnGroupDrop2">
-                                    <a class="dropdown-item" href="javascript:void(0);" onclick="deleteValueLabelDet();">
+                                    <a class="dropdown-item" href="javascript:void(0);" onclick="deleteCodeDet();">
                                         <i class="fas fa-trash-alt"></i>
                                     </a>
                                 </div>
                             </div>
 
-                            <button type="button" class="btn btn-outline-success" onclick="saveValueLabelDet();">
+                            <button type="button" class="btn btn-outline-success" onclick="saveCodeDet();">
                                 <i class="far fa-save"></i>
                             </button>
                         </div>
@@ -190,7 +190,7 @@
     <my:footer/>
     <script data-for="ready">
         jQuery(($) => {
-            $.when(drawTable1(), drawTable2(), MyAjax.getSelectOptions($("#useTf"), "${CONTEXT_PATH}/common/valuelabel/getValueLabelVOList.json", {
+            $.when(drawTable1(), drawTable2(), MyAjax.getSelectOptions($("#useTf"), "${CONTEXT_PATH}/common/code/getCodeVOList.json", {
                 groupCode: "USE_TF"
             })).done(() => {
                 selectList();
@@ -225,19 +225,19 @@
                     text: '<i class="fas fa-plus"></i>',
                     titleAttr: '추가',
                     action: (e, dt, node, config) => {
-                        modalAddValueLabel();
+                        modalAddCode();
                     }
                 }, {
                     text: '<i class="fas fa-pencil-alt"></i>',
                     titleAttr: '수정',
                     action: (e, dt, node, config) => {
-                        modalModifyValueLabel();
+                        modalModifyCode();
                     }
                 }, {
                     text: '<i class="fas fa-trash-alt"></i>',
                     titleAttr: '삭제',
                     action: (e, dt, node, config) => {
-                        deleteValueLabel();
+                        deleteCode();
                     }
                 }, {
                     extend: 'colvis',
@@ -316,19 +316,19 @@
                     text: '<i class="fas fa-plus"></i>',
                     titleAttr: '추가',
                     action: (e, dt, node, config) => {
-                        modalAddValueLabelDet();
+                        modalAddCodeDet();
                     }
                 }, {
                     text: '<i class="fas fa-pencil-alt"></i>',
                     titleAttr: '수정',
                     action: (e, dt, node, config) => {
-                        modalModifyValueLabelDet();
+                        modalModifyCodeDet();
                     }
                 }, {
                     text: '<i class="fas fa-trash-alt"></i>',
                     titleAttr: '삭제',
                     action: (e, dt, node, config) => {
-                        deleteValueLabelDet();
+                        deleteCodeDet();
                     }
                 }, {
                     extend: 'colvis',
@@ -408,25 +408,25 @@
     </script>
     <script>
         async function selectList() {
-            const response = await MyAjax.execute('${CONTEXT_PATH}/sample/admin/valuelabel/getSampleCodeMstVOList.json', {});
+            const response = await MyAjax.execute('${CONTEXT_PATH}/sample/admin/code/getSampleCodeMstVOList.json', {});
             $('#table1').DataTable().clear().rows.add(response).draw();
         }
 
         async function selectListDet(groupCode) {
-            const response = await MyAjax.execute('${CONTEXT_PATH}/sample/admin/valuelabel/getSampleCodeDetVOList.json', {
+            const response = await MyAjax.execute('${CONTEXT_PATH}/sample/admin/code/getSampleCodeDetVOList.json', {
                 groupCode: groupCode
             });
             $('#table2').DataTable().clear().rows.add(response).draw();
         }
 
-        function modalAddValueLabel() {
+        function modalAddCode() {
             $('#form1')[0].reset();
             $('div.modal-footer>div.btn-group>div.btn-group').hide();
-            MyModal.open($('#modalValueLabel'));
+            MyModal.open($('#modalCode'));
             $('#groupCode').prop('readonly', false);
         }
 
-        function modalModifyValueLabel() {
+        function modalModifyCode() {
             const selectedRow = $('#table1').DataTable().rows({
                 selected: true
             }).data().toArray()[0];
@@ -436,21 +436,21 @@
             }
             $('#form1')[0].reset();
             $('div.modal-footer>div.btn-group>div.btn-group').show();
-            MyModal.open($('#modalValueLabel'));
+            MyModal.open($('#modalCode'));
             $('#groupCode').val(selectedRow.groupCode).prop('readonly', true);
             $('#groupCodeName').val(selectedRow.groupCodeName);
             $('#remark1').val(selectedRow.remark1);
         }
 
-        async function saveValueLabel() {
+        async function saveCode() {
             if (MyValidator.validate($('#form1'), true) !== null) {
                 return;
             }
             let url;
             if ($('div.modal-footer:visible>div.btn-group>div.btn-group').is(':hidden')) {
-                url = '${CONTEXT_PATH}/sample/admin/valuelabel/insertSampleCodeMst.json';
+                url = '${CONTEXT_PATH}/sample/admin/code/insertSampleCodeMst.json';
             } else {
-                url = '${CONTEXT_PATH}/sample/admin/valuelabel/updateSampleCodeMst.json';
+                url = '${CONTEXT_PATH}/sample/admin/code/updateSampleCodeMst.json';
             }
             const response = await MyAjax.execute(url, {
                 groupCode: $('#groupCode').val(),
@@ -459,14 +459,14 @@
             }, {
                 autoResultFunctionTF: true
             });
-            if (_.startsWith(response.responseCode, 'S')) {
-                MyModal.close($('#modalValueLabel'));
+            if (_.startsWith(response.code, 'S')) {
+                MyModal.close($('#modalCode'));
                 await selectList();
                 $('#table2').DataTable().clear().draw();
             }
         }
 
-        async function deleteValueLabel() {
+        async function deleteCode() {
             const selectedRow = $('#table1').DataTable().rows({
                 selected: true
             }).data().toArray()[0];
@@ -475,20 +475,20 @@
                 return;
             }
             if (confirm("정말 삭제하시겠습니까?")) {
-                const response = await MyAjax.execute('${CONTEXT_PATH}/sample/admin/valuelabel/deleteCOMM_CODE.json', {
+                const response = await MyAjax.execute('${CONTEXT_PATH}/sample/admin/code/deleteCOMM_CODE.json', {
                     groupCode: selectedRow.groupCode
                 }, {
                     autoResultFunctionTF: true
                 });
-                if (_.startsWith(response.responseCode, 'S')) {
-                    MyModal.close($('#modalValueLabel'));
+                if (_.startsWith(response.code, 'S')) {
+                    MyModal.close($('#modalCode'));
                     await selectList();
                     $('#table2').DataTable().clear().draw();
                 }
             }
         }
 
-        function modalAddValueLabelDet() {
+        function modalAddCodeDet() {
             const selectedRow = $('#table1').DataTable().rows({
                 selected: true
             }).data().toArray()[0];
@@ -498,12 +498,12 @@
             }
             $('#form2')[0].reset();
             $('div.modal-footer>div.btn-group>div.btn-group').hide();
-            MyModal.open($('#modalValueLabelDet'));
+            MyModal.open($('#modalCodeDet'));
             $('#code').prop('readonly', false);
             $('#groupCodeDet').val(selectedRow.groupCode);
         }
 
-        function modalModifyValueLabelDet() {
+        function modalModifyCodeDet() {
             const selectedRow = $('#table2').DataTable().rows({
                 selected: true
             }).data().toArray()[0];
@@ -520,7 +520,7 @@
             }
             $('#form2')[0].reset();
             $('div.modal-footer>div.btn-group>div.btn-group').show();
-            MyModal.open($('#modalValueLabelDet'));
+            MyModal.open($('#modalCodeDet'));
             $('#code').prop('readonly', true);
             $('#groupCodeDet').val(selectedRow1.groupCode);
             $('#code').val(selectedRow.code);
@@ -530,15 +530,15 @@
             $('#remark1Det').val(selectedRow.remark1);
         }
 
-        async function saveValueLabelDet() {
+        async function saveCodeDet() {
             if (MyValidator.validate($('#form2'), true) !== null) {
                 return;
             }
             let url;
             if ($('div.modal-footer:visible>div.btn-group>div.btn-group').is(':hidden')) {
-                url = '${CONTEXT_PATH}/sample/admin/valuelabel/insertSampleCodeDet.json';
+                url = '${CONTEXT_PATH}/sample/admin/code/insertSampleCodeDet.json';
             } else {
-                url = '${CONTEXT_PATH}/sample/admin/valuelabel/updateSampleCodeDet.json';
+                url = '${CONTEXT_PATH}/sample/admin/code/updateSampleCodeDet.json';
             }
             const response = await MyAjax.execute(url, {
                 groupCode: $('#groupCodeDet').val(),
@@ -550,13 +550,13 @@
             }, {
                 autoResultFunctionTF: true
             });
-            if (_.startsWith(response.responseCode, 'S')) {
-                MyModal.close($('#modalValueLabelDet'));
+            if (_.startsWith(response.code, 'S')) {
+                MyModal.close($('#modalCodeDet'));
                 await selectListDet($('#groupCodeDet').val());
             }
         }
 
-        async function deleteValueLabelDet() {
+        async function deleteCodeDet() {
             const selectedRow = $('#table2').DataTable().rows({
                 selected: true
             }).data().toArray()[0];
@@ -566,14 +566,14 @@
             }
 
             if (confirm("정말 삭제하시겠습니까?")) {
-                const response = await MyAjax.execute('${CONTEXT_PATH}/sample/admin/valuelabel/deleteSampleCodeDet.json', {
+                const response = await MyAjax.execute('${CONTEXT_PATH}/sample/admin/code/deleteSampleCodeDet.json', {
                     groupCode: selectedRow.groupCode,
                     code: selectedRow.code
                 }, {
                     autoResultFunctionTF: true
                 });
-                if (_.startsWith(response.responseCode, 'S')) {
-                    MyModal.close($('#modalValueLabelDet'));
+                if (_.startsWith(response.code, 'S')) {
+                    MyModal.close($('#modalCodeDet'));
                     await selectListDet(selectedRow.groupCode);
                 }
             }

@@ -1,7 +1,7 @@
 package com.github.bestheroz.standard.context.web;
 
 import com.github.bestheroz.standard.common.interceptor.Interceptor;
-import com.github.bestheroz.standard.common.util.MyMapperUtils;
+import com.github.bestheroz.standard.common.util.MapperUtils;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
@@ -38,7 +38,7 @@ public class WebConfig implements WebMvcConfigurer {
         converters.clear();
 
         final GsonHttpMessageConverter gsonHttpMessageConverter = new GsonHttpMessageConverter();
-        gsonHttpMessageConverter.setGson(MyMapperUtils.getGsonObject());
+        gsonHttpMessageConverter.setGson(MapperUtils.getGsonObject());
         converters.add(gsonHttpMessageConverter);
 
         final StringHttpMessageConverter stringHttpMessageConverter = new StringHttpMessageConverter();

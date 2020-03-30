@@ -12,10 +12,10 @@ import javax.servlet.ServletContext;
 public class InitWebConstantContext {
     @Autowired
     public void setConstant(final ServletContext servletContext) throws IllegalArgumentException {
-//        DateTimeZone.setDefault(MyDateUtils.TIME_ZONE_ASIA_SEOUL);
-//        TimeZone.setDefault(MyDateUtils.TIME_ZONE_ASIA_SEOUL.toTimeZone());
-//        servletContext.setAttribute("TIME_ZONE_ASIA_SEOUL", MyDateUtils.TIME_ZONE_ASIA_SEOUL.getID());
-//        servletContext.setAttribute("LOCALE_KOREAN", MyDateUtils.LOCALE_KOREAN.toString());
+//        DateTimeZone.setDefault(DateUtils.TIME_ZONE_ASIA_SEOUL);
+//        TimeZone.setDefault(DateUtils.TIME_ZONE_ASIA_SEOUL.toTimeZone());
+//        servletContext.setAttribute("TIME_ZONE_ASIA_SEOUL", DateUtils.TIME_ZONE_ASIA_SEOUL.getID());
+//        servletContext.setAttribute("LOCALE_KOREAN", DateUtils.LOCALE_KOREAN.toString());
 //        log.info("DateTimeZone/TimeZone.setDefault(\"{}\"); - Complete", servletContext.getAttribute("TIME_ZONE_ASIA_SEOUL"));
         log.info("\n{}\nThis Framework is managed by bestheroz.\nIf you have any questions, send me feedback.\nE-mail: bestheroz@gmail.com\ngithub: https://github.com/bestheroz\n{}",
                 StringUtils.repeat("=", 80),

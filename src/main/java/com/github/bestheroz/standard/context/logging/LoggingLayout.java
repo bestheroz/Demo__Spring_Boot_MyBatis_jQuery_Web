@@ -3,7 +3,7 @@ package com.github.bestheroz.standard.context.logging;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.CoreConstants;
 import ch.qos.logback.core.LayoutBase;
-import com.github.bestheroz.standard.common.util.MyDateUtils;
+import com.github.bestheroz.standard.common.util.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import studio.raptor.sqlparser.SQLUtils;
 
@@ -92,7 +92,7 @@ public class LoggingLayout extends LayoutBase<ILoggingEvent> {
     }
 
     private void getMessageHeader(final ILoggingEvent event, final StringBuffer sbuf) {
-        sbuf.append(MyDateUtils.getString(event.getTimeStamp(), "HH:mm:ss.SSS"));
+        sbuf.append(DateUtils.getString(event.getTimeStamp(), "HH:mm:ss.SSS"));
         sbuf.append(" [");
         sbuf.append(StringUtils.rightPad(event.getLevel().levelStr, 5));
         sbuf.append("] ");

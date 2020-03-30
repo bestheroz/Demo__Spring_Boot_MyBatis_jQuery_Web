@@ -6,7 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import javax.servlet.http.HttpServletRequest;
 
 @UtilityClass
-public class MyClientUtils {
+public class ClientUtils {
 
     public static String getClientIpAddr(final HttpServletRequest request) {
         final String[] headerValues = {"X-FORWARDED-FOR", "X-Forwarded-For", "Proxy-Client-IP", "WL-Proxy-Client-IP", "HTTP_CLIENT_IP", "HTTP_X_FORWARDED_FOR"};

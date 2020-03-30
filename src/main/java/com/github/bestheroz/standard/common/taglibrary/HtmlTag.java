@@ -1,7 +1,7 @@
 package com.github.bestheroz.standard.common.taglibrary;
 
 import com.github.bestheroz.standard.common.constant.CommonCode;
-import com.github.bestheroz.standard.common.exception.CommonException;
+import com.github.bestheroz.standard.common.exception.BusinessException;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -173,7 +173,7 @@ public class HtmlTag extends TagSupport {
             return EVAL_BODY_INCLUDE;
         } catch (final Throwable e) {
             log.warn(ExceptionUtils.getStackTrace(e));
-            throw new CommonException(e);
+            throw new BusinessException(e);
         }
     }
 
@@ -184,7 +184,7 @@ public class HtmlTag extends TagSupport {
             return SKIP_PAGE;
         } catch (final Throwable e) {
             log.warn(ExceptionUtils.getStackTrace(e));
-            throw new CommonException(e);
+            throw new BusinessException(e);
         }
     }
 

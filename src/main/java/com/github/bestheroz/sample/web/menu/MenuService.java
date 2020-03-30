@@ -1,7 +1,7 @@
 package com.github.bestheroz.sample.web.menu;
 
-import com.github.bestheroz.standard.common.exception.CommonException;
-import com.github.bestheroz.standard.common.util.MyMapperUtils;
+import com.github.bestheroz.standard.common.exception.BusinessException;
+import com.github.bestheroz.standard.common.util.MapperUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -16,16 +16,16 @@ import java.util.Map;
 public class MenuService {
     @Resource MenuDAO menuDAO;
 
-    public JsonArray getMenuVOObject(final JsonObject param, final boolean isNotLoggedIn) throws CommonException {
+    public JsonArray getMenuVOObject(final JsonObject param, final boolean isNotLoggedIn) {
         if (isNotLoggedIn) {
-            log.warn(CommonException.FAIL_NOT_ALLOWED_MEMBER.getJsonObject().toString());
-            throw CommonException.FAIL_NOT_ALLOWED_MEMBER;
+            log.warn(BusinessException.FAIL_NOT_ALLOWED_MEMBER.getJsonObject().toString());
+            throw BusinessException.FAIL_NOT_ALLOWED_MEMBER;
         }
 
         final JsonObject temp = new JsonObject();
         for (final MenuVO menuVO : this.menuDAO.getMenuVOList(param)) {
             if (menuVO.getLvl() == 2) {
-                temp.add(menuVO.getMenuId().toString(), MyMapperUtils.writeObjectAsJsonElement(menuVO));
+                temp.add(menuVO.getMenuId().toString(), MapperUtils.toJsonElement(menuVO));
             } else if (menuVO.getLvl() == 3) {
                 final JsonObject tempJsonObject = temp.get(menuVO.getParMenuId().toString()).getAsJsonObject();
                 final JsonArray children;
@@ -34,7 +34,7 @@ public class MenuService {
                 } else {
                     children = new JsonArray();
                 }
-                children.add(MyMapperUtils.writeObjectAsJsonElement(menuVO));
+                children.add(MapperUtils.toJsonElement(menuVO));
                 tempJsonObject.add("children", children);
             }
         }

@@ -1,6 +1,6 @@
 package com.github.bestheroz.standard.common.util.typeadapter;
 
-import com.github.bestheroz.standard.common.util.MyMapperUtils;
+import com.github.bestheroz.standard.common.util.MapperUtils;
 import com.google.gson.*;
 import org.apache.commons.lang3.StringUtils;
 
@@ -20,7 +20,7 @@ public class MapDeserializerTypeAdapter implements JsonDeserializer<Map<String, 
             final String key = entry.getKey();
             final JsonElement value = entry.getValue();
             if (value.isJsonArray()) {
-                map.put(key, MyMapperUtils.getGsonObject().fromJson(value, ArrayList.class));
+                map.put(key, MapperUtils.getGsonObject().fromJson(value, ArrayList.class));
             } else if (value.isJsonPrimitive()) {
                 // System.err.println(value.toString());
                 // String 처리
@@ -48,7 +48,7 @@ public class MapDeserializerTypeAdapter implements JsonDeserializer<Map<String, 
                                     map.put(key, value.getAsString());
                                 }
             } else if (value.isJsonObject()) {
-                map.put(key, MyMapperUtils.getGsonObject().fromJson(value, HashMap.class));
+                map.put(key, MapperUtils.getGsonObject().fromJson(value, HashMap.class));
             }
 
         }

@@ -1,6 +1,5 @@
 package com.github.bestheroz.sample.web.tablevo.samplemembermst;
 
-import com.github.bestheroz.standard.common.exception.CommonException;
 import com.github.bestheroz.standard.common.tablevo.SqlForTableDAO;
 import com.github.bestheroz.standard.common.tablevo.SqlForTableVO;
 import org.apache.ibatis.annotations.Mapper;
@@ -15,8 +14,8 @@ import java.util.Set;
 public interface TableSampleMemberMstDAO extends SqlForTableDAO {
 
     @SelectProvider(type = SqlForTableVO.class, method = SqlForTableVO.SELECT)
-    List<TableSampleMemberMstVO> getList(final TableSampleMemberMstVO vo, final Set<String> whereKeys, final String orderByColumns) throws CommonException;
+    List<TableSampleMemberMstVO> getList(final TableSampleMemberMstVO vo, final Set<String> whereKeys, final String orderByColumns);
 
     @SelectProvider(type = SqlForTableVO.class, method = SqlForTableVO.SELECT_ONE)
-    TableSampleMemberMstVO getVO(final TableSampleMemberMstVO vo, final Set<String> whereKeys) throws CommonException;
+    TableSampleMemberMstVO getVO(final TableSampleMemberMstVO vo, final Set<String> whereKeys);
 }

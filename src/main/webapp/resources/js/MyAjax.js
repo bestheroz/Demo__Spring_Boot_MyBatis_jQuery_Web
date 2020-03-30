@@ -111,8 +111,8 @@ const MyAjax = {
             }).fail((responseHtml, url, error) => {
                 console.warn("responseHtml : " + responseHtml + "\nurl : " + url + "\nerror : " + error);
                 const response = MyAjax.getJsonFromWrappedInPreTag(responseHtml);
-                if (MyCommon.isNotEmpty(response.responseMessage)) {
-                    alert(response.responseMessage);
+                if (MyCommon.isNotEmpty(response.message)) {
+                    alert(response.message);
                 } else {
                     alert('파일이 존재하지 않습니다.');
                 }
@@ -143,7 +143,7 @@ const MyAjax = {
         if (options.dataType === 'json') {
             response = MyAjax.getJsonFromWrappedInPreTag(response);
         }
-        if (response.responseCode === 'E011') {
+        if (response.code === 'E011') {
             if (confirm("페이지 시간초과\n페이지를 새로고침하여 로그인페이지로 안내합니다.")) {
                 window.location.reload();
             }
@@ -152,12 +152,12 @@ const MyAjax = {
     },
     doneAutoResultFunction: (response, options) => {
         if (options.autoResultFunctionTF) {
-            if (MyCommon.isNotEmpty(response.responseCode) && MyCommon.isNotEmpty(response.responseMessage)) {
+            if (MyCommon.isNotEmpty(response.code) && MyCommon.isNotEmpty(response.message)) {
                 let message = null;
-                if (MyCommon.isNotEmpty(options.successMessage) && _.startsWith(response.responseCode, 'S')) {
+                if (MyCommon.isNotEmpty(options.successMessage) && _.startsWith(response.code, 'S')) {
                     message = options.successMessage;
                 } else {
-                    message = response.responseMessage;
+                    message = response.message;
                 }
                 alert(message);
             }

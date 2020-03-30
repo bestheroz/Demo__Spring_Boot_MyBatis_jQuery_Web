@@ -5,14 +5,14 @@ import org.apache.commons.lang3.RegExUtils;
 import org.apache.commons.lang3.StringUtils;
 
 @UtilityClass
-public class MyMaskUtils {
+public class MaskUtils {
 
     public static String getEmail(final String email) {
         if (StringUtils.isEmpty(email)) {
             return StringUtils.EMPTY;
         }
 
-        final String dirty = MyEscapeUtils.unescapeAll(email);
+        final String dirty = EscapeUtils.unescapeAll(email);
         final StringBuilder returnValue = new StringBuilder();
 
         if (StringUtils.contains(dirty, "@")) {
@@ -46,7 +46,7 @@ public class MyMaskUtils {
             return StringUtils.EMPTY;
         }
 
-        final String dirty = MyEscapeUtils.unescapeAll(id);
+        final String dirty = EscapeUtils.unescapeAll(id);
         final StringBuilder returnValue = new StringBuilder();
 
         for (int i = 0; i < dirty.length(); i++) {
@@ -65,7 +65,7 @@ public class MyMaskUtils {
         }
 
         final StringBuilder returnValue = new StringBuilder();
-        final String dirty = StringUtils.substring(RegExUtils.removeAll(MyEscapeUtils.unescapeAll(mobile), "-"), 0, 11);
+        final String dirty = StringUtils.substring(RegExUtils.removeAll(EscapeUtils.unescapeAll(mobile), "-"), 0, 11);
 
         if (dirty.length() == 11) {
             returnValue.append(dirty, 0, 3).append("-****-").append(dirty.substring(7));
@@ -94,7 +94,7 @@ public class MyMaskUtils {
             return StringUtils.EMPTY;
         }
 
-        final String dirty = MyEscapeUtils.unescapeAll(name);
+        final String dirty = EscapeUtils.unescapeAll(name);
         final StringBuilder returnValue = new StringBuilder();
 
         for (int i = 0; i < dirty.length(); i++) {

@@ -246,7 +246,7 @@
             const response = await MyAjax.executeWithFile(url, formData, {
                 autoResultFunctionTF: true
             });
-            if (_.startsWith(response.responseCode, 'S')) {
+            if (_.startsWith(response.code, 'S')) {
                 MyModal.close($('#modalFile'));
                 await selectList();
             }
@@ -266,7 +266,7 @@
                 }, {
                     autoResultFunctionTF: true
                 });
-                if (_.startsWith(response.responseCode, 'S')) {
+                if (_.startsWith(response.code, 'S')) {
                     MyModal.close($('#modalFile'));
                     await selectList();
                 }
