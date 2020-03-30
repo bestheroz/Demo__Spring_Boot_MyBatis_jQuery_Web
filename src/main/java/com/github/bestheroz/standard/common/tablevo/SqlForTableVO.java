@@ -59,11 +59,7 @@ public class SqlForTableVO {
     private static final String WHERE_BIND_ENCRYPTED_STRING = "{0} = FNC_GET_ENCRYPT (#'{'param1.{1}{2}'}')";
 
     public static String getTableName(final String javaClassName) {
-        String tableName = CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, StringUtils.substringBetween(javaClassName, "Table", "VO"));
-        if (StringUtils.containsAny(tableName, "5MIN")) {
-            tableName = StringUtils.replace(tableName, "5MIN", "_5MIN");
-        }
-        return tableName;
+        return CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, StringUtils.substringBetween(javaClassName, "Table", "VO"));
     }
 
     public <T> String count(@NonNull final T vo, final Set<String> whereKeys) {
