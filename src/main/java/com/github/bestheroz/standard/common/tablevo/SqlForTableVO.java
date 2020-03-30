@@ -37,16 +37,15 @@ public class SqlForTableVO {
     public static final Set<String> TIMESTAMP_JAVA_TYPE_SET = ImmutableSet.of("DateTime", "LocalDateTime");
     public static final Set<String> BLOB_JAVA_TYPE_SET = ImmutableSet.of("Byte[]");
     public static final Set<String> BOOLEAN_JAVA_TYPE_SET = ImmutableSet.of("Boolean");
-    // 참고용: 각VO에 암호화 컬럼 정의 방법
-    private static final Set<String> ENCRYPTED_COLUMN_LIST = ImmutableSet.of("empnm", "smsphone");
-    private static final String TABLE_COLUMN_NAME_CREATED_BY = "CRT_ID";
-    private static final String TABLE_COLUMN_NAME_CREATED = "CRT_DT";
-    private static final String TABLE_COLUMN_NAME_UPDATED_BY = "UPD_ID";
-    private static final String TABLE_COLUMN_NAME_UPDATED = "UPD_DT";
-    private static final String VARIABLE_NAME_CREATED_BY = "crtId";
-    private static final String VARIABLE_NAME_CREATED = "crtDt";
-    private static final String VARIABLE_NAME_UPDATED_BY = "updId";
-    private static final String VARIABLE_NAME_UPDATED = "updDt";
+    private static final Set<String> ENCRYPTED_COLUMN_LIST = ImmutableSet.of("smsphone");
+    private static final String TABLE_COLUMN_NAME_CREATED_BY = "CREATED_BY";
+    private static final String TABLE_COLUMN_NAME_CREATED = "CREATED";
+    private static final String TABLE_COLUMN_NAME_UPDATED_BY = "UPDATED_BY";
+    private static final String TABLE_COLUMN_NAME_UPDATED = "UPDATED";
+    private static final String VARIABLE_NAME_CREATED_BY = "createdBy";
+    private static final String VARIABLE_NAME_CREATED = "created";
+    private static final String VARIABLE_NAME_UPDATED_BY = "updatedBy";
+    private static final String VARIABLE_NAME_UPDATED = "updated";
     private static final String SYSDATE = "NOW()";
     private static final Set<String> EXCLUDE_FIELD_SET = ImmutableSet.of("SERIAL_VERSION_U_I_D", "serialVersionUID", "E_N_C_R_Y_P_T_E_D__C_O_L_U_M_N__L_I_S_T");
     private static final String SELECT_ENCRYPTED_STRING = "FNC_GET_DECRYPT ({0}) AS {0}";

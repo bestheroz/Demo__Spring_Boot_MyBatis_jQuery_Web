@@ -32,7 +32,7 @@
                         <input type="text" class="form-control" id="resultTry1_1" placeholder="result..." readonly/>
                     </div>
                     <pre class="prettyprint lang-html">
-const params = {};
+const params = Object.create(null);;
 const response = await MyAjax.execute('&#36;{CONTEXT_PATH}/sample/admin/menu/getSampleMenuMstVOList.json', params);
 console.info(response);
 </pre>
@@ -73,7 +73,7 @@ console.info(response);
                         <input type="text" class="form-control" id="resultTry2_1" placeholder="result..." readonly/>
                     </div>
                     <pre class="prettyprint lang-html">
-const params = {};
+const params = Object.create(null);;
 const response = await MyAjax.execute('&#36;{CONTEXT_PATH}/sample/guide/ajax/sampleHtml.view', params, {
     dataType : "html"
 });
