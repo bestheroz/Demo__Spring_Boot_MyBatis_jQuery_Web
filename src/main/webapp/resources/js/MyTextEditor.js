@@ -13,7 +13,7 @@ const MyTextEditor = {
     init: (targetObj) => {
         targetObj = targetObj || $(document);
         $(targetObj).find('[data-texteditor="on"]').each((index, element) => {
-            const options = Object.create(null);;
+            const options = Object.create(null);
             if (MyCommon.isNotEmpty($(element).attr('data-texteditor-height'))) {
                 options['height'] = $(element).attr('data-texteditor-height') + 'px';
             }

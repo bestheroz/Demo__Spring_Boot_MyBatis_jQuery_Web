@@ -1,9 +1,9 @@
 ;
 const MyHandlebars = {
-    templates: Object.create(null);,
+    templates: Object.create(null),
     setTemplateScript: (targetObj, isAppendMode) => {
         if (!isAppendMode) {
-            MyHandlebars.templates = Object.create(null);;
+            MyHandlebars.templates = Object.create(null);
         }
         targetObj = targetObj || $(document);
 
